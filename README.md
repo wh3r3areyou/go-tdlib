@@ -67,3 +67,4 @@ $ docker run -it tdlib-docker
 
 ## Thx!
 https://github.com/Arman92/go-tl-parser - Generates JSON or Go structs/methods of a Telegram .tl file Adds every single comment (Structs, Struct members, Methods, Method arguments)
+https://github.com/Arman92/go-tdlib - base client and examples

@@ -312,6 +312,10 @@ func (client *Client) Authorize() (AuthorizationState, error) {
 }
 
 func (client *Client) sendTdLibParams() {
+	if len(client.Config.APIID) == 0 || len(client.Config.APIHash) == 0 {
+		panic("Input required params: APIID AND APIHASH!")
+	}
+
 	client.Send(UpdateData{
 		"@type": "setTdlibParameters",
 		"parameters": UpdateData{
