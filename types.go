@@ -32,6 +32,30 @@ func NewError(code int32, message string) *Error {
 	return &errorTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (error *Error) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Code    int32  `json:"code"`    // Error code; subject to future changes. If the error code is 406, the error message must not be processed in any way and must not be displayed to the user
+		Message string `json:"message"` // Error message; subject to future changes
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	error.tdCommon = tempObj.tdCommon
+	error.Code = tempObj.Code
+	error.Message = tempObj.Message
+
+	return nil
+}
+
 // Ok An object of this type is returned on a successful function call for certain functions
 type Ok struct {
 	tdCommon
@@ -50,6 +74,26 @@ func NewOk() *Ok {
 	}
 
 	return &okTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (ok *Ok) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	ok.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // TdlibParameters Contains parameters for TDLib initialization
@@ -117,6 +161,56 @@ func NewTdlibParameters(useTestDc bool, databaseDirectory string, filesDirectory
 	return &tdlibParametersTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (tdlibParameters *TdlibParameters) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UseTestDc              bool   `json:"use_test_dc"`              // If set to true, the Telegram test environment will be used instead of the production environment
+		DatabaseDirectory      string `json:"database_directory"`       // The path to the directory for the persistent database; if empty, the current working directory will be used
+		FilesDirectory         string `json:"files_directory"`          // The path to the directory for storing files; if empty, database_directory will be used
+		UseFileDatabase        bool   `json:"use_file_database"`        // If set to true, information about downloaded and uploaded files will be saved between application restarts
+		UseChatInfoDatabase    bool   `json:"use_chat_info_database"`   // If set to true, the library will maintain a cache of users, basic groups, supergroups, channels and secret chats. Implies use_file_database
+		UseMessageDatabase     bool   `json:"use_message_database"`     // If set to true, the library will maintain a cache of chats and messages. Implies use_chat_info_database
+		UseSecretChats         bool   `json:"use_secret_chats"`         // If set to true, support for secret chats will be enabled
+		APIID                  int32  `json:"api_id"`                   // Application identifier for Telegram API access, which can be obtained at https://my.telegram.org
+		APIHash                string `json:"api_hash"`                 // Application identifier hash for Telegram API access, which can be obtained at https://my.telegram.org
+		SystemLanguageCode     string `json:"system_language_code"`     // IETF language tag of the user's operating system language; must be non-empty
+		DeviceModel            string `json:"device_model"`             // Model of the device the application is being run on; must be non-empty
+		SystemVersion          string `json:"system_version"`           // Version of the operating system the application is being run on. If empty, the version is automatically detected by TDLib
+		ApplicationVersion     string `json:"application_version"`      // Application version; must be non-empty
+		EnableStorageOptimizer bool   `json:"enable_storage_optimizer"` // If set to true, old files will automatically be deleted
+		IgnoreFileNames        bool   `json:"ignore_file_names"`        // If set to true, original file names will be ignored. Otherwise, downloaded files will be saved under names as close as possible to the original name
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	tdlibParameters.tdCommon = tempObj.tdCommon
+	tdlibParameters.UseTestDc = tempObj.UseTestDc
+	tdlibParameters.DatabaseDirectory = tempObj.DatabaseDirectory
+	tdlibParameters.FilesDirectory = tempObj.FilesDirectory
+	tdlibParameters.UseFileDatabase = tempObj.UseFileDatabase
+	tdlibParameters.UseChatInfoDatabase = tempObj.UseChatInfoDatabase
+	tdlibParameters.UseMessageDatabase = tempObj.UseMessageDatabase
+	tdlibParameters.UseSecretChats = tempObj.UseSecretChats
+	tdlibParameters.APIID = tempObj.APIID
+	tdlibParameters.APIHash = tempObj.APIHash
+	tdlibParameters.SystemLanguageCode = tempObj.SystemLanguageCode
+	tdlibParameters.DeviceModel = tempObj.DeviceModel
+	tdlibParameters.SystemVersion = tempObj.SystemVersion
+	tdlibParameters.ApplicationVersion = tempObj.ApplicationVersion
+	tdlibParameters.EnableStorageOptimizer = tempObj.EnableStorageOptimizer
+	tdlibParameters.IgnoreFileNames = tempObj.IgnoreFileNames
+
+	return nil
+}
+
 // AuthenticationCodeTypeTelegramMessage An authentication code is delivered via a private Telegram message, which can be viewed from another active session
 type AuthenticationCodeTypeTelegramMessage struct {
 	tdCommon
@@ -138,6 +232,28 @@ func NewAuthenticationCodeTypeTelegramMessage(length int32) *AuthenticationCodeT
 	}
 
 	return &authenticationCodeTypeTelegramMessageTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (authenticationCodeTypeTelegramMessage *AuthenticationCodeTypeTelegramMessage) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Length int32 `json:"length"` // Length of the code
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authenticationCodeTypeTelegramMessage.tdCommon = tempObj.tdCommon
+	authenticationCodeTypeTelegramMessage.Length = tempObj.Length
+
+	return nil
 }
 
 // GetAuthenticationCodeTypeEnum return the enum type of this object
@@ -168,6 +284,28 @@ func NewAuthenticationCodeTypeSms(length int32) *AuthenticationCodeTypeSms {
 	return &authenticationCodeTypeSmsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (authenticationCodeTypeSms *AuthenticationCodeTypeSms) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Length int32 `json:"length"` // Length of the code
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authenticationCodeTypeSms.tdCommon = tempObj.tdCommon
+	authenticationCodeTypeSms.Length = tempObj.Length
+
+	return nil
+}
+
 // GetAuthenticationCodeTypeEnum return the enum type of this object
 func (authenticationCodeTypeSms *AuthenticationCodeTypeSms) GetAuthenticationCodeTypeEnum() AuthenticationCodeTypeEnum {
 	return AuthenticationCodeTypeSmsType
@@ -196,6 +334,28 @@ func NewAuthenticationCodeTypeCall(length int32) *AuthenticationCodeTypeCall {
 	return &authenticationCodeTypeCallTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (authenticationCodeTypeCall *AuthenticationCodeTypeCall) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Length int32 `json:"length"` // Length of the code
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authenticationCodeTypeCall.tdCommon = tempObj.tdCommon
+	authenticationCodeTypeCall.Length = tempObj.Length
+
+	return nil
+}
+
 // GetAuthenticationCodeTypeEnum return the enum type of this object
 func (authenticationCodeTypeCall *AuthenticationCodeTypeCall) GetAuthenticationCodeTypeEnum() AuthenticationCodeTypeEnum {
 	return AuthenticationCodeTypeCallType
@@ -222,6 +382,28 @@ func NewAuthenticationCodeTypeFlashCall(pattern string) *AuthenticationCodeTypeF
 	}
 
 	return &authenticationCodeTypeFlashCallTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (authenticationCodeTypeFlashCall *AuthenticationCodeTypeFlashCall) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Pattern string `json:"pattern"` // Pattern of the phone number from which the call will be made
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authenticationCodeTypeFlashCall.tdCommon = tempObj.tdCommon
+	authenticationCodeTypeFlashCall.Pattern = tempObj.Pattern
+
+	return nil
 }
 
 // GetAuthenticationCodeTypeEnum return the enum type of this object
@@ -255,6 +437,30 @@ func NewAuthenticationCodeTypeMissedCall(phoneNumberPrefix string, length int32)
 	return &authenticationCodeTypeMissedCallTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (authenticationCodeTypeMissedCall *AuthenticationCodeTypeMissedCall) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		PhoneNumberPrefix string `json:"phone_number_prefix"` // Prefix of the phone number from which the call will be made
+		Length            int32  `json:"length"`              // Number of digits in the code, excluding the prefix
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authenticationCodeTypeMissedCall.tdCommon = tempObj.tdCommon
+	authenticationCodeTypeMissedCall.PhoneNumberPrefix = tempObj.PhoneNumberPrefix
+	authenticationCodeTypeMissedCall.Length = tempObj.Length
+
+	return nil
+}
+
 // GetAuthenticationCodeTypeEnum return the enum type of this object
 func (authenticationCodeTypeMissedCall *AuthenticationCodeTypeMissedCall) GetAuthenticationCodeTypeEnum() AuthenticationCodeTypeEnum {
 	return AuthenticationCodeTypeMissedCallType
@@ -263,10 +469,10 @@ func (authenticationCodeTypeMissedCall *AuthenticationCodeTypeMissedCall) GetAut
 // AuthenticationCodeInfo Information about the authentication code that was sent
 type AuthenticationCodeInfo struct {
 	tdCommon
-	PhoneNumber string                 `json:"phone_number"` // A phone number that is being authenticated
-	Type        AuthenticationCodeType `json:"type"`         // The way the code was sent to the user
-	NextType    AuthenticationCodeType `json:"next_type"`    // The way the next code will be sent to the user; may be null
-	Timeout     int32                  `json:"timeout"`      // Timeout before the code can be re-sent, in seconds
+	PhoneNumber string                  `json:"phone_number"` // A phone number that is being authenticated
+	Type        AuthenticationCodeType  `json:"type"`         // The way the code was sent to the user
+	NextType    *AuthenticationCodeType `json:"next_type"`    // The way the next code will be sent to the user; may be null
+	Timeout     int32                   `json:"timeout"`      // Timeout before the code can be re-sent, in seconds
 }
 
 // MessageType return the string telegram-type of AuthenticationCodeInfo
@@ -280,7 +486,7 @@ func (authenticationCodeInfo *AuthenticationCodeInfo) MessageType() string {
 // @param typeParam The way the code was sent to the user
 // @param nextType The way the next code will be sent to the user; may be null
 // @param timeout Timeout before the code can be re-sent, in seconds
-func NewAuthenticationCodeInfo(phoneNumber string, typeParam AuthenticationCodeType, nextType AuthenticationCodeType, timeout int32) *AuthenticationCodeInfo {
+func NewAuthenticationCodeInfo(phoneNumber string, typeParam AuthenticationCodeType, nextType *AuthenticationCodeType, timeout int32) *AuthenticationCodeInfo {
 	authenticationCodeInfoTemp := AuthenticationCodeInfo{
 		tdCommon:    tdCommon{Type: "authenticationCodeInfo"},
 		PhoneNumber: phoneNumber,
@@ -317,7 +523,7 @@ func (authenticationCodeInfo *AuthenticationCodeInfo) UnmarshalJSON(b []byte) er
 	authenticationCodeInfo.Type = fieldType
 
 	fieldNextType, _ := unmarshalAuthenticationCodeType(objMap["next_type"])
-	authenticationCodeInfo.NextType = fieldNextType
+	authenticationCodeInfo.NextType = &fieldNextType
 
 	return nil
 }
@@ -346,6 +552,30 @@ func NewEmailAddressAuthenticationCodeInfo(emailAddressPattern string, length in
 	}
 
 	return &emailAddressAuthenticationCodeInfoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (emailAddressAuthenticationCodeInfo *EmailAddressAuthenticationCodeInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		EmailAddressPattern string `json:"email_address_pattern"` // Pattern of the email address to which an authentication code was sent
+		Length              int32  `json:"length"`                // Length of the code; 0 if unknown
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	emailAddressAuthenticationCodeInfo.tdCommon = tempObj.tdCommon
+	emailAddressAuthenticationCodeInfo.EmailAddressPattern = tempObj.EmailAddressPattern
+	emailAddressAuthenticationCodeInfo.Length = tempObj.Length
+
+	return nil
 }
 
 // TextEntity Represents a part of the text that needs to be formatted in some unusual way
@@ -428,6 +658,28 @@ func NewTextEntities(entities []TextEntity) *TextEntities {
 	return &textEntitiesTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (textEntities *TextEntities) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Entities []TextEntity `json:"entities"` // List of text entities
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntities.tdCommon = tempObj.tdCommon
+	textEntities.Entities = tempObj.Entities
+
+	return nil
+}
+
 // FormattedText A text with some entities
 type FormattedText struct {
 	tdCommon
@@ -452,6 +704,30 @@ func NewFormattedText(text string, entities []TextEntity) *FormattedText {
 	}
 
 	return &formattedTextTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (formattedText *FormattedText) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Text     string       `json:"text"`     // The text
+		Entities []TextEntity `json:"entities"` // Entities contained in the text. Entities can be nested, but must not mutually intersect with each other. Pre, Code and PreCode entities can't contain other entities. Bold, Italic, Underline and Strikethrough entities can contain and to be contained in all other entities. All other entities can't contain each other
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	formattedText.tdCommon = tempObj.tdCommon
+	formattedText.Text = tempObj.Text
+	formattedText.Entities = tempObj.Entities
+
+	return nil
 }
 
 // TermsOfService Contains Telegram terms of service
@@ -483,6 +759,32 @@ func NewTermsOfService(text *FormattedText, minUserAge int32, showPopup bool) *T
 	return &termsOfServiceTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (termsOfService *TermsOfService) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Text       *FormattedText `json:"text"`         // Text of the terms of service
+		MinUserAge int32          `json:"min_user_age"` // The minimum age of a user to be able to accept the terms; 0 if any
+		ShowPopup  bool           `json:"show_popup"`   // True, if a blocking popup with terms of service must be shown to the user
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	termsOfService.tdCommon = tempObj.tdCommon
+	termsOfService.Text = tempObj.Text
+	termsOfService.MinUserAge = tempObj.MinUserAge
+	termsOfService.ShowPopup = tempObj.ShowPopup
+
+	return nil
+}
+
 // AuthorizationStateWaitTdlibParameters TDLib needs TdlibParameters for initialization
 type AuthorizationStateWaitTdlibParameters struct {
 	tdCommon
@@ -501,6 +803,26 @@ func NewAuthorizationStateWaitTdlibParameters() *AuthorizationStateWaitTdlibPara
 	}
 
 	return &authorizationStateWaitTdlibParametersTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (authorizationStateWaitTdlibParameters *AuthorizationStateWaitTdlibParameters) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authorizationStateWaitTdlibParameters.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetAuthorizationStateEnum return the enum type of this object
@@ -531,6 +853,28 @@ func NewAuthorizationStateWaitEncryptionKey(isEncrypted bool) *AuthorizationStat
 	return &authorizationStateWaitEncryptionKeyTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (authorizationStateWaitEncryptionKey *AuthorizationStateWaitEncryptionKey) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		IsEncrypted bool `json:"is_encrypted"` // True, if the database is currently encrypted
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authorizationStateWaitEncryptionKey.tdCommon = tempObj.tdCommon
+	authorizationStateWaitEncryptionKey.IsEncrypted = tempObj.IsEncrypted
+
+	return nil
+}
+
 // GetAuthorizationStateEnum return the enum type of this object
 func (authorizationStateWaitEncryptionKey *AuthorizationStateWaitEncryptionKey) GetAuthorizationStateEnum() AuthorizationStateEnum {
 	return AuthorizationStateWaitEncryptionKeyType
@@ -554,6 +898,26 @@ func NewAuthorizationStateWaitPhoneNumber() *AuthorizationStateWaitPhoneNumber {
 	}
 
 	return &authorizationStateWaitPhoneNumberTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (authorizationStateWaitPhoneNumber *AuthorizationStateWaitPhoneNumber) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authorizationStateWaitPhoneNumber.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetAuthorizationStateEnum return the enum type of this object
@@ -584,6 +948,36 @@ func NewAuthorizationStateWaitCode(codeInfo *AuthenticationCodeInfo) *Authorizat
 	return &authorizationStateWaitCodeTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (authorizationStateWaitCode *AuthorizationStateWaitCode) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authorizationStateWaitCode.tdCommon = tempObj.tdCommon
+
+	var codeInfo AuthenticationCodeInfo
+	if objMap["code_info"] != nil {
+		err = codeInfo.UnmarshalJSON(*objMap["code_info"])
+		if err != nil {
+			return err
+		}
+	}
+
+	authorizationStateWaitCode.CodeInfo = &codeInfo
+
+	return nil
+}
+
 // GetAuthorizationStateEnum return the enum type of this object
 func (authorizationStateWaitCode *AuthorizationStateWaitCode) GetAuthorizationStateEnum() AuthorizationStateEnum {
 	return AuthorizationStateWaitCodeType
@@ -612,6 +1006,28 @@ func NewAuthorizationStateWaitOtherDeviceConfirmation(link string) *Authorizatio
 	return &authorizationStateWaitOtherDeviceConfirmationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (authorizationStateWaitOtherDeviceConfirmation *AuthorizationStateWaitOtherDeviceConfirmation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Link string `json:"link"` // A tg:// URL for the QR code. The link will be updated frequently
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authorizationStateWaitOtherDeviceConfirmation.tdCommon = tempObj.tdCommon
+	authorizationStateWaitOtherDeviceConfirmation.Link = tempObj.Link
+
+	return nil
+}
+
 // GetAuthorizationStateEnum return the enum type of this object
 func (authorizationStateWaitOtherDeviceConfirmation *AuthorizationStateWaitOtherDeviceConfirmation) GetAuthorizationStateEnum() AuthorizationStateEnum {
 	return AuthorizationStateWaitOtherDeviceConfirmationType
@@ -638,6 +1054,28 @@ func NewAuthorizationStateWaitRegistration(termsOfService *TermsOfService) *Auth
 	}
 
 	return &authorizationStateWaitRegistrationTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (authorizationStateWaitRegistration *AuthorizationStateWaitRegistration) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TermsOfService *TermsOfService `json:"terms_of_service"` // Telegram terms of service
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authorizationStateWaitRegistration.tdCommon = tempObj.tdCommon
+	authorizationStateWaitRegistration.TermsOfService = tempObj.TermsOfService
+
+	return nil
 }
 
 // GetAuthorizationStateEnum return the enum type of this object
@@ -674,6 +1112,32 @@ func NewAuthorizationStateWaitPassword(passwordHint string, hasRecoveryEmailAddr
 	return &authorizationStateWaitPasswordTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (authorizationStateWaitPassword *AuthorizationStateWaitPassword) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		PasswordHint                string `json:"password_hint"`                  // Hint for the password; may be empty
+		HasRecoveryEmailAddress     bool   `json:"has_recovery_email_address"`     // True, if a recovery email address has been set up
+		RecoveryEmailAddressPattern string `json:"recovery_email_address_pattern"` // Pattern of the email address to which the recovery email was sent; empty until a recovery email has been sent
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authorizationStateWaitPassword.tdCommon = tempObj.tdCommon
+	authorizationStateWaitPassword.PasswordHint = tempObj.PasswordHint
+	authorizationStateWaitPassword.HasRecoveryEmailAddress = tempObj.HasRecoveryEmailAddress
+	authorizationStateWaitPassword.RecoveryEmailAddressPattern = tempObj.RecoveryEmailAddressPattern
+
+	return nil
+}
+
 // GetAuthorizationStateEnum return the enum type of this object
 func (authorizationStateWaitPassword *AuthorizationStateWaitPassword) GetAuthorizationStateEnum() AuthorizationStateEnum {
 	return AuthorizationStateWaitPasswordType
@@ -697,6 +1161,26 @@ func NewAuthorizationStateReady() *AuthorizationStateReady {
 	}
 
 	return &authorizationStateReadyTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (authorizationStateReady *AuthorizationStateReady) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authorizationStateReady.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetAuthorizationStateEnum return the enum type of this object
@@ -724,6 +1208,26 @@ func NewAuthorizationStateLoggingOut() *AuthorizationStateLoggingOut {
 	return &authorizationStateLoggingOutTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (authorizationStateLoggingOut *AuthorizationStateLoggingOut) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authorizationStateLoggingOut.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetAuthorizationStateEnum return the enum type of this object
 func (authorizationStateLoggingOut *AuthorizationStateLoggingOut) GetAuthorizationStateEnum() AuthorizationStateEnum {
 	return AuthorizationStateLoggingOutType
@@ -749,6 +1253,26 @@ func NewAuthorizationStateClosing() *AuthorizationStateClosing {
 	return &authorizationStateClosingTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (authorizationStateClosing *AuthorizationStateClosing) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authorizationStateClosing.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetAuthorizationStateEnum return the enum type of this object
 func (authorizationStateClosing *AuthorizationStateClosing) GetAuthorizationStateEnum() AuthorizationStateEnum {
 	return AuthorizationStateClosingType
@@ -772,6 +1296,26 @@ func NewAuthorizationStateClosed() *AuthorizationStateClosed {
 	}
 
 	return &authorizationStateClosedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (authorizationStateClosed *AuthorizationStateClosed) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	authorizationStateClosed.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetAuthorizationStateEnum return the enum type of this object
@@ -817,6 +1361,38 @@ func NewPasswordState(hasPassword bool, passwordHint string, hasRecoveryEmailAdd
 	return &passwordStateTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passwordState *PasswordState) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		HasPassword                  bool                                `json:"has_password"`                     // True, if a 2-step verification password is set
+		PasswordHint                 string                              `json:"password_hint"`                    // Hint for the password; may be empty
+		HasRecoveryEmailAddress      bool                                `json:"has_recovery_email_address"`       // True, if a recovery email is set
+		HasPassportData              bool                                `json:"has_passport_data"`                // True, if some Telegram Passport elements were saved
+		RecoveryEmailAddressCodeInfo *EmailAddressAuthenticationCodeInfo `json:"recovery_email_address_code_info"` // Information about the recovery email address to which the confirmation email was sent; may be null
+		PendingResetDate             int32                               `json:"pending_reset_date"`               // If not 0, point in time (Unix timestamp) after which the password can be reset immediately using resetPassword
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passwordState.tdCommon = tempObj.tdCommon
+	passwordState.HasPassword = tempObj.HasPassword
+	passwordState.PasswordHint = tempObj.PasswordHint
+	passwordState.HasRecoveryEmailAddress = tempObj.HasRecoveryEmailAddress
+	passwordState.HasPassportData = tempObj.HasPassportData
+	passwordState.RecoveryEmailAddressCodeInfo = tempObj.RecoveryEmailAddressCodeInfo
+	passwordState.PendingResetDate = tempObj.PendingResetDate
+
+	return nil
+}
+
 // RecoveryEmailAddress Contains information about the current recovery email address
 type RecoveryEmailAddress struct {
 	tdCommon
@@ -838,6 +1414,28 @@ func NewRecoveryEmailAddress(recoveryEmailAddress string) *RecoveryEmailAddress 
 	}
 
 	return &recoveryEmailAddressTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (recoveryEmailAddress *RecoveryEmailAddress) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		RecoveryEmailAddress string `json:"recovery_email_address"` // Recovery email address
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	recoveryEmailAddress.tdCommon = tempObj.tdCommon
+	recoveryEmailAddress.RecoveryEmailAddress = tempObj.RecoveryEmailAddress
+
+	return nil
 }
 
 // TemporaryPasswordState Returns information about the availability of a temporary password, which can be used for payments
@@ -864,6 +1462,30 @@ func NewTemporaryPasswordState(hasPassword bool, validFor int32) *TemporaryPassw
 	}
 
 	return &temporaryPasswordStateTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (temporaryPasswordState *TemporaryPasswordState) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		HasPassword bool  `json:"has_password"` // True, if a temporary password is available
+		ValidFor    int32 `json:"valid_for"`    // Time left before the temporary password expires, in seconds
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	temporaryPasswordState.tdCommon = tempObj.tdCommon
+	temporaryPasswordState.HasPassword = tempObj.HasPassword
+	temporaryPasswordState.ValidFor = tempObj.ValidFor
+
+	return nil
 }
 
 // LocalFile Represents a local file
@@ -910,6 +1532,42 @@ func NewLocalFile(path string, canBeDownloaded bool, canBeDeleted bool, isDownlo
 	return &localFileTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (localFile *LocalFile) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Path                   string `json:"path"`                     // Local path to the locally available file part; may be empty
+		CanBeDownloaded        bool   `json:"can_be_downloaded"`        // True, if it is possible to download or generate the file
+		CanBeDeleted           bool   `json:"can_be_deleted"`           // True, if the file can be deleted
+		IsDownloadingActive    bool   `json:"is_downloading_active"`    // True, if the file is currently being downloaded (or a local copy is being generated by some other means)
+		IsDownloadingCompleted bool   `json:"is_downloading_completed"` // True, if the local copy is fully available
+		DownloadOffset         int32  `json:"download_offset"`          // Download will be started from this offset. downloaded_prefix_size is calculated from this offset
+		DownloadedPrefixSize   int32  `json:"downloaded_prefix_size"`   // If is_downloading_completed is false, then only some prefix of the file starting from download_offset is ready to be read. downloaded_prefix_size is the size of that prefix in bytes
+		DownloadedSize         int32  `json:"downloaded_size"`          // Total downloaded file size, in bytes. Can be used only for calculating download progress. The actual file size may be bigger, and some parts of it may contain garbage
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	localFile.tdCommon = tempObj.tdCommon
+	localFile.Path = tempObj.Path
+	localFile.CanBeDownloaded = tempObj.CanBeDownloaded
+	localFile.CanBeDeleted = tempObj.CanBeDeleted
+	localFile.IsDownloadingActive = tempObj.IsDownloadingActive
+	localFile.IsDownloadingCompleted = tempObj.IsDownloadingCompleted
+	localFile.DownloadOffset = tempObj.DownloadOffset
+	localFile.DownloadedPrefixSize = tempObj.DownloadedPrefixSize
+	localFile.DownloadedSize = tempObj.DownloadedSize
+
+	return nil
+}
+
 // RemoteFile Represents a remote file
 type RemoteFile struct {
 	tdCommon
@@ -943,6 +1601,36 @@ func NewRemoteFile(iD string, uniqueID string, isUploadingActive bool, isUploadi
 	}
 
 	return &remoteFileTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (remoteFile *RemoteFile) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID                   string `json:"id"`                     // Remote file identifier; may be empty. Can be used by the current user across application restarts or even from other devices. Uniquely identifies a file, but a file can have a lot of different valid identifiers. If the ID starts with "http://" or "https://", it represents the HTTP URL of the file. TDLib is currently unable to download files if only their URL is known. If downloadFile is called on such a file or if it is sent to a secret chat, TDLib starts a file generation process by sending updateFileGenerationStart to the application with the HTTP URL in the original_path and "#url#" as the conversion string. Application must generate the file by downloading it to the specified location
+		UniqueID             string `json:"unique_id"`              // Unique file identifier; may be empty if unknown. The unique file identifier which is the same for the same file even for different users and is persistent over time
+		IsUploadingActive    bool   `json:"is_uploading_active"`    // True, if the file is currently being uploaded (or a remote copy is being generated by some other means)
+		IsUploadingCompleted bool   `json:"is_uploading_completed"` // True, if a remote copy is fully available
+		UploadedSize         int32  `json:"uploaded_size"`          // Size of the remote available part of the file, in bytes; 0 if unknown
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	remoteFile.tdCommon = tempObj.tdCommon
+	remoteFile.ID = tempObj.ID
+	remoteFile.UniqueID = tempObj.UniqueID
+	remoteFile.IsUploadingActive = tempObj.IsUploadingActive
+	remoteFile.IsUploadingCompleted = tempObj.IsUploadingCompleted
+	remoteFile.UploadedSize = tempObj.UploadedSize
+
+	return nil
 }
 
 // File Represents a file
@@ -980,6 +1668,36 @@ func NewFile(iD int32, size int32, expectedSize int32, local *LocalFile, remote 
 	return &fileTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (file *File) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID           int32       `json:"id"`            // Unique file identifier
+		Size         int32       `json:"size"`          // File size, in bytes; 0 if unknown
+		ExpectedSize int32       `json:"expected_size"` // Approximate file size in bytes in case the exact file size is unknown. Can be used to show download/upload progress
+		Local        *LocalFile  `json:"local"`         // Information about the local copy of the file
+		Remote       *RemoteFile `json:"remote"`        // Information about the remote copy of the file
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	file.tdCommon = tempObj.tdCommon
+	file.ID = tempObj.ID
+	file.Size = tempObj.Size
+	file.ExpectedSize = tempObj.ExpectedSize
+	file.Local = tempObj.Local
+	file.Remote = tempObj.Remote
+
+	return nil
+}
+
 // InputFileID A file defined by its unique ID
 type InputFileID struct {
 	tdCommon
@@ -1001,6 +1719,28 @@ func NewInputFileID(iD int32) *InputFileID {
 	}
 
 	return &inputFileIDTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputFileID *InputFileID) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID int32 `json:"id"` // Unique file identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputFileID.tdCommon = tempObj.tdCommon
+	inputFileID.ID = tempObj.ID
+
+	return nil
 }
 
 // GetInputFileEnum return the enum type of this object
@@ -1031,6 +1771,28 @@ func NewInputFileRemote(iD string) *InputFileRemote {
 	return &inputFileRemoteTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputFileRemote *InputFileRemote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID string `json:"id"` // Remote file identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputFileRemote.tdCommon = tempObj.tdCommon
+	inputFileRemote.ID = tempObj.ID
+
+	return nil
+}
+
 // GetInputFileEnum return the enum type of this object
 func (inputFileRemote *InputFileRemote) GetInputFileEnum() InputFileEnum {
 	return InputFileRemoteType
@@ -1057,6 +1819,28 @@ func NewInputFileLocal(path string) *InputFileLocal {
 	}
 
 	return &inputFileLocalTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputFileLocal *InputFileLocal) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Path string `json:"path"` // Local path to the file
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputFileLocal.tdCommon = tempObj.tdCommon
+	inputFileLocal.Path = tempObj.Path
+
+	return nil
 }
 
 // GetInputFileEnum return the enum type of this object
@@ -1091,6 +1875,32 @@ func NewInputFileGenerated(originalPath string, conversion string, expectedSize 
 	}
 
 	return &inputFileGeneratedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputFileGenerated *InputFileGenerated) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		OriginalPath string `json:"original_path"` // Local path to a file from which the file is generated; may be empty if there is no such file
+		Conversion   string `json:"conversion"`    // String specifying the conversion applied to the original file; must be persistent across application restarts. Conversions beginning with '#' are reserved for internal TDLib usage
+		ExpectedSize int32  `json:"expected_size"` // Expected size of the generated file, in bytes; 0 if unknown
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputFileGenerated.tdCommon = tempObj.tdCommon
+	inputFileGenerated.OriginalPath = tempObj.OriginalPath
+	inputFileGenerated.Conversion = tempObj.Conversion
+	inputFileGenerated.ExpectedSize = tempObj.ExpectedSize
+
+	return nil
 }
 
 // GetInputFileEnum return the enum type of this object
@@ -1133,6 +1943,36 @@ func NewPhotoSize(typeParam string, photo *File, width int32, height int32, prog
 	return &photoSizeTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (photoSize *PhotoSize) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Type             string  `json:"type"`              // Image type (see https://core.telegram.org/constructor/photoSize)
+		Photo            *File   `json:"photo"`             // Information about the image file
+		Width            int32   `json:"width"`             // Image width
+		Height           int32   `json:"height"`            // Image height
+		ProgressiveSizes []int32 `json:"progressive_sizes"` // Sizes of progressive JPEG file prefixes, which can be used to preliminarily show the image; in bytes
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	photoSize.tdCommon = tempObj.tdCommon
+	photoSize.Type = tempObj.Type
+	photoSize.Photo = tempObj.Photo
+	photoSize.Width = tempObj.Width
+	photoSize.Height = tempObj.Height
+	photoSize.ProgressiveSizes = tempObj.ProgressiveSizes
+
+	return nil
+}
+
 // Minithumbnail Thumbnail image of a very poor quality and low resolution
 type Minithumbnail struct {
 	tdCommon
@@ -1162,6 +2002,32 @@ func NewMinithumbnail(width int32, height int32, data []byte) *Minithumbnail {
 	return &minithumbnailTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (minithumbnail *Minithumbnail) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Width  int32  `json:"width"`  // Thumbnail width, usually doesn't exceed 40
+		Height int32  `json:"height"` // Thumbnail height, usually doesn't exceed 40
+		Data   []byte `json:"data"`   // The thumbnail in JPEG format
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	minithumbnail.tdCommon = tempObj.tdCommon
+	minithumbnail.Width = tempObj.Width
+	minithumbnail.Height = tempObj.Height
+	minithumbnail.Data = tempObj.Data
+
+	return nil
+}
+
 // ThumbnailFormatJpeg The thumbnail is in JPEG format
 type ThumbnailFormatJpeg struct {
 	tdCommon
@@ -1180,6 +2046,26 @@ func NewThumbnailFormatJpeg() *ThumbnailFormatJpeg {
 	}
 
 	return &thumbnailFormatJpegTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (thumbnailFormatJpeg *ThumbnailFormatJpeg) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	thumbnailFormatJpeg.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetThumbnailFormatEnum return the enum type of this object
@@ -1207,6 +2093,26 @@ func NewThumbnailFormatPng() *ThumbnailFormatPng {
 	return &thumbnailFormatPngTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (thumbnailFormatPng *ThumbnailFormatPng) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	thumbnailFormatPng.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetThumbnailFormatEnum return the enum type of this object
 func (thumbnailFormatPng *ThumbnailFormatPng) GetThumbnailFormatEnum() ThumbnailFormatEnum {
 	return ThumbnailFormatPngType
@@ -1230,6 +2136,26 @@ func NewThumbnailFormatWebp() *ThumbnailFormatWebp {
 	}
 
 	return &thumbnailFormatWebpTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (thumbnailFormatWebp *ThumbnailFormatWebp) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	thumbnailFormatWebp.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetThumbnailFormatEnum return the enum type of this object
@@ -1257,6 +2183,26 @@ func NewThumbnailFormatGif() *ThumbnailFormatGif {
 	return &thumbnailFormatGifTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (thumbnailFormatGif *ThumbnailFormatGif) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	thumbnailFormatGif.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetThumbnailFormatEnum return the enum type of this object
 func (thumbnailFormatGif *ThumbnailFormatGif) GetThumbnailFormatEnum() ThumbnailFormatEnum {
 	return ThumbnailFormatGifType
@@ -1282,6 +2228,26 @@ func NewThumbnailFormatTgs() *ThumbnailFormatTgs {
 	return &thumbnailFormatTgsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (thumbnailFormatTgs *ThumbnailFormatTgs) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	thumbnailFormatTgs.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetThumbnailFormatEnum return the enum type of this object
 func (thumbnailFormatTgs *ThumbnailFormatTgs) GetThumbnailFormatEnum() ThumbnailFormatEnum {
 	return ThumbnailFormatTgsType
@@ -1305,6 +2271,26 @@ func NewThumbnailFormatMpeg4() *ThumbnailFormatMpeg4 {
 	}
 
 	return &thumbnailFormatMpeg4Temp
+}
+
+// UnmarshalJSON unmarshal to json
+func (thumbnailFormatMpeg4 *ThumbnailFormatMpeg4) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	thumbnailFormatMpeg4.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetThumbnailFormatEnum return the enum type of this object
@@ -1393,6 +2379,26 @@ func NewMaskPointForehead() *MaskPointForehead {
 	return &maskPointForeheadTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (maskPointForehead *MaskPointForehead) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	maskPointForehead.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetMaskPointEnum return the enum type of this object
 func (maskPointForehead *MaskPointForehead) GetMaskPointEnum() MaskPointEnum {
 	return MaskPointForeheadType
@@ -1416,6 +2422,26 @@ func NewMaskPointEyes() *MaskPointEyes {
 	}
 
 	return &maskPointEyesTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (maskPointEyes *MaskPointEyes) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	maskPointEyes.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetMaskPointEnum return the enum type of this object
@@ -1443,6 +2469,26 @@ func NewMaskPointMouth() *MaskPointMouth {
 	return &maskPointMouthTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (maskPointMouth *MaskPointMouth) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	maskPointMouth.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetMaskPointEnum return the enum type of this object
 func (maskPointMouth *MaskPointMouth) GetMaskPointEnum() MaskPointEnum {
 	return MaskPointMouthType
@@ -1466,6 +2512,26 @@ func NewMaskPointChin() *MaskPointChin {
 	}
 
 	return &maskPointChinTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (maskPointChin *MaskPointChin) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	maskPointChin.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetMaskPointEnum return the enum type of this object
@@ -1557,6 +2623,29 @@ func NewClosedVectorPath(commands []VectorPathCommand) *ClosedVectorPath {
 	return &closedVectorPathTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (closedVectorPath *ClosedVectorPath) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	closedVectorPath.tdCommon = tempObj.tdCommon
+
+	fieldCommands, _ := unmarshalVectorPathCommandSlice(objMap["commands"])
+	closedVectorPath.Commands = fieldCommands
+
+	return nil
+}
+
 // PollOption Describes one answer option of a poll
 type PollOption struct {
 	tdCommon
@@ -1592,6 +2681,36 @@ func NewPollOption(text string, voterCount int32, votePercentage int32, isChosen
 	return &pollOptionTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pollOption *PollOption) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Text           string `json:"text"`            // Option text; 1-100 characters
+		VoterCount     int32  `json:"voter_count"`     // Number of voters for this option, available only for closed or voted polls
+		VotePercentage int32  `json:"vote_percentage"` // The percentage of votes for this option; 0-100
+		IsChosen       bool   `json:"is_chosen"`       // True, if the option was chosen by the user
+		IsBeingChosen  bool   `json:"is_being_chosen"` // True, if the option is being chosen by a pending setPollAnswer request
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pollOption.tdCommon = tempObj.tdCommon
+	pollOption.Text = tempObj.Text
+	pollOption.VoterCount = tempObj.VoterCount
+	pollOption.VotePercentage = tempObj.VotePercentage
+	pollOption.IsChosen = tempObj.IsChosen
+	pollOption.IsBeingChosen = tempObj.IsBeingChosen
+
+	return nil
+}
+
 // PollTypeRegular A regular poll
 type PollTypeRegular struct {
 	tdCommon
@@ -1613,6 +2732,28 @@ func NewPollTypeRegular(allowMultipleAnswers bool) *PollTypeRegular {
 	}
 
 	return &pollTypeRegularTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pollTypeRegular *PollTypeRegular) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		AllowMultipleAnswers bool `json:"allow_multiple_answers"` // True, if multiple answer options can be chosen simultaneously
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pollTypeRegular.tdCommon = tempObj.tdCommon
+	pollTypeRegular.AllowMultipleAnswers = tempObj.AllowMultipleAnswers
+
+	return nil
 }
 
 // GetPollTypeEnum return the enum type of this object
@@ -1644,6 +2785,30 @@ func NewPollTypeQuiz(correctOptionID int32, explanation *FormattedText) *PollTyp
 	}
 
 	return &pollTypeQuizTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pollTypeQuiz *PollTypeQuiz) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		CorrectOptionID int32          `json:"correct_option_id"` // 0-based identifier of the correct answer option; -1 for a yet unanswered poll
+		Explanation     *FormattedText `json:"explanation"`       // Text that is shown when the user chooses an incorrect answer or taps on the lamp icon; 0-200 characters with at most 2 line feeds; empty for a yet unanswered poll
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pollTypeQuiz.tdCommon = tempObj.tdCommon
+	pollTypeQuiz.CorrectOptionID = tempObj.CorrectOptionID
+	pollTypeQuiz.Explanation = tempObj.Explanation
+
+	return nil
 }
 
 // GetPollTypeEnum return the enum type of this object
@@ -1698,6 +2863,52 @@ func NewAnimation(duration int32, width int32, height int32, fileName string, mi
 	return &animationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (animation *Animation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Duration      int32          `json:"duration"`      // Duration of the animation, in seconds; as defined by the sender
+		Width         int32          `json:"width"`         // Width of the animation
+		Height        int32          `json:"height"`        // Height of the animation
+		FileName      string         `json:"file_name"`     // Original name of the file; as defined by the sender
+		MimeType      string         `json:"mime_type"`     // MIME type of the file, usually "image/gif" or "video/mp4"
+		HasStickers   bool           `json:"has_stickers"`  // True, if stickers were added to the animation. The list of corresponding sticker set can be received using getAttachedStickerSets
+		Minithumbnail *Minithumbnail `json:"minithumbnail"` // Animation minithumbnail; may be null
+		Animation     *File          `json:"animation"`     // File containing the animation
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	animation.tdCommon = tempObj.tdCommon
+	animation.Duration = tempObj.Duration
+	animation.Width = tempObj.Width
+	animation.Height = tempObj.Height
+	animation.FileName = tempObj.FileName
+	animation.MimeType = tempObj.MimeType
+	animation.HasStickers = tempObj.HasStickers
+	animation.Minithumbnail = tempObj.Minithumbnail
+	animation.Animation = tempObj.Animation
+
+	var thumbnail Thumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	animation.Thumbnail = &thumbnail
+
+	return nil
+}
+
 // Audio Describes an audio file. Audio is usually in MP3 or M4A format
 type Audio struct {
 	tdCommon
@@ -1742,6 +2953,50 @@ func NewAudio(duration int32, title string, performer string, fileName string, m
 	return &audioTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (audio *Audio) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Duration                int32          `json:"duration"`                  // Duration of the audio, in seconds; as defined by the sender
+		Title                   string         `json:"title"`                     // Title of the audio; as defined by the sender
+		Performer               string         `json:"performer"`                 // Performer of the audio; as defined by the sender
+		FileName                string         `json:"file_name"`                 // Original name of the file; as defined by the sender
+		MimeType                string         `json:"mime_type"`                 // The MIME type of the file; as defined by the sender
+		AlbumCoverMinithumbnail *Minithumbnail `json:"album_cover_minithumbnail"` // The minithumbnail of the album cover; may be null
+		Audio                   *File          `json:"audio"`                     // File containing the audio
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	audio.tdCommon = tempObj.tdCommon
+	audio.Duration = tempObj.Duration
+	audio.Title = tempObj.Title
+	audio.Performer = tempObj.Performer
+	audio.FileName = tempObj.FileName
+	audio.MimeType = tempObj.MimeType
+	audio.AlbumCoverMinithumbnail = tempObj.AlbumCoverMinithumbnail
+	audio.Audio = tempObj.Audio
+
+	var albumCoverThumbnail Thumbnail
+	if objMap["album_cover_thumbnail"] != nil {
+		err = albumCoverThumbnail.UnmarshalJSON(*objMap["album_cover_thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	audio.AlbumCoverThumbnail = &albumCoverThumbnail
+
+	return nil
+}
+
 // Document Describes a document of any type
 type Document struct {
 	tdCommon
@@ -1777,6 +3032,44 @@ func NewDocument(fileName string, mimeType string, minithumbnail *Minithumbnail,
 	return &documentTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (document *Document) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		FileName      string         `json:"file_name"`     // Original name of the file; as defined by the sender
+		MimeType      string         `json:"mime_type"`     // MIME type of the file; as defined by the sender
+		Minithumbnail *Minithumbnail `json:"minithumbnail"` // Document minithumbnail; may be null
+		Document      *File          `json:"document"`      // File containing the document
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	document.tdCommon = tempObj.tdCommon
+	document.FileName = tempObj.FileName
+	document.MimeType = tempObj.MimeType
+	document.Minithumbnail = tempObj.Minithumbnail
+	document.Document = tempObj.Document
+
+	var thumbnail Thumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	document.Thumbnail = &thumbnail
+
+	return nil
+}
+
 // Photo Describes a photo
 type Photo struct {
 	tdCommon
@@ -1804,6 +3097,32 @@ func NewPhoto(hasStickers bool, minithumbnail *Minithumbnail, sizes []PhotoSize)
 	}
 
 	return &photoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (photo *Photo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		HasStickers   bool           `json:"has_stickers"`  // True, if stickers were added to the photo. The list of corresponding sticker sets can be received using getAttachedStickerSets
+		Minithumbnail *Minithumbnail `json:"minithumbnail"` // Photo minithumbnail; may be null
+		Sizes         []PhotoSize    `json:"sizes"`         // Available variants of the photo, in different sizes
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	photo.tdCommon = tempObj.tdCommon
+	photo.HasStickers = tempObj.HasStickers
+	photo.Minithumbnail = tempObj.Minithumbnail
+	photo.Sizes = tempObj.Sizes
+
+	return nil
 }
 
 // Sticker Describes a sticker
@@ -1856,6 +3175,62 @@ func NewSticker(setID JSONInt64, width int32, height int32, emoji string, isAnim
 	return &stickerTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (sticker *Sticker) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SetID      JSONInt64          `json:"set_id"`      // The identifier of the sticker set to which the sticker belongs; 0 if none
+		Width      int32              `json:"width"`       // Sticker width; as defined by the sender
+		Height     int32              `json:"height"`      // Sticker height; as defined by the sender
+		Emoji      string             `json:"emoji"`       // Emoji corresponding to the sticker
+		IsAnimated bool               `json:"is_animated"` // True, if the sticker is an animated sticker in TGS format
+		IsMask     bool               `json:"is_mask"`     // True, if the sticker is a mask
+		Outline    []ClosedVectorPath `json:"outline"`     // Sticker's outline represented as a list of closed vector paths; may be empty. The coordinate system origin is in the upper-left corner
+		Sticker    *File              `json:"sticker"`     // File containing the sticker
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	sticker.tdCommon = tempObj.tdCommon
+	sticker.SetID = tempObj.SetID
+	sticker.Width = tempObj.Width
+	sticker.Height = tempObj.Height
+	sticker.Emoji = tempObj.Emoji
+	sticker.IsAnimated = tempObj.IsAnimated
+	sticker.IsMask = tempObj.IsMask
+	sticker.Outline = tempObj.Outline
+	sticker.Sticker = tempObj.Sticker
+
+	var maskPosition MaskPosition
+	if objMap["mask_position"] != nil {
+		err = maskPosition.UnmarshalJSON(*objMap["mask_position"])
+		if err != nil {
+			return err
+		}
+	}
+
+	sticker.MaskPosition = &maskPosition
+
+	var thumbnail Thumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	sticker.Thumbnail = &thumbnail
+
+	return nil
+}
+
 // Video Describes a video file
 type Video struct {
 	tdCommon
@@ -1906,6 +3281,54 @@ func NewVideo(duration int32, width int32, height int32, fileName string, mimeTy
 	return &videoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (video *Video) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Duration          int32          `json:"duration"`           // Duration of the video, in seconds; as defined by the sender
+		Width             int32          `json:"width"`              // Video width; as defined by the sender
+		Height            int32          `json:"height"`             // Video height; as defined by the sender
+		FileName          string         `json:"file_name"`          // Original name of the file; as defined by the sender
+		MimeType          string         `json:"mime_type"`          // MIME type of the file; as defined by the sender
+		HasStickers       bool           `json:"has_stickers"`       // True, if stickers were added to the video. The list of corresponding sticker sets can be received using getAttachedStickerSets
+		SupportsStreaming bool           `json:"supports_streaming"` // True, if the video is supposed to be streamed
+		Minithumbnail     *Minithumbnail `json:"minithumbnail"`      // Video minithumbnail; may be null
+		Video             *File          `json:"video"`              // File containing the video
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	video.tdCommon = tempObj.tdCommon
+	video.Duration = tempObj.Duration
+	video.Width = tempObj.Width
+	video.Height = tempObj.Height
+	video.FileName = tempObj.FileName
+	video.MimeType = tempObj.MimeType
+	video.HasStickers = tempObj.HasStickers
+	video.SupportsStreaming = tempObj.SupportsStreaming
+	video.Minithumbnail = tempObj.Minithumbnail
+	video.Video = tempObj.Video
+
+	var thumbnail Thumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	video.Thumbnail = &thumbnail
+
+	return nil
+}
+
 // VideoNote Describes a video note. The video must be equal in width and height, cropped to a circle, and stored in MPEG4 format
 type VideoNote struct {
 	tdCommon
@@ -1941,6 +3364,44 @@ func NewVideoNote(duration int32, length int32, minithumbnail *Minithumbnail, th
 	return &videoNoteTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (videoNote *VideoNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Duration      int32          `json:"duration"`      // Duration of the video, in seconds; as defined by the sender
+		Length        int32          `json:"length"`        // Video width and height; as defined by the sender
+		Minithumbnail *Minithumbnail `json:"minithumbnail"` // Video minithumbnail; may be null
+		Video         *File          `json:"video"`         // File containing the video
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	videoNote.tdCommon = tempObj.tdCommon
+	videoNote.Duration = tempObj.Duration
+	videoNote.Length = tempObj.Length
+	videoNote.Minithumbnail = tempObj.Minithumbnail
+	videoNote.Video = tempObj.Video
+
+	var thumbnail Thumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	videoNote.Thumbnail = &thumbnail
+
+	return nil
+}
+
 // VoiceNote Describes a voice note. The voice note must be encoded with the Opus codec, and stored inside an OGG container. Voice notes can have only a single audio channel
 type VoiceNote struct {
 	tdCommon
@@ -1973,6 +3434,34 @@ func NewVoiceNote(duration int32, waveform []byte, mimeType string, voice *File)
 	return &voiceNoteTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (voiceNote *VoiceNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Duration int32  `json:"duration"`  // Duration of the voice note, in seconds; as defined by the sender
+		Waveform []byte `json:"waveform"`  // A waveform representation of the voice note in 5-bit format
+		MimeType string `json:"mime_type"` // MIME type of the file; as defined by the sender
+		Voice    *File  `json:"voice"`     // File containing the voice note
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	voiceNote.tdCommon = tempObj.tdCommon
+	voiceNote.Duration = tempObj.Duration
+	voiceNote.Waveform = tempObj.Waveform
+	voiceNote.MimeType = tempObj.MimeType
+	voiceNote.Voice = tempObj.Voice
+
+	return nil
+}
+
 // AnimatedEmoji Describes an animated representation of an emoji
 type AnimatedEmoji struct {
 	tdCommon
@@ -2000,6 +3489,32 @@ func NewAnimatedEmoji(sticker *Sticker, fitzpatrickType int32, sound *File) *Ani
 	}
 
 	return &animatedEmojiTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (animatedEmoji *AnimatedEmoji) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Sticker         *Sticker `json:"sticker"`          // Animated sticker for the emoji
+		FitzpatrickType int32    `json:"fitzpatrick_type"` // Emoji modifier fitzpatrick type; 0-6; 0 if none
+		Sound           *File    `json:"sound"`            // File containing the sound to be played when the animated emoji is clicked if any; may be null. The sound is encoded with the Opus codec, and stored inside an OGG container
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	animatedEmoji.tdCommon = tempObj.tdCommon
+	animatedEmoji.Sticker = tempObj.Sticker
+	animatedEmoji.FitzpatrickType = tempObj.FitzpatrickType
+	animatedEmoji.Sound = tempObj.Sound
+
+	return nil
 }
 
 // Contact Describes a user contact
@@ -2037,6 +3552,36 @@ func NewContact(phoneNumber string, firstName string, lastName string, vcard str
 	return &contactTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (contact *Contact) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		PhoneNumber string `json:"phone_number"` // Phone number of the user
+		FirstName   string `json:"first_name"`   // First name of the user; 1-255 characters in length
+		LastName    string `json:"last_name"`    // Last name of the user
+		Vcard       string `json:"vcard"`        // Additional data about the user in a form of vCard; 0-2048 bytes in length
+		UserID      int64  `json:"user_id"`      // Identifier of the user, if known; otherwise 0
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	contact.tdCommon = tempObj.tdCommon
+	contact.PhoneNumber = tempObj.PhoneNumber
+	contact.FirstName = tempObj.FirstName
+	contact.LastName = tempObj.LastName
+	contact.Vcard = tempObj.Vcard
+	contact.UserID = tempObj.UserID
+
+	return nil
+}
+
 // Location Describes a location on planet Earth
 type Location struct {
 	tdCommon
@@ -2064,6 +3609,32 @@ func NewLocation(latitude float64, longitude float64, horizontalAccuracy float64
 	}
 
 	return &locationTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (location *Location) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Latitude           float64 `json:"latitude"`            // Latitude of the location in degrees; as defined by the sender
+		Longitude          float64 `json:"longitude"`           // Longitude of the location, in degrees; as defined by the sender
+		HorizontalAccuracy float64 `json:"horizontal_accuracy"` // The estimated horizontal accuracy of the location, in meters; as defined by the sender. 0 if unknown
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	location.tdCommon = tempObj.tdCommon
+	location.Latitude = tempObj.Latitude
+	location.Longitude = tempObj.Longitude
+	location.HorizontalAccuracy = tempObj.HorizontalAccuracy
+
+	return nil
 }
 
 // Venue Describes a venue
@@ -2102,6 +3673,38 @@ func NewVenue(location *Location, title string, address string, provider string,
 	}
 
 	return &venueTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (venue *Venue) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Location *Location `json:"location"` // Venue location; as defined by the sender
+		Title    string    `json:"title"`    // Venue name; as defined by the sender
+		Address  string    `json:"address"`  // Venue address; as defined by the sender
+		Provider string    `json:"provider"` // Provider of the venue database; as defined by the sender. Currently, only "foursquare" and "gplaces" (Google Places) need to be supported
+		ID       string    `json:"id"`       // Identifier of the venue in the provider database; as defined by the sender
+		Type     string    `json:"type"`     // Type of the venue in the provider database; as defined by the sender
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	venue.tdCommon = tempObj.tdCommon
+	venue.Location = tempObj.Location
+	venue.Title = tempObj.Title
+	venue.Address = tempObj.Address
+	venue.Provider = tempObj.Provider
+	venue.ID = tempObj.ID
+	venue.Type = tempObj.Type
+
+	return nil
 }
 
 // Game Describes a game
@@ -2143,6 +3746,40 @@ func NewGame(iD JSONInt64, shortName string, title string, text *FormattedText, 
 	}
 
 	return &gameTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (game *Game) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID          JSONInt64      `json:"id"`          // Game ID
+		ShortName   string         `json:"short_name"`  // Game short name. To share a game use the URL https://t.me/{bot_username}?game={game_short_name}
+		Title       string         `json:"title"`       // Game title
+		Text        *FormattedText `json:"text"`        // Game text, usually containing scoreboards for a game
+		Description string         `json:"description"` // Game description
+		Photo       *Photo         `json:"photo"`       // Game photo
+		Animation   *Animation     `json:"animation"`   // Game animation; may be null
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	game.tdCommon = tempObj.tdCommon
+	game.ID = tempObj.ID
+	game.ShortName = tempObj.ShortName
+	game.Title = tempObj.Title
+	game.Text = tempObj.Text
+	game.Description = tempObj.Description
+	game.Photo = tempObj.Photo
+	game.Animation = tempObj.Animation
+
+	return nil
 }
 
 // Poll Describes a poll
@@ -2271,6 +3908,36 @@ func NewProfilePhoto(iD JSONInt64, small *File, big *File, minithumbnail *Minith
 	return &profilePhotoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (profilePhoto *ProfilePhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID            JSONInt64      `json:"id"`            // Photo identifier; 0 for an empty photo. Can be used to find a photo in a list of user profile photos
+		Small         *File          `json:"small"`         // A small (160x160) user profile photo. The file can be downloaded only before the photo is changed
+		Big           *File          `json:"big"`           // A big (640x640) user profile photo. The file can be downloaded only before the photo is changed
+		Minithumbnail *Minithumbnail `json:"minithumbnail"` // User profile photo minithumbnail; may be null
+		HasAnimation  bool           `json:"has_animation"` // True, if the photo has animated variant
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	profilePhoto.tdCommon = tempObj.tdCommon
+	profilePhoto.ID = tempObj.ID
+	profilePhoto.Small = tempObj.Small
+	profilePhoto.Big = tempObj.Big
+	profilePhoto.Minithumbnail = tempObj.Minithumbnail
+	profilePhoto.HasAnimation = tempObj.HasAnimation
+
+	return nil
+}
+
 // ChatPhotoInfo Contains basic information about the photo of a chat
 type ChatPhotoInfo struct {
 	tdCommon
@@ -2303,6 +3970,34 @@ func NewChatPhotoInfo(small *File, big *File, minithumbnail *Minithumbnail, hasA
 	return &chatPhotoInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatPhotoInfo *ChatPhotoInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Small         *File          `json:"small"`         // A small (160x160) chat photo variant in JPEG format. The file can be downloaded only before the photo is changed
+		Big           *File          `json:"big"`           // A big (640x640) chat photo variant in JPEG format. The file can be downloaded only before the photo is changed
+		Minithumbnail *Minithumbnail `json:"minithumbnail"` // Chat photo minithumbnail; may be null
+		HasAnimation  bool           `json:"has_animation"` // True, if the photo has animated variant
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatPhotoInfo.tdCommon = tempObj.tdCommon
+	chatPhotoInfo.Small = tempObj.Small
+	chatPhotoInfo.Big = tempObj.Big
+	chatPhotoInfo.Minithumbnail = tempObj.Minithumbnail
+	chatPhotoInfo.HasAnimation = tempObj.HasAnimation
+
+	return nil
+}
+
 // UserTypeRegular A regular user
 type UserTypeRegular struct {
 	tdCommon
@@ -2321,6 +4016,26 @@ func NewUserTypeRegular() *UserTypeRegular {
 	}
 
 	return &userTypeRegularTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (userTypeRegular *UserTypeRegular) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userTypeRegular.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetUserTypeEnum return the enum type of this object
@@ -2346,6 +4061,26 @@ func NewUserTypeDeleted() *UserTypeDeleted {
 	}
 
 	return &userTypeDeletedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (userTypeDeleted *UserTypeDeleted) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userTypeDeleted.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetUserTypeEnum return the enum type of this object
@@ -2388,6 +4123,36 @@ func NewUserTypeBot(canJoinGroups bool, canReadAllGroupMessages bool, isInline b
 	return &userTypeBotTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (userTypeBot *UserTypeBot) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		CanJoinGroups           bool   `json:"can_join_groups"`             // True, if the bot can be invited to basic group and supergroup chats
+		CanReadAllGroupMessages bool   `json:"can_read_all_group_messages"` // True, if the bot can read all messages in basic group or supergroup chats and not just those addressed to the bot. In private and channel chats a bot can always read all messages
+		IsInline                bool   `json:"is_inline"`                   // True, if the bot supports inline queries
+		InlineQueryPlaceholder  string `json:"inline_query_placeholder"`    // Placeholder for inline queries (displayed on the application input field)
+		NeedLocation            bool   `json:"need_location"`               // True, if the location of the user is expected to be sent with every inline query to this bot
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userTypeBot.tdCommon = tempObj.tdCommon
+	userTypeBot.CanJoinGroups = tempObj.CanJoinGroups
+	userTypeBot.CanReadAllGroupMessages = tempObj.CanReadAllGroupMessages
+	userTypeBot.IsInline = tempObj.IsInline
+	userTypeBot.InlineQueryPlaceholder = tempObj.InlineQueryPlaceholder
+	userTypeBot.NeedLocation = tempObj.NeedLocation
+
+	return nil
+}
+
 // GetUserTypeEnum return the enum type of this object
 func (userTypeBot *UserTypeBot) GetUserTypeEnum() UserTypeEnum {
 	return UserTypeBotType
@@ -2411,6 +4176,26 @@ func NewUserTypeUnknown() *UserTypeUnknown {
 	}
 
 	return &userTypeUnknownTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (userTypeUnknown *UserTypeUnknown) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userTypeUnknown.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetUserTypeEnum return the enum type of this object
@@ -2444,6 +4229,30 @@ func NewBotCommand(command string, description string) *BotCommand {
 	return &botCommandTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (botCommand *BotCommand) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Command     string `json:"command"`     // Text of the bot command
+		Description string `json:"description"` // Description of the bot command
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	botCommand.tdCommon = tempObj.tdCommon
+	botCommand.Command = tempObj.Command
+	botCommand.Description = tempObj.Description
+
+	return nil
+}
+
 // BotCommands Contains a list of bot commands
 type BotCommands struct {
 	tdCommon
@@ -2470,6 +4279,30 @@ func NewBotCommands(botUserID int64, commands []BotCommand) *BotCommands {
 	return &botCommandsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (botCommands *BotCommands) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		BotUserID int64        `json:"bot_user_id"` // Bot's user identifier
+		Commands  []BotCommand `json:"commands"`    // List of bot commands
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	botCommands.tdCommon = tempObj.tdCommon
+	botCommands.BotUserID = tempObj.BotUserID
+	botCommands.Commands = tempObj.Commands
+
+	return nil
+}
+
 // ChatLocation Represents a location to which a chat is connected
 type ChatLocation struct {
 	tdCommon
@@ -2494,6 +4327,30 @@ func NewChatLocation(location *Location, address string) *ChatLocation {
 	}
 
 	return &chatLocationTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatLocation *ChatLocation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Location *Location `json:"location"` // The location
+		Address  string    `json:"address"`  // Location address; 1-64 characters, as defined by the chat owner
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatLocation.tdCommon = tempObj.tdCommon
+	chatLocation.Location = tempObj.Location
+	chatLocation.Address = tempObj.Address
+
+	return nil
 }
 
 // AnimatedChatPhoto Animated variant of a chat photo in MPEG4 format
@@ -2523,6 +4380,32 @@ func NewAnimatedChatPhoto(length int32, file *File, mainFrameTimestamp float64) 
 	}
 
 	return &animatedChatPhotoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (animatedChatPhoto *AnimatedChatPhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Length             int32   `json:"length"`               // Animation width and height
+		File               *File   `json:"file"`                 // Information about the animation file
+		MainFrameTimestamp float64 `json:"main_frame_timestamp"` // Timestamp of the frame, used as a static chat photo
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	animatedChatPhoto.tdCommon = tempObj.tdCommon
+	animatedChatPhoto.Length = tempObj.Length
+	animatedChatPhoto.File = tempObj.File
+	animatedChatPhoto.MainFrameTimestamp = tempObj.MainFrameTimestamp
+
+	return nil
 }
 
 // ChatPhoto Describes a chat or user profile photo
@@ -2560,6 +4443,36 @@ func NewChatPhoto(iD JSONInt64, addedDate int32, minithumbnail *Minithumbnail, s
 	return &chatPhotoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatPhoto *ChatPhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID            JSONInt64          `json:"id"`            // Unique photo identifier
+		AddedDate     int32              `json:"added_date"`    // Point in time (Unix timestamp) when the photo has been added
+		Minithumbnail *Minithumbnail     `json:"minithumbnail"` // Photo minithumbnail; may be null
+		Sizes         []PhotoSize        `json:"sizes"`         // Available variants of the photo in JPEG format, in different size
+		Animation     *AnimatedChatPhoto `json:"animation"`     // Animated variant of the photo in MPEG4 format; may be null
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatPhoto.tdCommon = tempObj.tdCommon
+	chatPhoto.ID = tempObj.ID
+	chatPhoto.AddedDate = tempObj.AddedDate
+	chatPhoto.Minithumbnail = tempObj.Minithumbnail
+	chatPhoto.Sizes = tempObj.Sizes
+	chatPhoto.Animation = tempObj.Animation
+
+	return nil
+}
+
 // ChatPhotos Contains a list of chat or user profile photos
 type ChatPhotos struct {
 	tdCommon
@@ -2586,6 +4499,30 @@ func NewChatPhotos(totalCount int32, photos []ChatPhoto) *ChatPhotos {
 	return &chatPhotosTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatPhotos *ChatPhotos) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount int32       `json:"total_count"` // Total number of photos
+		Photos     []ChatPhoto `json:"photos"`      // List of photos
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatPhotos.tdCommon = tempObj.tdCommon
+	chatPhotos.TotalCount = tempObj.TotalCount
+	chatPhotos.Photos = tempObj.Photos
+
+	return nil
+}
+
 // InputChatPhotoPrevious A previously used profile photo of the current user
 type InputChatPhotoPrevious struct {
 	tdCommon
@@ -2607,6 +4544,28 @@ func NewInputChatPhotoPrevious(chatPhotoID JSONInt64) *InputChatPhotoPrevious {
 	}
 
 	return &inputChatPhotoPreviousTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputChatPhotoPrevious *InputChatPhotoPrevious) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatPhotoID JSONInt64 `json:"chat_photo_id"` // Identifier of the current user's profile photo to reuse
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputChatPhotoPrevious.tdCommon = tempObj.tdCommon
+	inputChatPhotoPrevious.ChatPhotoID = tempObj.ChatPhotoID
+
+	return nil
 }
 
 // GetInputChatPhotoEnum return the enum type of this object
@@ -2904,6 +4863,50 @@ func NewUserFullInfo(photo *ChatPhoto, isBlocked bool, canBeCalled bool, support
 	return &userFullInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (userFullInfo *UserFullInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Photo                           *ChatPhoto   `json:"photo"`                               // User profile photo; may be null
+		IsBlocked                       bool         `json:"is_blocked"`                          // True, if the user is blocked by the current user
+		CanBeCalled                     bool         `json:"can_be_called"`                       // True, if the user can be called
+		SupportsVideoCalls              bool         `json:"supports_video_calls"`                // True, if a video call can be created with the user
+		HasPrivateCalls                 bool         `json:"has_private_calls"`                   // True, if the user can't be called due to their privacy settings
+		HasPrivateForwards              bool         `json:"has_private_forwards"`                // True, if the user can't be linked in forwarded messages due to their privacy settings
+		NeedPhoneNumberPrivacyException bool         `json:"need_phone_number_privacy_exception"` // True, if the current user needs to explicitly allow to share their phone number with the user when the method addContact is used
+		Bio                             string       `json:"bio"`                                 // A short user bio
+		ShareText                       string       `json:"share_text"`                          // For bots, the text that is shown on the bot's profile page and is sent together with the link when users share the bot
+		Description                     string       `json:"description"`                         // For bots, the text shown in the chat with the bot if the chat is empty
+		GroupInCommonCount              int32        `json:"group_in_common_count"`               // Number of group chats where both the other user and the current user are a member; 0 for the current user
+		Commands                        []BotCommand `json:"commands"`                            // For bots, list of the bot commands
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userFullInfo.tdCommon = tempObj.tdCommon
+	userFullInfo.Photo = tempObj.Photo
+	userFullInfo.IsBlocked = tempObj.IsBlocked
+	userFullInfo.CanBeCalled = tempObj.CanBeCalled
+	userFullInfo.SupportsVideoCalls = tempObj.SupportsVideoCalls
+	userFullInfo.HasPrivateCalls = tempObj.HasPrivateCalls
+	userFullInfo.HasPrivateForwards = tempObj.HasPrivateForwards
+	userFullInfo.NeedPhoneNumberPrivacyException = tempObj.NeedPhoneNumberPrivacyException
+	userFullInfo.Bio = tempObj.Bio
+	userFullInfo.ShareText = tempObj.ShareText
+	userFullInfo.Description = tempObj.Description
+	userFullInfo.GroupInCommonCount = tempObj.GroupInCommonCount
+	userFullInfo.Commands = tempObj.Commands
+
+	return nil
+}
+
 // Users Represents a list of users
 type Users struct {
 	tdCommon
@@ -2928,6 +4931,30 @@ func NewUsers(totalCount int32, userIDs []int64) *Users {
 	}
 
 	return &usersTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (users *Users) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount int32   `json:"total_count"` // Approximate total count of users found
+		UserIDs    []int64 `json:"user_ids"`    // A list of user identifiers
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	users.tdCommon = tempObj.tdCommon
+	users.TotalCount = tempObj.TotalCount
+	users.UserIDs = tempObj.UserIDs
+
+	return nil
 }
 
 // ChatAdministrator Contains information about a chat administrator
@@ -2959,6 +4986,32 @@ func NewChatAdministrator(userID int64, customTitle string, isOwner bool) *ChatA
 	return &chatAdministratorTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatAdministrator *ChatAdministrator) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserID      int64  `json:"user_id"`      // User identifier of the administrator
+		CustomTitle string `json:"custom_title"` // Custom title of the administrator
+		IsOwner     bool   `json:"is_owner"`     // True, if the user is the owner of the chat
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatAdministrator.tdCommon = tempObj.tdCommon
+	chatAdministrator.UserID = tempObj.UserID
+	chatAdministrator.CustomTitle = tempObj.CustomTitle
+	chatAdministrator.IsOwner = tempObj.IsOwner
+
+	return nil
+}
+
 // ChatAdministrators Represents a list of chat administrators
 type ChatAdministrators struct {
 	tdCommon
@@ -2980,6 +5033,28 @@ func NewChatAdministrators(administrators []ChatAdministrator) *ChatAdministrato
 	}
 
 	return &chatAdministratorsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatAdministrators *ChatAdministrators) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Administrators []ChatAdministrator `json:"administrators"` // A list of chat administrators
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatAdministrators.tdCommon = tempObj.tdCommon
+	chatAdministrators.Administrators = tempObj.Administrators
+
+	return nil
 }
 
 // ChatPermissions Describes actions that a user is allowed to take in a chat
@@ -3026,6 +5101,42 @@ func NewChatPermissions(canSendMessages bool, canSendMediaMessages bool, canSend
 	return &chatPermissionsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatPermissions *ChatPermissions) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		CanSendMessages       bool `json:"can_send_messages"`         // True, if the user can send text messages, contacts, locations, and venues
+		CanSendMediaMessages  bool `json:"can_send_media_messages"`   // True, if the user can send audio files, documents, photos, videos, video notes, and voice notes. Implies can_send_messages permissions
+		CanSendPolls          bool `json:"can_send_polls"`            // True, if the user can send polls. Implies can_send_messages permissions
+		CanSendOtherMessages  bool `json:"can_send_other_messages"`   // True, if the user can send animations, games, stickers, and dice and use inline bots. Implies can_send_messages permissions
+		CanAddWebPagePreviews bool `json:"can_add_web_page_previews"` // True, if the user may add a web page preview to their messages. Implies can_send_messages permissions
+		CanChangeInfo         bool `json:"can_change_info"`           // True, if the user can change the chat title, photo, and other settings
+		CanInviteUsers        bool `json:"can_invite_users"`          // True, if the user can invite new users to the chat
+		CanPinMessages        bool `json:"can_pin_messages"`          // True, if the user can pin messages
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatPermissions.tdCommon = tempObj.tdCommon
+	chatPermissions.CanSendMessages = tempObj.CanSendMessages
+	chatPermissions.CanSendMediaMessages = tempObj.CanSendMediaMessages
+	chatPermissions.CanSendPolls = tempObj.CanSendPolls
+	chatPermissions.CanSendOtherMessages = tempObj.CanSendOtherMessages
+	chatPermissions.CanAddWebPagePreviews = tempObj.CanAddWebPagePreviews
+	chatPermissions.CanChangeInfo = tempObj.CanChangeInfo
+	chatPermissions.CanInviteUsers = tempObj.CanInviteUsers
+	chatPermissions.CanPinMessages = tempObj.CanPinMessages
+
+	return nil
+}
+
 // ChatMemberStatusCreator The user is the owner of the chat and has all the administrator privileges
 type ChatMemberStatusCreator struct {
 	tdCommon
@@ -3053,6 +5164,32 @@ func NewChatMemberStatusCreator(customTitle string, isAnonymous bool, isMember b
 	}
 
 	return &chatMemberStatusCreatorTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatMemberStatusCreator *ChatMemberStatusCreator) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		CustomTitle string `json:"custom_title"` // A custom title of the owner; 0-16 characters without emojis; applicable to supergroups only
+		IsAnonymous bool   `json:"is_anonymous"` // True, if the creator isn't shown in the chat member list and sends messages anonymously; applicable to supergroups only
+		IsMember    bool   `json:"is_member"`    // True, if the user is a member of the chat
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatMemberStatusCreator.tdCommon = tempObj.tdCommon
+	chatMemberStatusCreator.CustomTitle = tempObj.CustomTitle
+	chatMemberStatusCreator.IsAnonymous = tempObj.IsAnonymous
+	chatMemberStatusCreator.IsMember = tempObj.IsMember
+
+	return nil
 }
 
 // GetChatMemberStatusEnum return the enum type of this object
@@ -3119,6 +5256,52 @@ func NewChatMemberStatusAdministrator(customTitle string, canBeEdited bool, canM
 	return &chatMemberStatusAdministratorTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatMemberStatusAdministrator *ChatMemberStatusAdministrator) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		CustomTitle         string `json:"custom_title"`           // A custom title of the administrator; 0-16 characters without emojis; applicable to supergroups only
+		CanBeEdited         bool   `json:"can_be_edited"`          // True, if the current user can edit the administrator privileges for the called user
+		CanManageChat       bool   `json:"can_manage_chat"`        // True, if the administrator can get chat event log, get chat statistics, get message statistics in channels, get channel members, see anonymous administrators in supergroups and ignore slow mode. Implied by any other privilege; applicable to supergroups and channels only
+		CanChangeInfo       bool   `json:"can_change_info"`        // True, if the administrator can change the chat title, photo, and other settings
+		CanPostMessages     bool   `json:"can_post_messages"`      // True, if the administrator can create channel posts; applicable to channels only
+		CanEditMessages     bool   `json:"can_edit_messages"`      // True, if the administrator can edit messages of other users and pin messages; applicable to channels only
+		CanDeleteMessages   bool   `json:"can_delete_messages"`    // True, if the administrator can delete messages of other users
+		CanInviteUsers      bool   `json:"can_invite_users"`       // True, if the administrator can invite new users to the chat
+		CanRestrictMembers  bool   `json:"can_restrict_members"`   // True, if the administrator can restrict, ban, or unban chat members; always true for channels
+		CanPinMessages      bool   `json:"can_pin_messages"`       // True, if the administrator can pin messages; applicable to basic groups and supergroups only
+		CanPromoteMembers   bool   `json:"can_promote_members"`    // True, if the administrator can add new administrators with a subset of their own privileges or demote administrators that were directly or indirectly promoted by them
+		CanManageVideoChats bool   `json:"can_manage_video_chats"` // True, if the administrator can manage video chats
+		IsAnonymous         bool   `json:"is_anonymous"`           // True, if the administrator isn't shown in the chat member list and sends messages anonymously; applicable to supergroups only
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatMemberStatusAdministrator.tdCommon = tempObj.tdCommon
+	chatMemberStatusAdministrator.CustomTitle = tempObj.CustomTitle
+	chatMemberStatusAdministrator.CanBeEdited = tempObj.CanBeEdited
+	chatMemberStatusAdministrator.CanManageChat = tempObj.CanManageChat
+	chatMemberStatusAdministrator.CanChangeInfo = tempObj.CanChangeInfo
+	chatMemberStatusAdministrator.CanPostMessages = tempObj.CanPostMessages
+	chatMemberStatusAdministrator.CanEditMessages = tempObj.CanEditMessages
+	chatMemberStatusAdministrator.CanDeleteMessages = tempObj.CanDeleteMessages
+	chatMemberStatusAdministrator.CanInviteUsers = tempObj.CanInviteUsers
+	chatMemberStatusAdministrator.CanRestrictMembers = tempObj.CanRestrictMembers
+	chatMemberStatusAdministrator.CanPinMessages = tempObj.CanPinMessages
+	chatMemberStatusAdministrator.CanPromoteMembers = tempObj.CanPromoteMembers
+	chatMemberStatusAdministrator.CanManageVideoChats = tempObj.CanManageVideoChats
+	chatMemberStatusAdministrator.IsAnonymous = tempObj.IsAnonymous
+
+	return nil
+}
+
 // GetChatMemberStatusEnum return the enum type of this object
 func (chatMemberStatusAdministrator *ChatMemberStatusAdministrator) GetChatMemberStatusEnum() ChatMemberStatusEnum {
 	return ChatMemberStatusAdministratorType
@@ -3142,6 +5325,26 @@ func NewChatMemberStatusMember() *ChatMemberStatusMember {
 	}
 
 	return &chatMemberStatusMemberTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatMemberStatusMember *ChatMemberStatusMember) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatMemberStatusMember.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatMemberStatusEnum return the enum type of this object
@@ -3178,6 +5381,32 @@ func NewChatMemberStatusRestricted(isMember bool, restrictedUntilDate int32, per
 	return &chatMemberStatusRestrictedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatMemberStatusRestricted *ChatMemberStatusRestricted) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		IsMember            bool             `json:"is_member"`             // True, if the user is a member of the chat
+		RestrictedUntilDate int32            `json:"restricted_until_date"` // Point in time (Unix timestamp) when restrictions will be lifted from the user; 0 if never. If the user is restricted for more than 366 days or for less than 30 seconds from the current time, the user is considered to be restricted forever
+		Permissions         *ChatPermissions `json:"permissions"`           // User permissions in the chat
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatMemberStatusRestricted.tdCommon = tempObj.tdCommon
+	chatMemberStatusRestricted.IsMember = tempObj.IsMember
+	chatMemberStatusRestricted.RestrictedUntilDate = tempObj.RestrictedUntilDate
+	chatMemberStatusRestricted.Permissions = tempObj.Permissions
+
+	return nil
+}
+
 // GetChatMemberStatusEnum return the enum type of this object
 func (chatMemberStatusRestricted *ChatMemberStatusRestricted) GetChatMemberStatusEnum() ChatMemberStatusEnum {
 	return ChatMemberStatusRestrictedType
@@ -3201,6 +5430,26 @@ func NewChatMemberStatusLeft() *ChatMemberStatusLeft {
 	}
 
 	return &chatMemberStatusLeftTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatMemberStatusLeft *ChatMemberStatusLeft) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatMemberStatusLeft.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatMemberStatusEnum return the enum type of this object
@@ -3229,6 +5478,28 @@ func NewChatMemberStatusBanned(bannedUntilDate int32) *ChatMemberStatusBanned {
 	}
 
 	return &chatMemberStatusBannedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatMemberStatusBanned *ChatMemberStatusBanned) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		BannedUntilDate int32 `json:"banned_until_date"` // Point in time (Unix timestamp) when the user will be unbanned; 0 if never. If the user is banned for more than 366 days or for less than 30 seconds from the current time, the user is considered to be banned forever. Always 0 in basic groups
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatMemberStatusBanned.tdCommon = tempObj.tdCommon
+	chatMemberStatusBanned.BannedUntilDate = tempObj.BannedUntilDate
+
+	return nil
 }
 
 // GetChatMemberStatusEnum return the enum type of this object
@@ -3325,6 +5596,30 @@ func NewChatMembers(totalCount int32, members []ChatMember) *ChatMembers {
 	return &chatMembersTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatMembers *ChatMembers) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount int32        `json:"total_count"` // Approximate total count of chat members found
+		Members    []ChatMember `json:"members"`     // A list of chat members
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatMembers.tdCommon = tempObj.tdCommon
+	chatMembers.TotalCount = tempObj.TotalCount
+	chatMembers.Members = tempObj.Members
+
+	return nil
+}
+
 // ChatMembersFilterContacts Returns contacts of the user
 type ChatMembersFilterContacts struct {
 	tdCommon
@@ -3343,6 +5638,26 @@ func NewChatMembersFilterContacts() *ChatMembersFilterContacts {
 	}
 
 	return &chatMembersFilterContactsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatMembersFilterContacts *ChatMembersFilterContacts) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatMembersFilterContacts.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatMembersFilterEnum return the enum type of this object
@@ -3370,6 +5685,26 @@ func NewChatMembersFilterAdministrators() *ChatMembersFilterAdministrators {
 	return &chatMembersFilterAdministratorsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatMembersFilterAdministrators *ChatMembersFilterAdministrators) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatMembersFilterAdministrators.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetChatMembersFilterEnum return the enum type of this object
 func (chatMembersFilterAdministrators *ChatMembersFilterAdministrators) GetChatMembersFilterEnum() ChatMembersFilterEnum {
 	return ChatMembersFilterAdministratorsType
@@ -3393,6 +5728,26 @@ func NewChatMembersFilterMembers() *ChatMembersFilterMembers {
 	}
 
 	return &chatMembersFilterMembersTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatMembersFilterMembers *ChatMembersFilterMembers) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatMembersFilterMembers.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatMembersFilterEnum return the enum type of this object
@@ -3423,6 +5778,28 @@ func NewChatMembersFilterMention(messageThreadID int64) *ChatMembersFilterMentio
 	return &chatMembersFilterMentionTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatMembersFilterMention *ChatMembersFilterMention) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		MessageThreadID int64 `json:"message_thread_id"` // If non-zero, the identifier of the current message thread
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatMembersFilterMention.tdCommon = tempObj.tdCommon
+	chatMembersFilterMention.MessageThreadID = tempObj.MessageThreadID
+
+	return nil
+}
+
 // GetChatMembersFilterEnum return the enum type of this object
 func (chatMembersFilterMention *ChatMembersFilterMention) GetChatMembersFilterEnum() ChatMembersFilterEnum {
 	return ChatMembersFilterMentionType
@@ -3446,6 +5823,26 @@ func NewChatMembersFilterRestricted() *ChatMembersFilterRestricted {
 	}
 
 	return &chatMembersFilterRestrictedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatMembersFilterRestricted *ChatMembersFilterRestricted) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatMembersFilterRestricted.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatMembersFilterEnum return the enum type of this object
@@ -3473,6 +5870,26 @@ func NewChatMembersFilterBanned() *ChatMembersFilterBanned {
 	return &chatMembersFilterBannedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatMembersFilterBanned *ChatMembersFilterBanned) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatMembersFilterBanned.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetChatMembersFilterEnum return the enum type of this object
 func (chatMembersFilterBanned *ChatMembersFilterBanned) GetChatMembersFilterEnum() ChatMembersFilterEnum {
 	return ChatMembersFilterBannedType
@@ -3498,6 +5915,26 @@ func NewChatMembersFilterBots() *ChatMembersFilterBots {
 	return &chatMembersFilterBotsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatMembersFilterBots *ChatMembersFilterBots) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatMembersFilterBots.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetChatMembersFilterEnum return the enum type of this object
 func (chatMembersFilterBots *ChatMembersFilterBots) GetChatMembersFilterEnum() ChatMembersFilterEnum {
 	return ChatMembersFilterBotsType
@@ -3521,6 +5958,26 @@ func NewSupergroupMembersFilterRecent() *SupergroupMembersFilterRecent {
 	}
 
 	return &supergroupMembersFilterRecentTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (supergroupMembersFilterRecent *SupergroupMembersFilterRecent) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	supergroupMembersFilterRecent.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetSupergroupMembersFilterEnum return the enum type of this object
@@ -3551,6 +6008,28 @@ func NewSupergroupMembersFilterContacts(query string) *SupergroupMembersFilterCo
 	return &supergroupMembersFilterContactsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (supergroupMembersFilterContacts *SupergroupMembersFilterContacts) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Query string `json:"query"` // Query to search for
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	supergroupMembersFilterContacts.tdCommon = tempObj.tdCommon
+	supergroupMembersFilterContacts.Query = tempObj.Query
+
+	return nil
+}
+
 // GetSupergroupMembersFilterEnum return the enum type of this object
 func (supergroupMembersFilterContacts *SupergroupMembersFilterContacts) GetSupergroupMembersFilterEnum() SupergroupMembersFilterEnum {
 	return SupergroupMembersFilterContactsType
@@ -3574,6 +6053,26 @@ func NewSupergroupMembersFilterAdministrators() *SupergroupMembersFilterAdminist
 	}
 
 	return &supergroupMembersFilterAdministratorsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (supergroupMembersFilterAdministrators *SupergroupMembersFilterAdministrators) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	supergroupMembersFilterAdministrators.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetSupergroupMembersFilterEnum return the enum type of this object
@@ -3604,6 +6103,28 @@ func NewSupergroupMembersFilterSearch(query string) *SupergroupMembersFilterSear
 	return &supergroupMembersFilterSearchTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (supergroupMembersFilterSearch *SupergroupMembersFilterSearch) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Query string `json:"query"` // Query to search for
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	supergroupMembersFilterSearch.tdCommon = tempObj.tdCommon
+	supergroupMembersFilterSearch.Query = tempObj.Query
+
+	return nil
+}
+
 // GetSupergroupMembersFilterEnum return the enum type of this object
 func (supergroupMembersFilterSearch *SupergroupMembersFilterSearch) GetSupergroupMembersFilterEnum() SupergroupMembersFilterEnum {
 	return SupergroupMembersFilterSearchType
@@ -3632,6 +6153,28 @@ func NewSupergroupMembersFilterRestricted(query string) *SupergroupMembersFilter
 	return &supergroupMembersFilterRestrictedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (supergroupMembersFilterRestricted *SupergroupMembersFilterRestricted) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Query string `json:"query"` // Query to search for
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	supergroupMembersFilterRestricted.tdCommon = tempObj.tdCommon
+	supergroupMembersFilterRestricted.Query = tempObj.Query
+
+	return nil
+}
+
 // GetSupergroupMembersFilterEnum return the enum type of this object
 func (supergroupMembersFilterRestricted *SupergroupMembersFilterRestricted) GetSupergroupMembersFilterEnum() SupergroupMembersFilterEnum {
 	return SupergroupMembersFilterRestrictedType
@@ -3658,6 +6201,28 @@ func NewSupergroupMembersFilterBanned(query string) *SupergroupMembersFilterBann
 	}
 
 	return &supergroupMembersFilterBannedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (supergroupMembersFilterBanned *SupergroupMembersFilterBanned) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Query string `json:"query"` // Query to search for
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	supergroupMembersFilterBanned.tdCommon = tempObj.tdCommon
+	supergroupMembersFilterBanned.Query = tempObj.Query
+
+	return nil
 }
 
 // GetSupergroupMembersFilterEnum return the enum type of this object
@@ -3691,6 +6256,30 @@ func NewSupergroupMembersFilterMention(query string, messageThreadID int64) *Sup
 	return &supergroupMembersFilterMentionTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (supergroupMembersFilterMention *SupergroupMembersFilterMention) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Query           string `json:"query"`             // Query to search for
+		MessageThreadID int64  `json:"message_thread_id"` // If non-zero, the identifier of the current message thread
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	supergroupMembersFilterMention.tdCommon = tempObj.tdCommon
+	supergroupMembersFilterMention.Query = tempObj.Query
+	supergroupMembersFilterMention.MessageThreadID = tempObj.MessageThreadID
+
+	return nil
+}
+
 // GetSupergroupMembersFilterEnum return the enum type of this object
 func (supergroupMembersFilterMention *SupergroupMembersFilterMention) GetSupergroupMembersFilterEnum() SupergroupMembersFilterEnum {
 	return SupergroupMembersFilterMentionType
@@ -3714,6 +6303,26 @@ func NewSupergroupMembersFilterBots() *SupergroupMembersFilterBots {
 	}
 
 	return &supergroupMembersFilterBotsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (supergroupMembersFilterBots *SupergroupMembersFilterBots) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	supergroupMembersFilterBots.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetSupergroupMembersFilterEnum return the enum type of this object
@@ -3777,6 +6386,50 @@ func NewChatInviteLink(inviteLink string, name string, creatorUserID int64, date
 	return &chatInviteLinkTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatInviteLink *ChatInviteLink) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		InviteLink              string `json:"invite_link"`                // Chat invite link
+		Name                    string `json:"name"`                       // Name of the link
+		CreatorUserID           int64  `json:"creator_user_id"`            // User identifier of an administrator created the link
+		Date                    int32  `json:"date"`                       // Point in time (Unix timestamp) when the link was created
+		EditDate                int32  `json:"edit_date"`                  // Point in time (Unix timestamp) when the link was last edited; 0 if never or unknown
+		ExpirationDate          int32  `json:"expiration_date"`            // Point in time (Unix timestamp) when the link will expire; 0 if never
+		MemberLimit             int32  `json:"member_limit"`               // The maximum number of members, which can join the chat using the link simultaneously; 0 if not limited. Always 0 if the link requires approval
+		MemberCount             int32  `json:"member_count"`               // Number of chat members, which joined the chat using the link
+		PendingJoinRequestCount int32  `json:"pending_join_request_count"` // Number of pending join requests created using this link
+		CreatesJoinRequest      bool   `json:"creates_join_request"`       // True, if the link only creates join request. If true, total number of joining members will be unlimited
+		IsPrimary               bool   `json:"is_primary"`                 // True, if the link is primary. Primary invite link can't have name, expiration date, or usage limit. There is exactly one primary invite link for each administrator with can_invite_users right at a given time
+		IsRevoked               bool   `json:"is_revoked"`                 // True, if the link was revoked
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatInviteLink.tdCommon = tempObj.tdCommon
+	chatInviteLink.InviteLink = tempObj.InviteLink
+	chatInviteLink.Name = tempObj.Name
+	chatInviteLink.CreatorUserID = tempObj.CreatorUserID
+	chatInviteLink.Date = tempObj.Date
+	chatInviteLink.EditDate = tempObj.EditDate
+	chatInviteLink.ExpirationDate = tempObj.ExpirationDate
+	chatInviteLink.MemberLimit = tempObj.MemberLimit
+	chatInviteLink.MemberCount = tempObj.MemberCount
+	chatInviteLink.PendingJoinRequestCount = tempObj.PendingJoinRequestCount
+	chatInviteLink.CreatesJoinRequest = tempObj.CreatesJoinRequest
+	chatInviteLink.IsPrimary = tempObj.IsPrimary
+	chatInviteLink.IsRevoked = tempObj.IsRevoked
+
+	return nil
+}
+
 // ChatInviteLinks Contains a list of chat invite links
 type ChatInviteLinks struct {
 	tdCommon
@@ -3801,6 +6454,30 @@ func NewChatInviteLinks(totalCount int32, inviteLinks []ChatInviteLink) *ChatInv
 	}
 
 	return &chatInviteLinksTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatInviteLinks *ChatInviteLinks) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount  int32            `json:"total_count"`  // Approximate total count of chat invite links found
+		InviteLinks []ChatInviteLink `json:"invite_links"` // List of invite links
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatInviteLinks.tdCommon = tempObj.tdCommon
+	chatInviteLinks.TotalCount = tempObj.TotalCount
+	chatInviteLinks.InviteLinks = tempObj.InviteLinks
+
+	return nil
 }
 
 // ChatInviteLinkCount Describes a chat administrator with a number of active and revoked chat invite links
@@ -3832,6 +6509,32 @@ func NewChatInviteLinkCount(userID int64, inviteLinkCount int32, revokedInviteLi
 	return &chatInviteLinkCountTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatInviteLinkCount *ChatInviteLinkCount) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserID                 int64 `json:"user_id"`                   // Administrator's user identifier
+		InviteLinkCount        int32 `json:"invite_link_count"`         // Number of active invite links
+		RevokedInviteLinkCount int32 `json:"revoked_invite_link_count"` // Number of revoked invite links
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatInviteLinkCount.tdCommon = tempObj.tdCommon
+	chatInviteLinkCount.UserID = tempObj.UserID
+	chatInviteLinkCount.InviteLinkCount = tempObj.InviteLinkCount
+	chatInviteLinkCount.RevokedInviteLinkCount = tempObj.RevokedInviteLinkCount
+
+	return nil
+}
+
 // ChatInviteLinkCounts Contains a list of chat invite link counts
 type ChatInviteLinkCounts struct {
 	tdCommon
@@ -3853,6 +6556,28 @@ func NewChatInviteLinkCounts(inviteLinkCounts []ChatInviteLinkCount) *ChatInvite
 	}
 
 	return &chatInviteLinkCountsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatInviteLinkCounts *ChatInviteLinkCounts) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		InviteLinkCounts []ChatInviteLinkCount `json:"invite_link_counts"` // List of invite link counts
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatInviteLinkCounts.tdCommon = tempObj.tdCommon
+	chatInviteLinkCounts.InviteLinkCounts = tempObj.InviteLinkCounts
+
+	return nil
 }
 
 // ChatInviteLinkMember Describes a chat member joined a chat via an invite link
@@ -3884,6 +6609,32 @@ func NewChatInviteLinkMember(userID int64, joinedChatDate int32, approverUserID 
 	return &chatInviteLinkMemberTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatInviteLinkMember *ChatInviteLinkMember) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserID         int64 `json:"user_id"`          // User identifier
+		JoinedChatDate int32 `json:"joined_chat_date"` // Point in time (Unix timestamp) when the user joined the chat
+		ApproverUserID int64 `json:"approver_user_id"` // User identifier of the chat administrator, approved user join request
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatInviteLinkMember.tdCommon = tempObj.tdCommon
+	chatInviteLinkMember.UserID = tempObj.UserID
+	chatInviteLinkMember.JoinedChatDate = tempObj.JoinedChatDate
+	chatInviteLinkMember.ApproverUserID = tempObj.ApproverUserID
+
+	return nil
+}
+
 // ChatInviteLinkMembers Contains a list of chat members joined a chat via an invite link
 type ChatInviteLinkMembers struct {
 	tdCommon
@@ -3908,6 +6659,30 @@ func NewChatInviteLinkMembers(totalCount int32, members []ChatInviteLinkMember) 
 	}
 
 	return &chatInviteLinkMembersTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatInviteLinkMembers *ChatInviteLinkMembers) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount int32                  `json:"total_count"` // Approximate total count of chat members found
+		Members    []ChatInviteLinkMember `json:"members"`     // List of chat members, joined a chat via an invite link
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatInviteLinkMembers.tdCommon = tempObj.tdCommon
+	chatInviteLinkMembers.TotalCount = tempObj.TotalCount
+	chatInviteLinkMembers.Members = tempObj.Members
+
+	return nil
 }
 
 // ChatInviteLinkInfo Contains information about a chat invite link
@@ -4030,6 +6805,32 @@ func NewChatJoinRequest(userID int64, date int32, bio string) *ChatJoinRequest {
 	return &chatJoinRequestTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatJoinRequest *ChatJoinRequest) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserID int64  `json:"user_id"` // User identifier
+		Date   int32  `json:"date"`    // Point in time (Unix timestamp) when the user sent the join request
+		Bio    string `json:"bio"`     // A short bio of the user
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatJoinRequest.tdCommon = tempObj.tdCommon
+	chatJoinRequest.UserID = tempObj.UserID
+	chatJoinRequest.Date = tempObj.Date
+	chatJoinRequest.Bio = tempObj.Bio
+
+	return nil
+}
+
 // ChatJoinRequests Contains a list of requests to join a chat
 type ChatJoinRequests struct {
 	tdCommon
@@ -4056,6 +6857,30 @@ func NewChatJoinRequests(totalCount int32, requests []ChatJoinRequest) *ChatJoin
 	return &chatJoinRequestsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatJoinRequests *ChatJoinRequests) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount int32             `json:"total_count"` // Approximate total count of requests found
+		Requests   []ChatJoinRequest `json:"requests"`    // List of the requests
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatJoinRequests.tdCommon = tempObj.tdCommon
+	chatJoinRequests.TotalCount = tempObj.TotalCount
+	chatJoinRequests.Requests = tempObj.Requests
+
+	return nil
+}
+
 // ChatJoinRequestsInfo Contains information about pending join requests for a chat
 type ChatJoinRequestsInfo struct {
 	tdCommon
@@ -4080,6 +6905,30 @@ func NewChatJoinRequestsInfo(totalCount int32, userIDs []int64) *ChatJoinRequest
 	}
 
 	return &chatJoinRequestsInfoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatJoinRequestsInfo *ChatJoinRequestsInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount int32   `json:"total_count"` // Total number of pending join requests
+		UserIDs    []int64 `json:"user_ids"`    // Identifiers of at most 3 users sent the newest pending join requests
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatJoinRequestsInfo.tdCommon = tempObj.tdCommon
+	chatJoinRequestsInfo.TotalCount = tempObj.TotalCount
+	chatJoinRequestsInfo.UserIDs = tempObj.UserIDs
+
+	return nil
 }
 
 // BasicGroup Represents a basic group of 0-200 users (must be upgraded to a supergroup to accommodate more than 200 users)
@@ -4184,6 +7033,38 @@ func NewBasicGroupFullInfo(photo *ChatPhoto, description string, creatorUserID i
 	}
 
 	return &basicGroupFullInfoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (basicGroupFullInfo *BasicGroupFullInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Photo         *ChatPhoto      `json:"photo"`           // Chat photo; may be null
+		Description   string          `json:"description"`     // Group description. Updated only after the basic group is opened
+		CreatorUserID int64           `json:"creator_user_id"` // User identifier of the creator of the group; 0 if unknown
+		Members       []ChatMember    `json:"members"`         // Group members
+		InviteLink    *ChatInviteLink `json:"invite_link"`     // Primary invite link for this group; may be null. For chat administrators with can_invite_users right only. Updated only after the basic group is opened
+		BotCommands   []BotCommands   `json:"bot_commands"`    // List of commands of bots in the group
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	basicGroupFullInfo.tdCommon = tempObj.tdCommon
+	basicGroupFullInfo.Photo = tempObj.Photo
+	basicGroupFullInfo.Description = tempObj.Description
+	basicGroupFullInfo.CreatorUserID = tempObj.CreatorUserID
+	basicGroupFullInfo.Members = tempObj.Members
+	basicGroupFullInfo.InviteLink = tempObj.InviteLink
+	basicGroupFullInfo.BotCommands = tempObj.BotCommands
+
+	return nil
 }
 
 // Supergroup Represents a supergroup or channel with zero or more members (subscribers in the case of channels). From the point of view of the system, a channel is a special kind of a supergroup: only administrators can post and see the list of members, and posts from all administrators use the name and photo of the channel instead of individual names and profile photos. Unlike supergroups, channels can have an unlimited number of subscribers
@@ -4385,6 +7266,68 @@ func NewSupergroupFullInfo(photo *ChatPhoto, description string, memberCount int
 	return &supergroupFullInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (supergroupFullInfo *SupergroupFullInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Photo                    *ChatPhoto      `json:"photo"`                        // Chat photo; may be null
+		Description              string          `json:"description"`                  // Supergroup or channel description
+		MemberCount              int32           `json:"member_count"`                 // Number of members in the supergroup or channel; 0 if unknown
+		AdministratorCount       int32           `json:"administrator_count"`          // Number of privileged users in the supergroup or channel; 0 if unknown
+		RestrictedCount          int32           `json:"restricted_count"`             // Number of restricted users in the supergroup; 0 if unknown
+		BannedCount              int32           `json:"banned_count"`                 // Number of users banned from chat; 0 if unknown
+		LinkedChatID             int64           `json:"linked_chat_id"`               // Chat identifier of a discussion group for the channel, or a channel, for which the supergroup is the designated discussion group; 0 if none or unknown
+		SlowModeDelay            int32           `json:"slow_mode_delay"`              // Delay between consecutive sent messages for non-administrator supergroup members, in seconds
+		SlowModeDelayExpiresIn   float64         `json:"slow_mode_delay_expires_in"`   // Time left before next message can be sent in the supergroup, in seconds. An updateSupergroupFullInfo update is not triggered when value of this field changes, but both new and old values are non-zero
+		CanGetMembers            bool            `json:"can_get_members"`              // True, if members of the chat can be retrieved
+		CanSetUsername           bool            `json:"can_set_username"`             // True, if the chat username can be changed
+		CanSetStickerSet         bool            `json:"can_set_sticker_set"`          // True, if the supergroup sticker set can be changed
+		CanSetLocation           bool            `json:"can_set_location"`             // True, if the supergroup location can be changed
+		CanGetStatistics         bool            `json:"can_get_statistics"`           // True, if the supergroup or channel statistics are available
+		IsAllHistoryAvailable    bool            `json:"is_all_history_available"`     // True, if new chat members will have access to old messages. In public or discussion groups and both public and private channels, old messages are always available, so this option affects only private supergroups without a linked chat. The value of this field is only available for chat administrators
+		StickerSetID             JSONInt64       `json:"sticker_set_id"`               // Identifier of the supergroup sticker set; 0 if none
+		Location                 *ChatLocation   `json:"location"`                     // Location to which the supergroup is connected; may be null
+		InviteLink               *ChatInviteLink `json:"invite_link"`                  // Primary invite link for this chat; may be null. For chat administrators with can_invite_users right only
+		BotCommands              []BotCommands   `json:"bot_commands"`                 // List of commands of bots in the group
+		UpgradedFromBasicGroupID int64           `json:"upgraded_from_basic_group_id"` // Identifier of the basic group from which supergroup was upgraded; 0 if none
+		UpgradedFromMaxMessageID int64           `json:"upgraded_from_max_message_id"` // Identifier of the last message in the basic group from which supergroup was upgraded; 0 if none
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	supergroupFullInfo.tdCommon = tempObj.tdCommon
+	supergroupFullInfo.Photo = tempObj.Photo
+	supergroupFullInfo.Description = tempObj.Description
+	supergroupFullInfo.MemberCount = tempObj.MemberCount
+	supergroupFullInfo.AdministratorCount = tempObj.AdministratorCount
+	supergroupFullInfo.RestrictedCount = tempObj.RestrictedCount
+	supergroupFullInfo.BannedCount = tempObj.BannedCount
+	supergroupFullInfo.LinkedChatID = tempObj.LinkedChatID
+	supergroupFullInfo.SlowModeDelay = tempObj.SlowModeDelay
+	supergroupFullInfo.SlowModeDelayExpiresIn = tempObj.SlowModeDelayExpiresIn
+	supergroupFullInfo.CanGetMembers = tempObj.CanGetMembers
+	supergroupFullInfo.CanSetUsername = tempObj.CanSetUsername
+	supergroupFullInfo.CanSetStickerSet = tempObj.CanSetStickerSet
+	supergroupFullInfo.CanSetLocation = tempObj.CanSetLocation
+	supergroupFullInfo.CanGetStatistics = tempObj.CanGetStatistics
+	supergroupFullInfo.IsAllHistoryAvailable = tempObj.IsAllHistoryAvailable
+	supergroupFullInfo.StickerSetID = tempObj.StickerSetID
+	supergroupFullInfo.Location = tempObj.Location
+	supergroupFullInfo.InviteLink = tempObj.InviteLink
+	supergroupFullInfo.BotCommands = tempObj.BotCommands
+	supergroupFullInfo.UpgradedFromBasicGroupID = tempObj.UpgradedFromBasicGroupID
+	supergroupFullInfo.UpgradedFromMaxMessageID = tempObj.UpgradedFromMaxMessageID
+
+	return nil
+}
+
 // SecretChatStatePending The secret chat is not yet created; waiting for the other user to get online
 type SecretChatStatePending struct {
 	tdCommon
@@ -4403,6 +7346,26 @@ func NewSecretChatStatePending() *SecretChatStatePending {
 	}
 
 	return &secretChatStatePendingTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (secretChatStatePending *SecretChatStatePending) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	secretChatStatePending.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetSecretChatStateEnum return the enum type of this object
@@ -4430,6 +7393,26 @@ func NewSecretChatStateReady() *SecretChatStateReady {
 	return &secretChatStateReadyTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (secretChatStateReady *SecretChatStateReady) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	secretChatStateReady.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetSecretChatStateEnum return the enum type of this object
 func (secretChatStateReady *SecretChatStateReady) GetSecretChatStateEnum() SecretChatStateEnum {
 	return SecretChatStateReadyType
@@ -4453,6 +7436,26 @@ func NewSecretChatStateClosed() *SecretChatStateClosed {
 	}
 
 	return &secretChatStateClosedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (secretChatStateClosed *SecretChatStateClosed) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	secretChatStateClosed.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetSecretChatStateEnum return the enum type of this object
@@ -4554,6 +7557,28 @@ func NewMessageSenderUser(userID int64) *MessageSenderUser {
 	return &messageSenderUserTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageSenderUser *MessageSenderUser) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserID int64 `json:"user_id"` // Identifier of the user that sent the message
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageSenderUser.tdCommon = tempObj.tdCommon
+	messageSenderUser.UserID = tempObj.UserID
+
+	return nil
+}
+
 // GetMessageSenderEnum return the enum type of this object
 func (messageSenderUser *MessageSenderUser) GetMessageSenderEnum() MessageSenderEnum {
 	return MessageSenderUserType
@@ -4580,6 +7605,28 @@ func NewMessageSenderChat(chatID int64) *MessageSenderChat {
 	}
 
 	return &messageSenderChatTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageSenderChat *MessageSenderChat) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID int64 `json:"chat_id"` // Identifier of the chat that sent the message
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageSenderChat.tdCommon = tempObj.tdCommon
+	messageSenderChat.ChatID = tempObj.ChatID
+
+	return nil
 }
 
 // GetMessageSenderEnum return the enum type of this object
@@ -4613,6 +7660,32 @@ func NewMessageSenders(totalCount int32, senders []MessageSender) *MessageSender
 	return &messageSendersTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageSenders *MessageSenders) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount int32 `json:"total_count"` // Approximate total count of messages senders found
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageSenders.tdCommon = tempObj.tdCommon
+	messageSenders.TotalCount = tempObj.TotalCount
+
+	fieldSenders, _ := unmarshalMessageSenderSlice(objMap["senders"])
+	messageSenders.Senders = fieldSenders
+
+	return nil
+}
+
 // MessageForwardOriginUser The message was originally sent by a known user
 type MessageForwardOriginUser struct {
 	tdCommon
@@ -4634,6 +7707,28 @@ func NewMessageForwardOriginUser(senderUserID int64) *MessageForwardOriginUser {
 	}
 
 	return &messageForwardOriginUserTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageForwardOriginUser *MessageForwardOriginUser) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SenderUserID int64 `json:"sender_user_id"` // Identifier of the user that originally sent the message
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageForwardOriginUser.tdCommon = tempObj.tdCommon
+	messageForwardOriginUser.SenderUserID = tempObj.SenderUserID
+
+	return nil
 }
 
 // GetMessageForwardOriginEnum return the enum type of this object
@@ -4667,6 +7762,30 @@ func NewMessageForwardOriginChat(senderChatID int64, authorSignature string) *Me
 	return &messageForwardOriginChatTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageForwardOriginChat *MessageForwardOriginChat) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SenderChatID    int64  `json:"sender_chat_id"`   // Identifier of the chat that originally sent the message
+		AuthorSignature string `json:"author_signature"` // For messages originally sent by an anonymous chat administrator, original message author signature
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageForwardOriginChat.tdCommon = tempObj.tdCommon
+	messageForwardOriginChat.SenderChatID = tempObj.SenderChatID
+	messageForwardOriginChat.AuthorSignature = tempObj.AuthorSignature
+
+	return nil
+}
+
 // GetMessageForwardOriginEnum return the enum type of this object
 func (messageForwardOriginChat *MessageForwardOriginChat) GetMessageForwardOriginEnum() MessageForwardOriginEnum {
 	return MessageForwardOriginChatType
@@ -4693,6 +7812,28 @@ func NewMessageForwardOriginHiddenUser(senderName string) *MessageForwardOriginH
 	}
 
 	return &messageForwardOriginHiddenUserTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageForwardOriginHiddenUser *MessageForwardOriginHiddenUser) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SenderName string `json:"sender_name"` // Name of the sender
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageForwardOriginHiddenUser.tdCommon = tempObj.tdCommon
+	messageForwardOriginHiddenUser.SenderName = tempObj.SenderName
+
+	return nil
 }
 
 // GetMessageForwardOriginEnum return the enum type of this object
@@ -4729,6 +7870,32 @@ func NewMessageForwardOriginChannel(chatID int64, messageID int64, authorSignatu
 	return &messageForwardOriginChannelTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageForwardOriginChannel *MessageForwardOriginChannel) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID          int64  `json:"chat_id"`          // Identifier of the chat from which the message was originally forwarded
+		MessageID       int64  `json:"message_id"`       // Message identifier of the original message
+		AuthorSignature string `json:"author_signature"` // Original post author signature
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageForwardOriginChannel.tdCommon = tempObj.tdCommon
+	messageForwardOriginChannel.ChatID = tempObj.ChatID
+	messageForwardOriginChannel.MessageID = tempObj.MessageID
+	messageForwardOriginChannel.AuthorSignature = tempObj.AuthorSignature
+
+	return nil
+}
+
 // GetMessageForwardOriginEnum return the enum type of this object
 func (messageForwardOriginChannel *MessageForwardOriginChannel) GetMessageForwardOriginEnum() MessageForwardOriginEnum {
 	return MessageForwardOriginChannelType
@@ -4755,6 +7922,28 @@ func NewMessageForwardOriginMessageImport(senderName string) *MessageForwardOrig
 	}
 
 	return &messageForwardOriginMessageImportTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageForwardOriginMessageImport *MessageForwardOriginMessageImport) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SenderName string `json:"sender_name"` // Name of the sender
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageForwardOriginMessageImport.tdCommon = tempObj.tdCommon
+	messageForwardOriginMessageImport.SenderName = tempObj.SenderName
+
+	return nil
 }
 
 // GetMessageForwardOriginEnum return the enum type of this object
@@ -4863,6 +8052,37 @@ func NewMessageReplyInfo(replyCount int32, recentReplierIDs []MessageSender, las
 	return &messageReplyInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageReplyInfo *MessageReplyInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ReplyCount              int32 `json:"reply_count"`                 // Number of times the message was directly or indirectly replied
+		LastReadInboxMessageID  int64 `json:"last_read_inbox_message_id"`  // Identifier of the last read incoming reply to the message
+		LastReadOutboxMessageID int64 `json:"last_read_outbox_message_id"` // Identifier of the last read outgoing reply to the message
+		LastMessageID           int64 `json:"last_message_id"`             // Identifier of the last reply to the message
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageReplyInfo.tdCommon = tempObj.tdCommon
+	messageReplyInfo.ReplyCount = tempObj.ReplyCount
+	messageReplyInfo.LastReadInboxMessageID = tempObj.LastReadInboxMessageID
+	messageReplyInfo.LastReadOutboxMessageID = tempObj.LastReadOutboxMessageID
+	messageReplyInfo.LastMessageID = tempObj.LastMessageID
+
+	fieldRecentReplierIDs, _ := unmarshalMessageSenderSlice(objMap["recent_replier_ids"])
+	messageReplyInfo.RecentReplierIDs = fieldRecentReplierIDs
+
+	return nil
+}
+
 // MessageInteractionInfo Contains information about interactions with a message
 type MessageInteractionInfo struct {
 	tdCommon
@@ -4892,6 +8112,41 @@ func NewMessageInteractionInfo(viewCount int32, forwardCount int32, replyInfo *M
 	return &messageInteractionInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageInteractionInfo *MessageInteractionInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ViewCount    int32 `json:"view_count"`    // Number of times the message was viewed
+		ForwardCount int32 `json:"forward_count"` // Number of times the message was forwarded
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageInteractionInfo.tdCommon = tempObj.tdCommon
+	messageInteractionInfo.ViewCount = tempObj.ViewCount
+	messageInteractionInfo.ForwardCount = tempObj.ForwardCount
+
+	var replyInfo MessageReplyInfo
+	if objMap["reply_info"] != nil {
+		err = replyInfo.UnmarshalJSON(*objMap["reply_info"])
+		if err != nil {
+			return err
+		}
+	}
+
+	messageInteractionInfo.ReplyInfo = &replyInfo
+
+	return nil
+}
+
 // MessageSendingStatePending The message is being sent now, but has not yet been delivered to the server
 type MessageSendingStatePending struct {
 	tdCommon
@@ -4910,6 +8165,26 @@ func NewMessageSendingStatePending() *MessageSendingStatePending {
 	}
 
 	return &messageSendingStatePendingTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageSendingStatePending *MessageSendingStatePending) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageSendingStatePending.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetMessageSendingStateEnum return the enum type of this object
@@ -4952,6 +8227,36 @@ func NewMessageSendingStateFailed(errorCode int32, errorMessage string, canRetry
 	return &messageSendingStateFailedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageSendingStateFailed *MessageSendingStateFailed) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ErrorCode         int32   `json:"error_code"`          // An error code; 0 if unknown
+		ErrorMessage      string  `json:"error_message"`       // Error message
+		CanRetry          bool    `json:"can_retry"`           // True, if the message can be re-sent
+		NeedAnotherSender bool    `json:"need_another_sender"` // True, if the message can be re-sent only on behalf of a different sender
+		RetryAfter        float64 `json:"retry_after"`         // Time left before the message can be re-sent, in seconds. No update is sent when this field changes
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageSendingStateFailed.tdCommon = tempObj.tdCommon
+	messageSendingStateFailed.ErrorCode = tempObj.ErrorCode
+	messageSendingStateFailed.ErrorMessage = tempObj.ErrorMessage
+	messageSendingStateFailed.CanRetry = tempObj.CanRetry
+	messageSendingStateFailed.NeedAnotherSender = tempObj.NeedAnotherSender
+	messageSendingStateFailed.RetryAfter = tempObj.RetryAfter
+
+	return nil
+}
+
 // GetMessageSendingStateEnum return the enum type of this object
 func (messageSendingStateFailed *MessageSendingStateFailed) GetMessageSendingStateEnum() MessageSendingStateEnum {
 	return MessageSendingStateFailedType
@@ -4963,8 +8268,8 @@ type Message struct {
 	ID                        int64                   `json:"id"`                            // Message identifier; unique for the chat to which the message belongs
 	SenderID                  MessageSender           `json:"sender_id"`                     // Identifier of the sender of the message
 	ChatID                    int64                   `json:"chat_id"`                       // Chat identifier
-	SendingState              MessageSendingState     `json:"sending_state"`                 // The sending state of the message; may be null
-	SchedulingState           MessageSchedulingState  `json:"scheduling_state"`              // The scheduling state of the message; may be null
+	SendingState              *MessageSendingState    `json:"sending_state"`                 // The sending state of the message; may be null
+	SchedulingState           *MessageSchedulingState `json:"scheduling_state"`              // The scheduling state of the message; may be null
 	IsOutgoing                bool                    `json:"is_outgoing"`                   // True, if the message is outgoing
 	IsPinned                  bool                    `json:"is_pinned"`                     // True, if the message is pinned
 	CanBeEdited               bool                    `json:"can_be_edited"`                 // True, if the message can be edited. For live location and poll messages this fields shows whether editMessageLiveLocation or stopPoll can be used with this message by the application
@@ -4993,7 +8298,7 @@ type Message struct {
 	MediaAlbumID              JSONInt64               `json:"media_album_id"`                // Unique identifier of an album this message belongs to. Only audios, documents, photos and videos can be grouped together in albums
 	RestrictionReason         string                  `json:"restriction_reason"`            // If non-empty, contains a human-readable description of the reason why access to this message must be restricted
 	Content                   MessageContent          `json:"content"`                       // Content of the message
-	ReplyMarkup               ReplyMarkup             `json:"reply_markup"`                  // Reply markup for the message; may be null
+	ReplyMarkup               *ReplyMarkup            `json:"reply_markup"`                  // Reply markup for the message; may be null
 }
 
 // MessageType return the string telegram-type of Message
@@ -5037,7 +8342,7 @@ func (message *Message) MessageType() string {
 // @param restrictionReason If non-empty, contains a human-readable description of the reason why access to this message must be restricted
 // @param content Content of the message
 // @param replyMarkup Reply markup for the message; may be null
-func NewMessage(iD int64, senderID MessageSender, chatID int64, sendingState MessageSendingState, schedulingState MessageSchedulingState, isOutgoing bool, isPinned bool, canBeEdited bool, canBeForwarded bool, canBeSaved bool, canBeDeletedOnlyForSelf bool, canBeDeletedForAllUsers bool, canGetStatistics bool, canGetMessageThread bool, canGetViewers bool, canGetMediaTimestampLinks bool, hasTimestampedMedia bool, isChannelPost bool, containsUnreadMention bool, date int32, editDate int32, forwardInfo *MessageForwardInfo, interactionInfo *MessageInteractionInfo, replyInChatID int64, replyToMessageID int64, messageThreadID int64, tTL int32, tTLExpiresIn float64, viaBotUserID int64, authorSignature string, mediaAlbumID JSONInt64, restrictionReason string, content MessageContent, replyMarkup ReplyMarkup) *Message {
+func NewMessage(iD int64, senderID MessageSender, chatID int64, sendingState *MessageSendingState, schedulingState *MessageSchedulingState, isOutgoing bool, isPinned bool, canBeEdited bool, canBeForwarded bool, canBeSaved bool, canBeDeletedOnlyForSelf bool, canBeDeletedForAllUsers bool, canGetStatistics bool, canGetMessageThread bool, canGetViewers bool, canGetMediaTimestampLinks bool, hasTimestampedMedia bool, isChannelPost bool, containsUnreadMention bool, date int32, editDate int32, forwardInfo *MessageForwardInfo, interactionInfo *MessageInteractionInfo, replyInChatID int64, replyToMessageID int64, messageThreadID int64, tTL int32, tTLExpiresIn float64, viaBotUserID int64, authorSignature string, mediaAlbumID JSONInt64, restrictionReason string, content MessageContent, replyMarkup *ReplyMarkup) *Message {
 	messageTemp := Message{
 		tdCommon:                  tdCommon{Type: "message"},
 		ID:                        iD,
@@ -5106,7 +8411,6 @@ func (message *Message) UnmarshalJSON(b []byte) error {
 		ContainsUnreadMention     bool                    `json:"contains_unread_mention"`       // True, if the message contains an unread mention for the current user
 		Date                      int32                   `json:"date"`                          // Point in time (Unix timestamp) when the message was sent
 		EditDate                  int32                   `json:"edit_date"`                     // Point in time (Unix timestamp) when the message was last edited
-		ForwardInfo               *MessageForwardInfo     `json:"forward_info"`                  // Information about the initial message sender; may be null
 		InteractionInfo           *MessageInteractionInfo `json:"interaction_info"`              // Information about interactions with the message; may be null
 		ReplyInChatID             int64                   `json:"reply_in_chat_id"`              // If non-zero, the identifier of the chat to which the replied message belongs; Currently, only messages in the Replies chat can have different reply_in_chat_id and chat_id
 		ReplyToMessageID          int64                   `json:"reply_to_message_id"`           // If non-zero, the identifier of the message this message is replying to; can be the identifier of a deleted message
@@ -5143,7 +8447,6 @@ func (message *Message) UnmarshalJSON(b []byte) error {
 	message.ContainsUnreadMention = tempObj.ContainsUnreadMention
 	message.Date = tempObj.Date
 	message.EditDate = tempObj.EditDate
-	message.ForwardInfo = tempObj.ForwardInfo
 	message.InteractionInfo = tempObj.InteractionInfo
 	message.ReplyInChatID = tempObj.ReplyInChatID
 	message.ReplyToMessageID = tempObj.ReplyToMessageID
@@ -5159,16 +8462,26 @@ func (message *Message) UnmarshalJSON(b []byte) error {
 	message.SenderID = fieldSenderID
 
 	fieldSendingState, _ := unmarshalMessageSendingState(objMap["sending_state"])
-	message.SendingState = fieldSendingState
+	message.SendingState = &fieldSendingState
 
 	fieldSchedulingState, _ := unmarshalMessageSchedulingState(objMap["scheduling_state"])
-	message.SchedulingState = fieldSchedulingState
+	message.SchedulingState = &fieldSchedulingState
 
 	fieldContent, _ := unmarshalMessageContent(objMap["content"])
 	message.Content = fieldContent
 
 	fieldReplyMarkup, _ := unmarshalReplyMarkup(objMap["reply_markup"])
-	message.ReplyMarkup = fieldReplyMarkup
+	message.ReplyMarkup = &fieldReplyMarkup
+
+	var forwardInfo MessageForwardInfo
+	if objMap["forward_info"] != nil {
+		err = forwardInfo.UnmarshalJSON(*objMap["forward_info"])
+		if err != nil {
+			return err
+		}
+	}
+
+	message.ForwardInfo = &forwardInfo
 
 	return nil
 }
@@ -5197,6 +8510,30 @@ func NewMessages(totalCount int32, messages []Message) *Messages {
 	}
 
 	return &messagesTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messages *Messages) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount int32     `json:"total_count"` // Approximate total count of messages found
+		Messages   []Message `json:"messages"`    // List of messages; messages may be null
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messages.tdCommon = tempObj.tdCommon
+	messages.TotalCount = tempObj.TotalCount
+	messages.Messages = tempObj.Messages
+
+	return nil
 }
 
 // FoundMessages Contains a list of messages found by a search
@@ -5228,6 +8565,32 @@ func NewFoundMessages(totalCount int32, messages []Message, nextOffset string) *
 	return &foundMessagesTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (foundMessages *FoundMessages) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount int32     `json:"total_count"` // Approximate total count of messages found; -1 if unknown
+		Messages   []Message `json:"messages"`    // List of messages
+		NextOffset string    `json:"next_offset"` // The offset for the next request. If empty, there are no more results
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	foundMessages.tdCommon = tempObj.tdCommon
+	foundMessages.TotalCount = tempObj.TotalCount
+	foundMessages.Messages = tempObj.Messages
+	foundMessages.NextOffset = tempObj.NextOffset
+
+	return nil
+}
+
 // MessagePosition Contains information about a message in a specific position
 type MessagePosition struct {
 	tdCommon
@@ -5257,6 +8620,32 @@ func NewMessagePosition(position int32, messageID int64, date int32) *MessagePos
 	return &messagePositionTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messagePosition *MessagePosition) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Position  int32 `json:"position"`   // 0-based message position in the full list of suitable messages
+		MessageID int64 `json:"message_id"` // Message identifier
+		Date      int32 `json:"date"`       // Point in time (Unix timestamp) when the message was sent
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messagePosition.tdCommon = tempObj.tdCommon
+	messagePosition.Position = tempObj.Position
+	messagePosition.MessageID = tempObj.MessageID
+	messagePosition.Date = tempObj.Date
+
+	return nil
+}
+
 // MessagePositions Contains a list of message positions
 type MessagePositions struct {
 	tdCommon
@@ -5281,6 +8670,30 @@ func NewMessagePositions(totalCount int32, positions []MessagePosition) *Message
 	}
 
 	return &messagePositionsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messagePositions *MessagePositions) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount int32             `json:"total_count"` // Total count of messages found
+		Positions  []MessagePosition `json:"positions"`   // List of message positions
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messagePositions.tdCommon = tempObj.tdCommon
+	messagePositions.TotalCount = tempObj.TotalCount
+	messagePositions.Positions = tempObj.Positions
+
+	return nil
 }
 
 // MessageCalendarDay Contains information about found messages sent on a specific day
@@ -5309,6 +8722,39 @@ func NewMessageCalendarDay(totalCount int32, message *Message) *MessageCalendarD
 	return &messageCalendarDayTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageCalendarDay *MessageCalendarDay) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount int32 `json:"total_count"` // Total number of found messages sent on the day
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageCalendarDay.tdCommon = tempObj.tdCommon
+	messageCalendarDay.TotalCount = tempObj.TotalCount
+
+	var message Message
+	if objMap["message"] != nil {
+		err = message.UnmarshalJSON(*objMap["message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	messageCalendarDay.Message = &message
+
+	return nil
+}
+
 // MessageCalendar Contains information about found messages, split by days according to the option "utc_time_offset"
 type MessageCalendar struct {
 	tdCommon
@@ -5335,13 +8781,37 @@ func NewMessageCalendar(totalCount int32, days []MessageCalendarDay) *MessageCal
 	return &messageCalendarTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageCalendar *MessageCalendar) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount int32                `json:"total_count"` // Total number of found messages
+		Days       []MessageCalendarDay `json:"days"`        // Information about messages sent
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageCalendar.tdCommon = tempObj.tdCommon
+	messageCalendar.TotalCount = tempObj.TotalCount
+	messageCalendar.Days = tempObj.Days
+
+	return nil
+}
+
 // SponsoredMessage Describes a sponsored message
 type SponsoredMessage struct {
 	tdCommon
-	MessageID     int64            `json:"message_id"`      // Message identifier; unique for the chat to which the sponsored message belongs among both ordinary and sponsored messages
-	SponsorChatID int64            `json:"sponsor_chat_id"` // Chat identifier
-	Link          InternalLinkType `json:"link"`            // An internal link to be opened when the sponsored message is clicked; may be null. If null, the sponsor chat needs to be opened instead
-	Content       MessageContent   `json:"content"`         // Content of the message. Currently, can be only of the type messageText
+	MessageID     int64             `json:"message_id"`      // Message identifier; unique for the chat to which the sponsored message belongs among both ordinary and sponsored messages
+	SponsorChatID int64             `json:"sponsor_chat_id"` // Chat identifier
+	Link          *InternalLinkType `json:"link"`            // An internal link to be opened when the sponsored message is clicked; may be null. If null, the sponsor chat needs to be opened instead
+	Content       MessageContent    `json:"content"`         // Content of the message. Currently, can be only of the type messageText
 }
 
 // MessageType return the string telegram-type of SponsoredMessage
@@ -5355,7 +8825,7 @@ func (sponsoredMessage *SponsoredMessage) MessageType() string {
 // @param sponsorChatID Chat identifier
 // @param link An internal link to be opened when the sponsored message is clicked; may be null. If null, the sponsor chat needs to be opened instead
 // @param content Content of the message. Currently, can be only of the type messageText
-func NewSponsoredMessage(messageID int64, sponsorChatID int64, link InternalLinkType, content MessageContent) *SponsoredMessage {
+func NewSponsoredMessage(messageID int64, sponsorChatID int64, link *InternalLinkType, content MessageContent) *SponsoredMessage {
 	sponsoredMessageTemp := SponsoredMessage{
 		tdCommon:      tdCommon{Type: "sponsoredMessage"},
 		MessageID:     messageID,
@@ -5390,7 +8860,7 @@ func (sponsoredMessage *SponsoredMessage) UnmarshalJSON(b []byte) error {
 	sponsoredMessage.SponsorChatID = tempObj.SponsorChatID
 
 	fieldLink, _ := unmarshalInternalLinkType(objMap["link"])
-	sponsoredMessage.Link = fieldLink
+	sponsoredMessage.Link = &fieldLink
 
 	fieldContent, _ := unmarshalMessageContent(objMap["content"])
 	sponsoredMessage.Content = fieldContent
@@ -5418,6 +8888,26 @@ func NewNotificationSettingsScopePrivateChats() *NotificationSettingsScopePrivat
 	return &notificationSettingsScopePrivateChatsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (notificationSettingsScopePrivateChats *NotificationSettingsScopePrivateChats) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	notificationSettingsScopePrivateChats.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetNotificationSettingsScopeEnum return the enum type of this object
 func (notificationSettingsScopePrivateChats *NotificationSettingsScopePrivateChats) GetNotificationSettingsScopeEnum() NotificationSettingsScopeEnum {
 	return NotificationSettingsScopePrivateChatsType
@@ -5443,6 +8933,26 @@ func NewNotificationSettingsScopeGroupChats() *NotificationSettingsScopeGroupCha
 	return &notificationSettingsScopeGroupChatsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (notificationSettingsScopeGroupChats *NotificationSettingsScopeGroupChats) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	notificationSettingsScopeGroupChats.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetNotificationSettingsScopeEnum return the enum type of this object
 func (notificationSettingsScopeGroupChats *NotificationSettingsScopeGroupChats) GetNotificationSettingsScopeEnum() NotificationSettingsScopeEnum {
 	return NotificationSettingsScopeGroupChatsType
@@ -5466,6 +8976,26 @@ func NewNotificationSettingsScopeChannelChats() *NotificationSettingsScopeChanne
 	}
 
 	return &notificationSettingsScopeChannelChatsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (notificationSettingsScopeChannelChats *NotificationSettingsScopeChannelChats) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	notificationSettingsScopeChannelChats.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetNotificationSettingsScopeEnum return the enum type of this object
@@ -5523,6 +9053,46 @@ func NewChatNotificationSettings(useDefaultMuteFor bool, muteFor int32, useDefau
 	return &chatNotificationSettingsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatNotificationSettings *ChatNotificationSettings) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UseDefaultMuteFor                           bool   `json:"use_default_mute_for"`                             // If true, mute_for is ignored and the value for the relevant type of chat is used instead
+		MuteFor                                     int32  `json:"mute_for"`                                         // Time left before notifications will be unmuted, in seconds
+		UseDefaultSound                             bool   `json:"use_default_sound"`                                // If true, sound is ignored and the value for the relevant type of chat is used instead
+		Sound                                       string `json:"sound"`                                            // The name of an audio file to be used for notification sounds; only applies to iOS applications
+		UseDefaultShowPreview                       bool   `json:"use_default_show_preview"`                         // If true, show_preview is ignored and the value for the relevant type of chat is used instead
+		ShowPreview                                 bool   `json:"show_preview"`                                     // True, if message content must be displayed in notifications
+		UseDefaultDisablePinnedMessageNotifications bool   `json:"use_default_disable_pinned_message_notifications"` // If true, disable_pinned_message_notifications is ignored and the value for the relevant type of chat is used instead
+		DisablePinnedMessageNotifications           bool   `json:"disable_pinned_message_notifications"`             // If true, notifications for incoming pinned messages will be created as for an ordinary unread message
+		UseDefaultDisableMentionNotifications       bool   `json:"use_default_disable_mention_notifications"`        // If true, disable_mention_notifications is ignored and the value for the relevant type of chat is used instead
+		DisableMentionNotifications                 bool   `json:"disable_mention_notifications"`                    // If true, notifications for messages with mentions will be created as for an ordinary unread message
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatNotificationSettings.tdCommon = tempObj.tdCommon
+	chatNotificationSettings.UseDefaultMuteFor = tempObj.UseDefaultMuteFor
+	chatNotificationSettings.MuteFor = tempObj.MuteFor
+	chatNotificationSettings.UseDefaultSound = tempObj.UseDefaultSound
+	chatNotificationSettings.Sound = tempObj.Sound
+	chatNotificationSettings.UseDefaultShowPreview = tempObj.UseDefaultShowPreview
+	chatNotificationSettings.ShowPreview = tempObj.ShowPreview
+	chatNotificationSettings.UseDefaultDisablePinnedMessageNotifications = tempObj.UseDefaultDisablePinnedMessageNotifications
+	chatNotificationSettings.DisablePinnedMessageNotifications = tempObj.DisablePinnedMessageNotifications
+	chatNotificationSettings.UseDefaultDisableMentionNotifications = tempObj.UseDefaultDisableMentionNotifications
+	chatNotificationSettings.DisableMentionNotifications = tempObj.DisableMentionNotifications
+
+	return nil
+}
+
 // ScopeNotificationSettings Contains information about notification settings for several chats
 type ScopeNotificationSettings struct {
 	tdCommon
@@ -5556,6 +9126,36 @@ func NewScopeNotificationSettings(muteFor int32, sound string, showPreview bool,
 	}
 
 	return &scopeNotificationSettingsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (scopeNotificationSettings *ScopeNotificationSettings) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		MuteFor                           int32  `json:"mute_for"`                             // Time left before notifications will be unmuted, in seconds
+		Sound                             string `json:"sound"`                                // The name of an audio file to be used for notification sounds; only applies to iOS applications
+		ShowPreview                       bool   `json:"show_preview"`                         // True, if message content must be displayed in notifications
+		DisablePinnedMessageNotifications bool   `json:"disable_pinned_message_notifications"` // True, if notifications for incoming pinned messages will be created as for an ordinary unread message
+		DisableMentionNotifications       bool   `json:"disable_mention_notifications"`        // True, if notifications for messages with mentions will be created as for an ordinary unread message
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	scopeNotificationSettings.tdCommon = tempObj.tdCommon
+	scopeNotificationSettings.MuteFor = tempObj.MuteFor
+	scopeNotificationSettings.Sound = tempObj.Sound
+	scopeNotificationSettings.ShowPreview = tempObj.ShowPreview
+	scopeNotificationSettings.DisablePinnedMessageNotifications = tempObj.DisablePinnedMessageNotifications
+	scopeNotificationSettings.DisableMentionNotifications = tempObj.DisableMentionNotifications
+
+	return nil
 }
 
 // DraftMessage Contains information about a message draft
@@ -5638,6 +9238,28 @@ func NewChatTypePrivate(userID int64) *ChatTypePrivate {
 	return &chatTypePrivateTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatTypePrivate *ChatTypePrivate) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserID int64 `json:"user_id"` // User identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatTypePrivate.tdCommon = tempObj.tdCommon
+	chatTypePrivate.UserID = tempObj.UserID
+
+	return nil
+}
+
 // GetChatTypeEnum return the enum type of this object
 func (chatTypePrivate *ChatTypePrivate) GetChatTypeEnum() ChatTypeEnum {
 	return ChatTypePrivateType
@@ -5664,6 +9286,28 @@ func NewChatTypeBasicGroup(basicGroupID int64) *ChatTypeBasicGroup {
 	}
 
 	return &chatTypeBasicGroupTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatTypeBasicGroup *ChatTypeBasicGroup) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		BasicGroupID int64 `json:"basic_group_id"` // Basic group identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatTypeBasicGroup.tdCommon = tempObj.tdCommon
+	chatTypeBasicGroup.BasicGroupID = tempObj.BasicGroupID
+
+	return nil
 }
 
 // GetChatTypeEnum return the enum type of this object
@@ -5697,6 +9341,30 @@ func NewChatTypeSupergroup(supergroupID int64, isChannel bool) *ChatTypeSupergro
 	return &chatTypeSupergroupTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatTypeSupergroup *ChatTypeSupergroup) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SupergroupID int64 `json:"supergroup_id"` // Supergroup or channel identifier
+		IsChannel    bool  `json:"is_channel"`    // True, if the supergroup is a channel
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatTypeSupergroup.tdCommon = tempObj.tdCommon
+	chatTypeSupergroup.SupergroupID = tempObj.SupergroupID
+	chatTypeSupergroup.IsChannel = tempObj.IsChannel
+
+	return nil
+}
+
 // GetChatTypeEnum return the enum type of this object
 func (chatTypeSupergroup *ChatTypeSupergroup) GetChatTypeEnum() ChatTypeEnum {
 	return ChatTypeSupergroupType
@@ -5726,6 +9394,30 @@ func NewChatTypeSecret(secretChatID int32, userID int64) *ChatTypeSecret {
 	}
 
 	return &chatTypeSecretTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatTypeSecret *ChatTypeSecret) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SecretChatID int32 `json:"secret_chat_id"` // Secret chat identifier
+		UserID       int64 `json:"user_id"`        // User identifier of the secret chat peer
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatTypeSecret.tdCommon = tempObj.tdCommon
+	chatTypeSecret.SecretChatID = tempObj.SecretChatID
+	chatTypeSecret.UserID = tempObj.UserID
+
+	return nil
 }
 
 // GetChatTypeEnum return the enum type of this object
@@ -5792,6 +9484,52 @@ func NewChatFilter(title string, iconName string, pinnedChatIDs []int64, include
 	return &chatFilterTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatFilter *ChatFilter) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Title              string  `json:"title"`                // The title of the filter; 1-12 characters without line feeds
+		IconName           string  `json:"icon_name"`            // The chosen icon name for short filter representation. If non-empty, must be one of "All", "Unread", "Unmuted", "Bots", "Channels", "Groups", "Private", "Custom", "Setup", "Cat", "Crown", "Favorite", "Flower", "Game", "Home", "Love", "Mask", "Party", "Sport", "Study", "Trade", "Travel", "Work". If empty, use getChatFilterDefaultIconName to get default icon name for the filter
+		PinnedChatIDs      []int64 `json:"pinned_chat_ids"`      // The chat identifiers of pinned chats in the filtered chat list
+		IncludedChatIDs    []int64 `json:"included_chat_ids"`    // The chat identifiers of always included chats in the filtered chat list
+		ExcludedChatIDs    []int64 `json:"excluded_chat_ids"`    // The chat identifiers of always excluded chats in the filtered chat list
+		ExcludeMuted       bool    `json:"exclude_muted"`        // True, if muted chats need to be excluded
+		ExcludeRead        bool    `json:"exclude_read"`         // True, if read chats need to be excluded
+		ExcludeArchived    bool    `json:"exclude_archived"`     // True, if archived chats need to be excluded
+		IncludeContacts    bool    `json:"include_contacts"`     // True, if contacts need to be included
+		IncludeNonContacts bool    `json:"include_non_contacts"` // True, if non-contact users need to be included
+		IncludeBots        bool    `json:"include_bots"`         // True, if bots need to be included
+		IncludeGroups      bool    `json:"include_groups"`       // True, if basic groups and supergroups need to be included
+		IncludeChannels    bool    `json:"include_channels"`     // True, if channels need to be included
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatFilter.tdCommon = tempObj.tdCommon
+	chatFilter.Title = tempObj.Title
+	chatFilter.IconName = tempObj.IconName
+	chatFilter.PinnedChatIDs = tempObj.PinnedChatIDs
+	chatFilter.IncludedChatIDs = tempObj.IncludedChatIDs
+	chatFilter.ExcludedChatIDs = tempObj.ExcludedChatIDs
+	chatFilter.ExcludeMuted = tempObj.ExcludeMuted
+	chatFilter.ExcludeRead = tempObj.ExcludeRead
+	chatFilter.ExcludeArchived = tempObj.ExcludeArchived
+	chatFilter.IncludeContacts = tempObj.IncludeContacts
+	chatFilter.IncludeNonContacts = tempObj.IncludeNonContacts
+	chatFilter.IncludeBots = tempObj.IncludeBots
+	chatFilter.IncludeGroups = tempObj.IncludeGroups
+	chatFilter.IncludeChannels = tempObj.IncludeChannels
+
+	return nil
+}
+
 // ChatFilterInfo Contains basic information about a chat filter
 type ChatFilterInfo struct {
 	tdCommon
@@ -5821,6 +9559,32 @@ func NewChatFilterInfo(iD int32, title string, iconName string) *ChatFilterInfo 
 	return &chatFilterInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatFilterInfo *ChatFilterInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID       int32  `json:"id"`        // Unique chat filter identifier
+		Title    string `json:"title"`     // The title of the filter; 1-12 characters without line feeds
+		IconName string `json:"icon_name"` // The chosen or default icon name for short filter representation. One of "All", "Unread", "Unmuted", "Bots", "Channels", "Groups", "Private", "Custom", "Setup", "Cat", "Crown", "Favorite", "Flower", "Game", "Home", "Love", "Mask", "Party", "Sport", "Study", "Trade", "Travel", "Work"
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatFilterInfo.tdCommon = tempObj.tdCommon
+	chatFilterInfo.ID = tempObj.ID
+	chatFilterInfo.Title = tempObj.Title
+	chatFilterInfo.IconName = tempObj.IconName
+
+	return nil
+}
+
 // RecommendedChatFilter Describes a recommended chat filter
 type RecommendedChatFilter struct {
 	tdCommon
@@ -5847,6 +9611,30 @@ func NewRecommendedChatFilter(filter *ChatFilter, description string) *Recommend
 	return &recommendedChatFilterTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (recommendedChatFilter *RecommendedChatFilter) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Filter      *ChatFilter `json:"filter"`      // The chat filter
+		Description string      `json:"description"` // Chat filter description
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	recommendedChatFilter.tdCommon = tempObj.tdCommon
+	recommendedChatFilter.Filter = tempObj.Filter
+	recommendedChatFilter.Description = tempObj.Description
+
+	return nil
+}
+
 // RecommendedChatFilters Contains a list of recommended chat filters
 type RecommendedChatFilters struct {
 	tdCommon
@@ -5870,6 +9658,28 @@ func NewRecommendedChatFilters(chatFilters []RecommendedChatFilter) *Recommended
 	return &recommendedChatFiltersTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (recommendedChatFilters *RecommendedChatFilters) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatFilters []RecommendedChatFilter `json:"chat_filters"` // List of recommended chat filters
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	recommendedChatFilters.tdCommon = tempObj.tdCommon
+	recommendedChatFilters.ChatFilters = tempObj.ChatFilters
+
+	return nil
+}
+
 // ChatListMain A main list of chats
 type ChatListMain struct {
 	tdCommon
@@ -5888,6 +9698,26 @@ func NewChatListMain() *ChatListMain {
 	}
 
 	return &chatListMainTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatListMain *ChatListMain) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatListMain.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatListEnum return the enum type of this object
@@ -5913,6 +9743,26 @@ func NewChatListArchive() *ChatListArchive {
 	}
 
 	return &chatListArchiveTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatListArchive *ChatListArchive) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatListArchive.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatListEnum return the enum type of this object
@@ -5943,6 +9793,28 @@ func NewChatListFilter(chatFilterID int32) *ChatListFilter {
 	return &chatListFilterTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatListFilter *ChatListFilter) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatFilterID int32 `json:"chat_filter_id"` // Chat filter identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatListFilter.tdCommon = tempObj.tdCommon
+	chatListFilter.ChatFilterID = tempObj.ChatFilterID
+
+	return nil
+}
+
 // GetChatListEnum return the enum type of this object
 func (chatListFilter *ChatListFilter) GetChatListEnum() ChatListEnum {
 	return ChatListFilterType
@@ -5971,6 +9843,29 @@ func NewChatLists(chatLists []ChatList) *ChatLists {
 	return &chatListsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatLists *ChatLists) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatLists.tdCommon = tempObj.tdCommon
+
+	fieldChatLists, _ := unmarshalChatListSlice(objMap["chat_lists"])
+	chatLists.ChatLists = fieldChatLists
+
+	return nil
+}
+
 // ChatSourceMtprotoProxy The chat is sponsored by the user's MTProxy server
 type ChatSourceMtprotoProxy struct {
 	tdCommon
@@ -5989,6 +9884,26 @@ func NewChatSourceMtprotoProxy() *ChatSourceMtprotoProxy {
 	}
 
 	return &chatSourceMtprotoProxyTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatSourceMtprotoProxy *ChatSourceMtprotoProxy) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatSourceMtprotoProxy.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatSourceEnum return the enum type of this object
@@ -6022,6 +9937,30 @@ func NewChatSourcePublicServiceAnnouncement(typeParam string, text string) *Chat
 	return &chatSourcePublicServiceAnnouncementTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatSourcePublicServiceAnnouncement *ChatSourcePublicServiceAnnouncement) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Type string `json:"type"` // The type of the announcement
+		Text string `json:"text"` // The text of the announcement
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatSourcePublicServiceAnnouncement.tdCommon = tempObj.tdCommon
+	chatSourcePublicServiceAnnouncement.Type = tempObj.Type
+	chatSourcePublicServiceAnnouncement.Text = tempObj.Text
+
+	return nil
+}
+
 // GetChatSourceEnum return the enum type of this object
 func (chatSourcePublicServiceAnnouncement *ChatSourcePublicServiceAnnouncement) GetChatSourceEnum() ChatSourceEnum {
 	return ChatSourcePublicServiceAnnouncementType
@@ -6030,10 +9969,10 @@ func (chatSourcePublicServiceAnnouncement *ChatSourcePublicServiceAnnouncement) 
 // ChatPosition Describes a position of a chat in a chat list
 type ChatPosition struct {
 	tdCommon
-	List     ChatList   `json:"list"`      // The chat list
-	Order    JSONInt64  `json:"order"`     // A parameter used to determine order of the chat in the chat list. Chats must be sorted by the pair (order, chat.id) in descending order
-	IsPinned bool       `json:"is_pinned"` // True, if the chat is pinned in the chat list
-	Source   ChatSource `json:"source"`    // Source of the chat in the chat list; may be null
+	List     ChatList    `json:"list"`      // The chat list
+	Order    JSONInt64   `json:"order"`     // A parameter used to determine order of the chat in the chat list. Chats must be sorted by the pair (order, chat.id) in descending order
+	IsPinned bool        `json:"is_pinned"` // True, if the chat is pinned in the chat list
+	Source   *ChatSource `json:"source"`    // Source of the chat in the chat list; may be null
 }
 
 // MessageType return the string telegram-type of ChatPosition
@@ -6047,7 +9986,7 @@ func (chatPosition *ChatPosition) MessageType() string {
 // @param order A parameter used to determine order of the chat in the chat list. Chats must be sorted by the pair (order, chat.id) in descending order
 // @param isPinned True, if the chat is pinned in the chat list
 // @param source Source of the chat in the chat list; may be null
-func NewChatPosition(list ChatList, order JSONInt64, isPinned bool, source ChatSource) *ChatPosition {
+func NewChatPosition(list ChatList, order JSONInt64, isPinned bool, source *ChatSource) *ChatPosition {
 	chatPositionTemp := ChatPosition{
 		tdCommon: tdCommon{Type: "chatPosition"},
 		List:     list,
@@ -6085,7 +10024,7 @@ func (chatPosition *ChatPosition) UnmarshalJSON(b []byte) error {
 	chatPosition.List = fieldList
 
 	fieldSource, _ := unmarshalChatSource(objMap["source"])
-	chatPosition.Source = fieldSource
+	chatPosition.Source = &fieldSource
 
 	return nil
 }
@@ -6093,9 +10032,9 @@ func (chatPosition *ChatPosition) UnmarshalJSON(b []byte) error {
 // VideoChat Describes a video chat
 type VideoChat struct {
 	tdCommon
-	GroupCallID          int32         `json:"group_call_id"`          // Group call identifier of an active video chat; 0 if none. Full information about the video chat can be received through the method getGroupCall
-	HasParticipants      bool          `json:"has_participants"`       // True, if the video chat has participants
-	DefaultParticipantID MessageSender `json:"default_participant_id"` // Default group call participant identifier to join the video chat; may be null
+	GroupCallID          int32          `json:"group_call_id"`          // Group call identifier of an active video chat; 0 if none. Full information about the video chat can be received through the method getGroupCall
+	HasParticipants      bool           `json:"has_participants"`       // True, if the video chat has participants
+	DefaultParticipantID *MessageSender `json:"default_participant_id"` // Default group call participant identifier to join the video chat; may be null
 }
 
 // MessageType return the string telegram-type of VideoChat
@@ -6108,7 +10047,7 @@ func (videoChat *VideoChat) MessageType() string {
 // @param groupCallID Group call identifier of an active video chat; 0 if none. Full information about the video chat can be received through the method getGroupCall
 // @param hasParticipants True, if the video chat has participants
 // @param defaultParticipantID Default group call participant identifier to join the video chat; may be null
-func NewVideoChat(groupCallID int32, hasParticipants bool, defaultParticipantID MessageSender) *VideoChat {
+func NewVideoChat(groupCallID int32, hasParticipants bool, defaultParticipantID *MessageSender) *VideoChat {
 	videoChatTemp := VideoChat{
 		tdCommon:             tdCommon{Type: "videoChat"},
 		GroupCallID:          groupCallID,
@@ -6142,7 +10081,7 @@ func (videoChat *VideoChat) UnmarshalJSON(b []byte) error {
 	videoChat.HasParticipants = tempObj.HasParticipants
 
 	fieldDefaultParticipantID, _ := unmarshalMessageSender(objMap["default_participant_id"])
-	videoChat.DefaultParticipantID = fieldDefaultParticipantID
+	videoChat.DefaultParticipantID = &fieldDefaultParticipantID
 
 	return nil
 }
@@ -6157,7 +10096,7 @@ type Chat struct {
 	Permissions                *ChatPermissions          `json:"permissions"`                  // Actions that non-administrator chat members are allowed to take in the chat
 	LastMessage                *Message                  `json:"last_message"`                 // Last message in the chat; may be null
 	Positions                  []ChatPosition            `json:"positions"`                    // Positions of the chat in chat lists
-	MessageSenderID            MessageSender             `json:"message_sender_id"`            // Identifier of a user or chat that is selected to send messages in the chat; may be null if the user can't change message sender
+	MessageSenderID            *MessageSender            `json:"message_sender_id"`            // Identifier of a user or chat that is selected to send messages in the chat; may be null if the user can't change message sender
 	HasProtectedContent        bool                      `json:"has_protected_content"`        // True, if chat content can't be saved locally, forwarded, or copied
 	IsMarkedAsUnread           bool                      `json:"is_marked_as_unread"`          // True, if the chat is marked as unread
 	IsBlocked                  bool                      `json:"is_blocked"`                   // True, if the chat is blocked by the current user and private messages from the chat can't be received
@@ -6173,7 +10112,7 @@ type Chat struct {
 	NotificationSettings       *ChatNotificationSettings `json:"notification_settings"`        // Notification settings for this chat
 	MessageTTL                 int32                     `json:"message_ttl"`                  // Current message Time To Live setting (self-destruct timer) for the chat; 0 if not defined. TTL is counted from the time message or its content is viewed in secret chats and from the send date in other chats
 	ThemeName                  string                    `json:"theme_name"`                   // If non-empty, name of a theme, set for the chat
-	ActionBar                  ChatActionBar             `json:"action_bar"`                   // Information about actions which must be possible to do through the chat action bar; may be null
+	ActionBar                  *ChatActionBar            `json:"action_bar"`                   // Information about actions which must be possible to do through the chat action bar; may be null
 	VideoChat                  *VideoChat                `json:"video_chat"`                   // Information about video chat of the chat
 	PendingJoinRequests        *ChatJoinRequestsInfo     `json:"pending_join_requests"`        // Information about pending join requests; may be null
 	ReplyMarkupMessageID       int64                     `json:"reply_markup_message_id"`      // Identifier of the message from which reply markup needs to be used; 0 if there is no default custom reply markup in the chat
@@ -6217,7 +10156,7 @@ func (chat *Chat) MessageType() string {
 // @param replyMarkupMessageID Identifier of the message from which reply markup needs to be used; 0 if there is no default custom reply markup in the chat
 // @param draftMessage A draft of a message in the chat; may be null
 // @param clientData Application-specific data associated with the chat. (For example, the chat scroll position or local chat notification settings can be stored here.) Persistent if the message database is used
-func NewChat(iD int64, typeParam ChatType, title string, photo *ChatPhotoInfo, permissions *ChatPermissions, lastMessage *Message, positions []ChatPosition, messageSenderID MessageSender, hasProtectedContent bool, isMarkedAsUnread bool, isBlocked bool, hasScheduledMessages bool, canBeDeletedOnlyForSelf bool, canBeDeletedForAllUsers bool, canBeReported bool, defaultDisableNotification bool, unreadCount int32, lastReadInboxMessageID int64, lastReadOutboxMessageID int64, unreadMentionCount int32, notificationSettings *ChatNotificationSettings, messageTTL int32, themeName string, actionBar ChatActionBar, videoChat *VideoChat, pendingJoinRequests *ChatJoinRequestsInfo, replyMarkupMessageID int64, draftMessage *DraftMessage, clientData string) *Chat {
+func NewChat(iD int64, typeParam ChatType, title string, photo *ChatPhotoInfo, permissions *ChatPermissions, lastMessage *Message, positions []ChatPosition, messageSenderID *MessageSender, hasProtectedContent bool, isMarkedAsUnread bool, isBlocked bool, hasScheduledMessages bool, canBeDeletedOnlyForSelf bool, canBeDeletedForAllUsers bool, canBeReported bool, defaultDisableNotification bool, unreadCount int32, lastReadInboxMessageID int64, lastReadOutboxMessageID int64, unreadMentionCount int32, notificationSettings *ChatNotificationSettings, messageTTL int32, themeName string, actionBar *ChatActionBar, videoChat *VideoChat, pendingJoinRequests *ChatJoinRequestsInfo, replyMarkupMessageID int64, draftMessage *DraftMessage, clientData string) *Chat {
 	chatTemp := Chat{
 		tdCommon:                   tdCommon{Type: "chat"},
 		ID:                         iD,
@@ -6267,7 +10206,6 @@ func (chat *Chat) UnmarshalJSON(b []byte) error {
 		Title                      string                    `json:"title"`                        // Chat title
 		Photo                      *ChatPhotoInfo            `json:"photo"`                        // Chat photo; may be null
 		Permissions                *ChatPermissions          `json:"permissions"`                  // Actions that non-administrator chat members are allowed to take in the chat
-		LastMessage                *Message                  `json:"last_message"`                 // Last message in the chat; may be null
 		Positions                  []ChatPosition            `json:"positions"`                    // Positions of the chat in chat lists
 		HasProtectedContent        bool                      `json:"has_protected_content"`        // True, if chat content can't be saved locally, forwarded, or copied
 		IsMarkedAsUnread           bool                      `json:"is_marked_as_unread"`          // True, if the chat is marked as unread
@@ -6284,10 +10222,8 @@ func (chat *Chat) UnmarshalJSON(b []byte) error {
 		NotificationSettings       *ChatNotificationSettings `json:"notification_settings"`        // Notification settings for this chat
 		MessageTTL                 int32                     `json:"message_ttl"`                  // Current message Time To Live setting (self-destruct timer) for the chat; 0 if not defined. TTL is counted from the time message or its content is viewed in secret chats and from the send date in other chats
 		ThemeName                  string                    `json:"theme_name"`                   // If non-empty, name of a theme, set for the chat
-		VideoChat                  *VideoChat                `json:"video_chat"`                   // Information about video chat of the chat
 		PendingJoinRequests        *ChatJoinRequestsInfo     `json:"pending_join_requests"`        // Information about pending join requests; may be null
 		ReplyMarkupMessageID       int64                     `json:"reply_markup_message_id"`      // Identifier of the message from which reply markup needs to be used; 0 if there is no default custom reply markup in the chat
-		DraftMessage               *DraftMessage             `json:"draft_message"`                // A draft of a message in the chat; may be null
 		ClientData                 string                    `json:"client_data"`                  // Application-specific data associated with the chat. (For example, the chat scroll position or local chat notification settings can be stored here.) Persistent if the message database is used
 	}{}
 	err = json.Unmarshal(b, &tempObj)
@@ -6300,7 +10236,6 @@ func (chat *Chat) UnmarshalJSON(b []byte) error {
 	chat.Title = tempObj.Title
 	chat.Photo = tempObj.Photo
 	chat.Permissions = tempObj.Permissions
-	chat.LastMessage = tempObj.LastMessage
 	chat.Positions = tempObj.Positions
 	chat.HasProtectedContent = tempObj.HasProtectedContent
 	chat.IsMarkedAsUnread = tempObj.IsMarkedAsUnread
@@ -6317,20 +10252,48 @@ func (chat *Chat) UnmarshalJSON(b []byte) error {
 	chat.NotificationSettings = tempObj.NotificationSettings
 	chat.MessageTTL = tempObj.MessageTTL
 	chat.ThemeName = tempObj.ThemeName
-	chat.VideoChat = tempObj.VideoChat
 	chat.PendingJoinRequests = tempObj.PendingJoinRequests
 	chat.ReplyMarkupMessageID = tempObj.ReplyMarkupMessageID
-	chat.DraftMessage = tempObj.DraftMessage
 	chat.ClientData = tempObj.ClientData
 
 	fieldType, _ := unmarshalChatType(objMap["type"])
 	chat.Type = fieldType
 
 	fieldMessageSenderID, _ := unmarshalMessageSender(objMap["message_sender_id"])
-	chat.MessageSenderID = fieldMessageSenderID
+	chat.MessageSenderID = &fieldMessageSenderID
 
 	fieldActionBar, _ := unmarshalChatActionBar(objMap["action_bar"])
-	chat.ActionBar = fieldActionBar
+	chat.ActionBar = &fieldActionBar
+
+	var lastMessage Message
+	if objMap["last_message"] != nil {
+		err = lastMessage.UnmarshalJSON(*objMap["last_message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	chat.LastMessage = &lastMessage
+
+	var videoChat VideoChat
+	if objMap["video_chat"] != nil {
+		err = videoChat.UnmarshalJSON(*objMap["video_chat"])
+		if err != nil {
+			return err
+		}
+	}
+
+	chat.VideoChat = &videoChat
+
+	var draftMessage DraftMessage
+	if objMap["draft_message"] != nil {
+		err = draftMessage.UnmarshalJSON(*objMap["draft_message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	chat.DraftMessage = &draftMessage
 
 	return nil
 }
@@ -6361,6 +10324,30 @@ func NewChats(totalCount int32, chatIDs []int64) *Chats {
 	return &chatsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chats *Chats) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount int32   `json:"total_count"` // Approximate total count of chats found
+		ChatIDs    []int64 `json:"chat_ids"`    // List of chat identifiers
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chats.tdCommon = tempObj.tdCommon
+	chats.TotalCount = tempObj.TotalCount
+	chats.ChatIDs = tempObj.ChatIDs
+
+	return nil
+}
+
 // ChatNearby Describes a chat located nearby
 type ChatNearby struct {
 	tdCommon
@@ -6385,6 +10372,30 @@ func NewChatNearby(chatID int64, distance int32) *ChatNearby {
 	}
 
 	return &chatNearbyTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatNearby *ChatNearby) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID   int64 `json:"chat_id"`  // Chat identifier
+		Distance int32 `json:"distance"` // Distance to the chat location, in meters
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatNearby.tdCommon = tempObj.tdCommon
+	chatNearby.ChatID = tempObj.ChatID
+	chatNearby.Distance = tempObj.Distance
+
+	return nil
 }
 
 // ChatsNearby Represents a list of chats located nearby
@@ -6413,6 +10424,30 @@ func NewChatsNearby(usersNearby []ChatNearby, supergroupsNearby []ChatNearby) *C
 	return &chatsNearbyTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatsNearby *ChatsNearby) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UsersNearby       []ChatNearby `json:"users_nearby"`       // List of users nearby
+		SupergroupsNearby []ChatNearby `json:"supergroups_nearby"` // List of location-based supergroups nearby
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatsNearby.tdCommon = tempObj.tdCommon
+	chatsNearby.UsersNearby = tempObj.UsersNearby
+	chatsNearby.SupergroupsNearby = tempObj.SupergroupsNearby
+
+	return nil
+}
+
 // PublicChatTypeHasUsername The chat is public, because it has username
 type PublicChatTypeHasUsername struct {
 	tdCommon
@@ -6431,6 +10466,26 @@ func NewPublicChatTypeHasUsername() *PublicChatTypeHasUsername {
 	}
 
 	return &publicChatTypeHasUsernameTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (publicChatTypeHasUsername *PublicChatTypeHasUsername) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	publicChatTypeHasUsername.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPublicChatTypeEnum return the enum type of this object
@@ -6456,6 +10511,26 @@ func NewPublicChatTypeIsLocationBased() *PublicChatTypeIsLocationBased {
 	}
 
 	return &publicChatTypeIsLocationBasedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (publicChatTypeIsLocationBased *PublicChatTypeIsLocationBased) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	publicChatTypeIsLocationBased.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPublicChatTypeEnum return the enum type of this object
@@ -6486,6 +10561,28 @@ func NewChatActionBarReportSpam(canUnarchive bool) *ChatActionBarReportSpam {
 	return &chatActionBarReportSpamTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatActionBarReportSpam *ChatActionBarReportSpam) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		CanUnarchive bool `json:"can_unarchive"` // If true, the chat was automatically archived and can be moved back to the main chat list using addChatToList simultaneously with setting chat notification settings to default using setChatNotificationSettings
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionBarReportSpam.tdCommon = tempObj.tdCommon
+	chatActionBarReportSpam.CanUnarchive = tempObj.CanUnarchive
+
+	return nil
+}
+
 // GetChatActionBarEnum return the enum type of this object
 func (chatActionBarReportSpam *ChatActionBarReportSpam) GetChatActionBarEnum() ChatActionBarEnum {
 	return ChatActionBarReportSpamType
@@ -6511,6 +10608,26 @@ func NewChatActionBarReportUnrelatedLocation() *ChatActionBarReportUnrelatedLoca
 	return &chatActionBarReportUnrelatedLocationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatActionBarReportUnrelatedLocation *ChatActionBarReportUnrelatedLocation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionBarReportUnrelatedLocation.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetChatActionBarEnum return the enum type of this object
 func (chatActionBarReportUnrelatedLocation *ChatActionBarReportUnrelatedLocation) GetChatActionBarEnum() ChatActionBarEnum {
 	return ChatActionBarReportUnrelatedLocationType
@@ -6534,6 +10651,26 @@ func NewChatActionBarInviteMembers() *ChatActionBarInviteMembers {
 	}
 
 	return &chatActionBarInviteMembersTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatActionBarInviteMembers *ChatActionBarInviteMembers) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionBarInviteMembers.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatActionBarEnum return the enum type of this object
@@ -6567,6 +10704,30 @@ func NewChatActionBarReportAddBlock(canUnarchive bool, distance int32) *ChatActi
 	return &chatActionBarReportAddBlockTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatActionBarReportAddBlock *ChatActionBarReportAddBlock) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		CanUnarchive bool  `json:"can_unarchive"` // If true, the chat was automatically archived and can be moved back to the main chat list using addChatToList simultaneously with setting chat notification settings to default using setChatNotificationSettings
+		Distance     int32 `json:"distance"`      // If non-negative, the current user was found by the peer through searchChatsNearby and this is the distance between the users
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionBarReportAddBlock.tdCommon = tempObj.tdCommon
+	chatActionBarReportAddBlock.CanUnarchive = tempObj.CanUnarchive
+	chatActionBarReportAddBlock.Distance = tempObj.Distance
+
+	return nil
+}
+
 // GetChatActionBarEnum return the enum type of this object
 func (chatActionBarReportAddBlock *ChatActionBarReportAddBlock) GetChatActionBarEnum() ChatActionBarEnum {
 	return ChatActionBarReportAddBlockType
@@ -6592,6 +10753,26 @@ func NewChatActionBarAddContact() *ChatActionBarAddContact {
 	return &chatActionBarAddContactTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatActionBarAddContact *ChatActionBarAddContact) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionBarAddContact.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetChatActionBarEnum return the enum type of this object
 func (chatActionBarAddContact *ChatActionBarAddContact) GetChatActionBarEnum() ChatActionBarEnum {
 	return ChatActionBarAddContactType
@@ -6615,6 +10796,26 @@ func NewChatActionBarSharePhoneNumber() *ChatActionBarSharePhoneNumber {
 	}
 
 	return &chatActionBarSharePhoneNumberTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatActionBarSharePhoneNumber *ChatActionBarSharePhoneNumber) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionBarSharePhoneNumber.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatActionBarEnum return the enum type of this object
@@ -6651,6 +10852,32 @@ func NewChatActionBarJoinRequest(title string, isChannel bool, requestDate int32
 	return &chatActionBarJoinRequestTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatActionBarJoinRequest *ChatActionBarJoinRequest) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Title       string `json:"title"`        // Title of the chat to which the join request was sent
+		IsChannel   bool   `json:"is_channel"`   // True, if the join request was sent to a channel chat
+		RequestDate int32  `json:"request_date"` // Point in time (Unix timestamp) when the join request was sent
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionBarJoinRequest.tdCommon = tempObj.tdCommon
+	chatActionBarJoinRequest.Title = tempObj.Title
+	chatActionBarJoinRequest.IsChannel = tempObj.IsChannel
+	chatActionBarJoinRequest.RequestDate = tempObj.RequestDate
+
+	return nil
+}
+
 // GetChatActionBarEnum return the enum type of this object
 func (chatActionBarJoinRequest *ChatActionBarJoinRequest) GetChatActionBarEnum() ChatActionBarEnum {
 	return ChatActionBarJoinRequestType
@@ -6674,6 +10901,26 @@ func NewKeyboardButtonTypeText() *KeyboardButtonTypeText {
 	}
 
 	return &keyboardButtonTypeTextTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (keyboardButtonTypeText *KeyboardButtonTypeText) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	keyboardButtonTypeText.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetKeyboardButtonTypeEnum return the enum type of this object
@@ -6701,6 +10948,26 @@ func NewKeyboardButtonTypeRequestPhoneNumber() *KeyboardButtonTypeRequestPhoneNu
 	return &keyboardButtonTypeRequestPhoneNumberTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (keyboardButtonTypeRequestPhoneNumber *KeyboardButtonTypeRequestPhoneNumber) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	keyboardButtonTypeRequestPhoneNumber.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetKeyboardButtonTypeEnum return the enum type of this object
 func (keyboardButtonTypeRequestPhoneNumber *KeyboardButtonTypeRequestPhoneNumber) GetKeyboardButtonTypeEnum() KeyboardButtonTypeEnum {
 	return KeyboardButtonTypeRequestPhoneNumberType
@@ -6724,6 +10991,26 @@ func NewKeyboardButtonTypeRequestLocation() *KeyboardButtonTypeRequestLocation {
 	}
 
 	return &keyboardButtonTypeRequestLocationTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (keyboardButtonTypeRequestLocation *KeyboardButtonTypeRequestLocation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	keyboardButtonTypeRequestLocation.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetKeyboardButtonTypeEnum return the enum type of this object
@@ -6755,6 +11042,30 @@ func NewKeyboardButtonTypeRequestPoll(forceRegular bool, forceQuiz bool) *Keyboa
 	}
 
 	return &keyboardButtonTypeRequestPollTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (keyboardButtonTypeRequestPoll *KeyboardButtonTypeRequestPoll) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ForceRegular bool `json:"force_regular"` // If true, only regular polls must be allowed to create
+		ForceQuiz    bool `json:"force_quiz"`    // If true, only polls in quiz mode must be allowed to create
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	keyboardButtonTypeRequestPoll.tdCommon = tempObj.tdCommon
+	keyboardButtonTypeRequestPoll.ForceRegular = tempObj.ForceRegular
+	keyboardButtonTypeRequestPoll.ForceQuiz = tempObj.ForceQuiz
+
+	return nil
 }
 
 // GetKeyboardButtonTypeEnum return the enum type of this object
@@ -6837,6 +11148,28 @@ func NewInlineKeyboardButtonTypeURL(uRL string) *InlineKeyboardButtonTypeURL {
 	return &inlineKeyboardButtonTypeURLTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inlineKeyboardButtonTypeURL *InlineKeyboardButtonTypeURL) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		URL string `json:"url"` // HTTP or tg:// URL to open
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineKeyboardButtonTypeURL.tdCommon = tempObj.tdCommon
+	inlineKeyboardButtonTypeURL.URL = tempObj.URL
+
+	return nil
+}
+
 // GetInlineKeyboardButtonTypeEnum return the enum type of this object
 func (inlineKeyboardButtonTypeURL *InlineKeyboardButtonTypeURL) GetInlineKeyboardButtonTypeEnum() InlineKeyboardButtonTypeEnum {
 	return InlineKeyboardButtonTypeURLType
@@ -6871,6 +11204,32 @@ func NewInlineKeyboardButtonTypeLoginURL(uRL string, iD int64, forwardText strin
 	return &inlineKeyboardButtonTypeLoginURLTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inlineKeyboardButtonTypeLoginURL *InlineKeyboardButtonTypeLoginURL) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		URL         string `json:"url"`          // An HTTP URL to open
+		ID          int64  `json:"id"`           // Unique button identifier
+		ForwardText string `json:"forward_text"` // If non-empty, new text of the button in forwarded messages
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineKeyboardButtonTypeLoginURL.tdCommon = tempObj.tdCommon
+	inlineKeyboardButtonTypeLoginURL.URL = tempObj.URL
+	inlineKeyboardButtonTypeLoginURL.ID = tempObj.ID
+	inlineKeyboardButtonTypeLoginURL.ForwardText = tempObj.ForwardText
+
+	return nil
+}
+
 // GetInlineKeyboardButtonTypeEnum return the enum type of this object
 func (inlineKeyboardButtonTypeLoginURL *InlineKeyboardButtonTypeLoginURL) GetInlineKeyboardButtonTypeEnum() InlineKeyboardButtonTypeEnum {
 	return InlineKeyboardButtonTypeLoginURLType
@@ -6897,6 +11256,28 @@ func NewInlineKeyboardButtonTypeCallback(data []byte) *InlineKeyboardButtonTypeC
 	}
 
 	return &inlineKeyboardButtonTypeCallbackTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inlineKeyboardButtonTypeCallback *InlineKeyboardButtonTypeCallback) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Data []byte `json:"data"` // Data to be sent to the bot via a callback query
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineKeyboardButtonTypeCallback.tdCommon = tempObj.tdCommon
+	inlineKeyboardButtonTypeCallback.Data = tempObj.Data
+
+	return nil
 }
 
 // GetInlineKeyboardButtonTypeEnum return the enum type of this object
@@ -6927,6 +11308,28 @@ func NewInlineKeyboardButtonTypeCallbackWithPassword(data []byte) *InlineKeyboar
 	return &inlineKeyboardButtonTypeCallbackWithPasswordTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inlineKeyboardButtonTypeCallbackWithPassword *InlineKeyboardButtonTypeCallbackWithPassword) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Data []byte `json:"data"` // Data to be sent to the bot via a callback query
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineKeyboardButtonTypeCallbackWithPassword.tdCommon = tempObj.tdCommon
+	inlineKeyboardButtonTypeCallbackWithPassword.Data = tempObj.Data
+
+	return nil
+}
+
 // GetInlineKeyboardButtonTypeEnum return the enum type of this object
 func (inlineKeyboardButtonTypeCallbackWithPassword *InlineKeyboardButtonTypeCallbackWithPassword) GetInlineKeyboardButtonTypeEnum() InlineKeyboardButtonTypeEnum {
 	return InlineKeyboardButtonTypeCallbackWithPasswordType
@@ -6950,6 +11353,26 @@ func NewInlineKeyboardButtonTypeCallbackGame() *InlineKeyboardButtonTypeCallback
 	}
 
 	return &inlineKeyboardButtonTypeCallbackGameTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inlineKeyboardButtonTypeCallbackGame *InlineKeyboardButtonTypeCallbackGame) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineKeyboardButtonTypeCallbackGame.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetInlineKeyboardButtonTypeEnum return the enum type of this object
@@ -6983,6 +11406,30 @@ func NewInlineKeyboardButtonTypeSwitchInline(query string, inCurrentChat bool) *
 	return &inlineKeyboardButtonTypeSwitchInlineTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inlineKeyboardButtonTypeSwitchInline *InlineKeyboardButtonTypeSwitchInline) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Query         string `json:"query"`           // Inline query to be sent to the bot
+		InCurrentChat bool   `json:"in_current_chat"` // True, if the inline query must be sent from the current chat
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineKeyboardButtonTypeSwitchInline.tdCommon = tempObj.tdCommon
+	inlineKeyboardButtonTypeSwitchInline.Query = tempObj.Query
+	inlineKeyboardButtonTypeSwitchInline.InCurrentChat = tempObj.InCurrentChat
+
+	return nil
+}
+
 // GetInlineKeyboardButtonTypeEnum return the enum type of this object
 func (inlineKeyboardButtonTypeSwitchInline *InlineKeyboardButtonTypeSwitchInline) GetInlineKeyboardButtonTypeEnum() InlineKeyboardButtonTypeEnum {
 	return InlineKeyboardButtonTypeSwitchInlineType
@@ -7006,6 +11453,26 @@ func NewInlineKeyboardButtonTypeBuy() *InlineKeyboardButtonTypeBuy {
 	}
 
 	return &inlineKeyboardButtonTypeBuyTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inlineKeyboardButtonTypeBuy *InlineKeyboardButtonTypeBuy) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineKeyboardButtonTypeBuy.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetInlineKeyboardButtonTypeEnum return the enum type of this object
@@ -7034,6 +11501,28 @@ func NewInlineKeyboardButtonTypeUser(userID int64) *InlineKeyboardButtonTypeUser
 	}
 
 	return &inlineKeyboardButtonTypeUserTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inlineKeyboardButtonTypeUser *InlineKeyboardButtonTypeUser) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserID int64 `json:"user_id"` // User identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineKeyboardButtonTypeUser.tdCommon = tempObj.tdCommon
+	inlineKeyboardButtonTypeUser.UserID = tempObj.UserID
+
+	return nil
 }
 
 // GetInlineKeyboardButtonTypeEnum return the enum type of this object
@@ -7116,6 +11605,28 @@ func NewReplyMarkupRemoveKeyboard(isPersonal bool) *ReplyMarkupRemoveKeyboard {
 	return &replyMarkupRemoveKeyboardTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (replyMarkupRemoveKeyboard *ReplyMarkupRemoveKeyboard) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		IsPersonal bool `json:"is_personal"` // True, if the keyboard is removed only for the mentioned users or the target user of a reply
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	replyMarkupRemoveKeyboard.tdCommon = tempObj.tdCommon
+	replyMarkupRemoveKeyboard.IsPersonal = tempObj.IsPersonal
+
+	return nil
+}
+
 // GetReplyMarkupEnum return the enum type of this object
 func (replyMarkupRemoveKeyboard *ReplyMarkupRemoveKeyboard) GetReplyMarkupEnum() ReplyMarkupEnum {
 	return ReplyMarkupRemoveKeyboardType
@@ -7145,6 +11656,30 @@ func NewReplyMarkupForceReply(isPersonal bool, inputFieldPlaceholder string) *Re
 	}
 
 	return &replyMarkupForceReplyTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (replyMarkupForceReply *ReplyMarkupForceReply) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		IsPersonal            bool   `json:"is_personal"`             // True, if a forced reply must automatically be shown to the current user. For outgoing messages, specify true to show the forced reply only for the mentioned users and for the target user of a reply
+		InputFieldPlaceholder string `json:"input_field_placeholder"` // If non-empty, the placeholder to be shown in the input field when the reply is active; 0-64 characters
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	replyMarkupForceReply.tdCommon = tempObj.tdCommon
+	replyMarkupForceReply.IsPersonal = tempObj.IsPersonal
+	replyMarkupForceReply.InputFieldPlaceholder = tempObj.InputFieldPlaceholder
+
+	return nil
 }
 
 // GetReplyMarkupEnum return the enum type of this object
@@ -7187,6 +11722,36 @@ func NewReplyMarkupShowKeyboard(rows [][]KeyboardButton, resizeKeyboard bool, on
 	return &replyMarkupShowKeyboardTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (replyMarkupShowKeyboard *ReplyMarkupShowKeyboard) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Rows                  [][]KeyboardButton `json:"rows"`                    // A list of rows of bot keyboard buttons
+		ResizeKeyboard        bool               `json:"resize_keyboard"`         // True, if the application needs to resize the keyboard vertically
+		OneTime               bool               `json:"one_time"`                // True, if the application needs to hide the keyboard after use
+		IsPersonal            bool               `json:"is_personal"`             // True, if the keyboard must automatically be shown to the current user. For outgoing messages, specify true to show the keyboard only for the mentioned users and for the target user of a reply
+		InputFieldPlaceholder string             `json:"input_field_placeholder"` // If non-empty, the placeholder to be shown in the input field when the keyboard is active; 0-64 characters
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	replyMarkupShowKeyboard.tdCommon = tempObj.tdCommon
+	replyMarkupShowKeyboard.Rows = tempObj.Rows
+	replyMarkupShowKeyboard.ResizeKeyboard = tempObj.ResizeKeyboard
+	replyMarkupShowKeyboard.OneTime = tempObj.OneTime
+	replyMarkupShowKeyboard.IsPersonal = tempObj.IsPersonal
+	replyMarkupShowKeyboard.InputFieldPlaceholder = tempObj.InputFieldPlaceholder
+
+	return nil
+}
+
 // GetReplyMarkupEnum return the enum type of this object
 func (replyMarkupShowKeyboard *ReplyMarkupShowKeyboard) GetReplyMarkupEnum() ReplyMarkupEnum {
 	return ReplyMarkupShowKeyboardType
@@ -7213,6 +11778,28 @@ func NewReplyMarkupInlineKeyboard(rows [][]InlineKeyboardButton) *ReplyMarkupInl
 	}
 
 	return &replyMarkupInlineKeyboardTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (replyMarkupInlineKeyboard *ReplyMarkupInlineKeyboard) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Rows [][]InlineKeyboardButton `json:"rows"` // A list of rows of inline keyboard buttons
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	replyMarkupInlineKeyboard.tdCommon = tempObj.tdCommon
+	replyMarkupInlineKeyboard.Rows = tempObj.Rows
+
+	return nil
 }
 
 // GetReplyMarkupEnum return the enum type of this object
@@ -7246,6 +11833,30 @@ func NewLoginURLInfoOpen(uRL string, skipConfirm bool) *LoginURLInfoOpen {
 	return &loginURLInfoOpenTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (loginURLInfoOpen *LoginURLInfoOpen) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		URL         string `json:"url"`          // The URL to open
+		SkipConfirm bool   `json:"skip_confirm"` // True, if there is no need to show an ordinary open URL confirm
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	loginURLInfoOpen.tdCommon = tempObj.tdCommon
+	loginURLInfoOpen.URL = tempObj.URL
+	loginURLInfoOpen.SkipConfirm = tempObj.SkipConfirm
+
+	return nil
+}
+
 // LoginURLInfoRequestConfirmation An authorization confirmation dialog needs to be shown to the user
 type LoginURLInfoRequestConfirmation struct {
 	tdCommon
@@ -7276,6 +11887,34 @@ func NewLoginURLInfoRequestConfirmation(uRL string, domain string, botUserID int
 	}
 
 	return &loginURLInfoRequestConfirmationTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (loginURLInfoRequestConfirmation *LoginURLInfoRequestConfirmation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		URL                string `json:"url"`                  // An HTTP URL to be opened
+		Domain             string `json:"domain"`               // A domain of the URL
+		BotUserID          int64  `json:"bot_user_id"`          // User identifier of a bot linked with the website
+		RequestWriteAccess bool   `json:"request_write_access"` // True, if the user needs to be requested to give the permission to the bot to send them messages
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	loginURLInfoRequestConfirmation.tdCommon = tempObj.tdCommon
+	loginURLInfoRequestConfirmation.URL = tempObj.URL
+	loginURLInfoRequestConfirmation.Domain = tempObj.Domain
+	loginURLInfoRequestConfirmation.BotUserID = tempObj.BotUserID
+	loginURLInfoRequestConfirmation.RequestWriteAccess = tempObj.RequestWriteAccess
+
+	return nil
 }
 
 // MessageThreadInfo Contains information about a message thread
@@ -7316,6 +11955,55 @@ func NewMessageThreadInfo(chatID int64, messageThreadID int64, replyInfo *Messag
 	return &messageThreadInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageThreadInfo *MessageThreadInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID             int64     `json:"chat_id"`              // Identifier of the chat to which the message thread belongs
+		MessageThreadID    int64     `json:"message_thread_id"`    // Message thread identifier, unique within the chat
+		UnreadMessageCount int32     `json:"unread_message_count"` // Approximate number of unread messages in the message thread
+		Messages           []Message `json:"messages"`             // The messages from which the thread starts. The messages are returned in a reverse chronological order (i.e., in order of decreasing message_id)
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageThreadInfo.tdCommon = tempObj.tdCommon
+	messageThreadInfo.ChatID = tempObj.ChatID
+	messageThreadInfo.MessageThreadID = tempObj.MessageThreadID
+	messageThreadInfo.UnreadMessageCount = tempObj.UnreadMessageCount
+	messageThreadInfo.Messages = tempObj.Messages
+
+	var replyInfo MessageReplyInfo
+	if objMap["reply_info"] != nil {
+		err = replyInfo.UnmarshalJSON(*objMap["reply_info"])
+		if err != nil {
+			return err
+		}
+	}
+
+	messageThreadInfo.ReplyInfo = &replyInfo
+
+	var draftMessage DraftMessage
+	if objMap["draft_message"] != nil {
+		err = draftMessage.UnmarshalJSON(*objMap["draft_message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	messageThreadInfo.DraftMessage = &draftMessage
+
+	return nil
+}
+
 // RichTextPlain A plain text
 type RichTextPlain struct {
 	tdCommon
@@ -7337,6 +12025,28 @@ func NewRichTextPlain(text string) *RichTextPlain {
 	}
 
 	return &richTextPlainTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (richTextPlain *RichTextPlain) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Text string `json:"text"` // Text
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	richTextPlain.tdCommon = tempObj.tdCommon
+	richTextPlain.Text = tempObj.Text
+
+	return nil
 }
 
 // GetRichTextEnum return the enum type of this object
@@ -7954,6 +12664,32 @@ func NewRichTextIcon(document *Document, width int32, height int32) *RichTextIco
 	return &richTextIconTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (richTextIcon *RichTextIcon) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Document *Document `json:"document"` // The image represented as a document. The image can be in GIF, JPEG or PNG format
+		Width    int32     `json:"width"`    // Width of a bounding box in which the image must be shown; 0 if unknown
+		Height   int32     `json:"height"`   // Height of a bounding box in which the image must be shown; 0 if unknown
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	richTextIcon.tdCommon = tempObj.tdCommon
+	richTextIcon.Document = tempObj.Document
+	richTextIcon.Width = tempObj.Width
+	richTextIcon.Height = tempObj.Height
+
+	return nil
+}
+
 // GetRichTextEnum return the enum type of this object
 func (richTextIcon *RichTextIcon) GetRichTextEnum() RichTextEnum {
 	return RichTextIconType
@@ -8041,6 +12777,28 @@ func NewRichTextAnchor(name string) *RichTextAnchor {
 	}
 
 	return &richTextAnchorTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (richTextAnchor *RichTextAnchor) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Name string `json:"name"` // Anchor name
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	richTextAnchor.tdCommon = tempObj.tdCommon
+	richTextAnchor.Name = tempObj.Name
+
+	return nil
 }
 
 // GetRichTextEnum return the enum type of this object
@@ -8132,6 +12890,29 @@ func NewRichTexts(texts []RichText) *RichTexts {
 	return &richTextsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (richTexts *RichTexts) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	richTexts.tdCommon = tempObj.tdCommon
+
+	fieldTexts, _ := unmarshalRichTextSlice(objMap["texts"])
+	richTexts.Texts = fieldTexts
+
+	return nil
+}
+
 // GetRichTextEnum return the enum type of this object
 func (richTexts *RichTexts) GetRichTextEnum() RichTextEnum {
 	return RichTextsType
@@ -8215,6 +12996,32 @@ func NewPageBlockListItem(label string, pageBlocks []PageBlock) *PageBlockListIt
 	return &pageBlockListItemTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pageBlockListItem *PageBlockListItem) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Label string `json:"label"` // Item label
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockListItem.tdCommon = tempObj.tdCommon
+	pageBlockListItem.Label = tempObj.Label
+
+	fieldPageBlocks, _ := unmarshalPageBlockSlice(objMap["page_blocks"])
+	pageBlockListItem.PageBlocks = fieldPageBlocks
+
+	return nil
+}
+
 // PageBlockHorizontalAlignmentLeft The content must be left-aligned
 type PageBlockHorizontalAlignmentLeft struct {
 	tdCommon
@@ -8233,6 +13040,26 @@ func NewPageBlockHorizontalAlignmentLeft() *PageBlockHorizontalAlignmentLeft {
 	}
 
 	return &pageBlockHorizontalAlignmentLeftTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pageBlockHorizontalAlignmentLeft *PageBlockHorizontalAlignmentLeft) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockHorizontalAlignmentLeft.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPageBlockHorizontalAlignmentEnum return the enum type of this object
@@ -8260,6 +13087,26 @@ func NewPageBlockHorizontalAlignmentCenter() *PageBlockHorizontalAlignmentCenter
 	return &pageBlockHorizontalAlignmentCenterTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pageBlockHorizontalAlignmentCenter *PageBlockHorizontalAlignmentCenter) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockHorizontalAlignmentCenter.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetPageBlockHorizontalAlignmentEnum return the enum type of this object
 func (pageBlockHorizontalAlignmentCenter *PageBlockHorizontalAlignmentCenter) GetPageBlockHorizontalAlignmentEnum() PageBlockHorizontalAlignmentEnum {
 	return PageBlockHorizontalAlignmentCenterType
@@ -8283,6 +13130,26 @@ func NewPageBlockHorizontalAlignmentRight() *PageBlockHorizontalAlignmentRight {
 	}
 
 	return &pageBlockHorizontalAlignmentRightTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pageBlockHorizontalAlignmentRight *PageBlockHorizontalAlignmentRight) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockHorizontalAlignmentRight.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPageBlockHorizontalAlignmentEnum return the enum type of this object
@@ -8310,6 +13177,26 @@ func NewPageBlockVerticalAlignmentTop() *PageBlockVerticalAlignmentTop {
 	return &pageBlockVerticalAlignmentTopTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pageBlockVerticalAlignmentTop *PageBlockVerticalAlignmentTop) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockVerticalAlignmentTop.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetPageBlockVerticalAlignmentEnum return the enum type of this object
 func (pageBlockVerticalAlignmentTop *PageBlockVerticalAlignmentTop) GetPageBlockVerticalAlignmentEnum() PageBlockVerticalAlignmentEnum {
 	return PageBlockVerticalAlignmentTopType
@@ -8333,6 +13220,26 @@ func NewPageBlockVerticalAlignmentMiddle() *PageBlockVerticalAlignmentMiddle {
 	}
 
 	return &pageBlockVerticalAlignmentMiddleTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pageBlockVerticalAlignmentMiddle *PageBlockVerticalAlignmentMiddle) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockVerticalAlignmentMiddle.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPageBlockVerticalAlignmentEnum return the enum type of this object
@@ -8360,6 +13267,26 @@ func NewPageBlockVerticalAlignmentBottom() *PageBlockVerticalAlignmentBottom {
 	return &pageBlockVerticalAlignmentBottomTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pageBlockVerticalAlignmentBottom *PageBlockVerticalAlignmentBottom) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockVerticalAlignmentBottom.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetPageBlockVerticalAlignmentEnum return the enum type of this object
 func (pageBlockVerticalAlignmentBottom *PageBlockVerticalAlignmentBottom) GetPageBlockVerticalAlignmentEnum() PageBlockVerticalAlignmentEnum {
 	return PageBlockVerticalAlignmentBottomType
@@ -8368,7 +13295,7 @@ func (pageBlockVerticalAlignmentBottom *PageBlockVerticalAlignmentBottom) GetPag
 // PageBlockTableCell Represents a cell of a table
 type PageBlockTableCell struct {
 	tdCommon
-	Text     RichText                     `json:"text"`      // Cell text; may be null. If the text is null, then the cell must be invisible
+	Text     *RichText                    `json:"text"`      // Cell text; may be null. If the text is null, then the cell must be invisible
 	IsHeader bool                         `json:"is_header"` // True, if it is a header cell
 	Colspan  int32                        `json:"colspan"`   // The number of columns the cell spans
 	Rowspan  int32                        `json:"rowspan"`   // The number of rows the cell spans
@@ -8389,7 +13316,7 @@ func (pageBlockTableCell *PageBlockTableCell) MessageType() string {
 // @param rowspan The number of rows the cell spans
 // @param align Horizontal cell content alignment
 // @param valign Vertical cell content alignment
-func NewPageBlockTableCell(text RichText, isHeader bool, colspan int32, rowspan int32, align PageBlockHorizontalAlignment, valign PageBlockVerticalAlignment) *PageBlockTableCell {
+func NewPageBlockTableCell(text *RichText, isHeader bool, colspan int32, rowspan int32, align PageBlockHorizontalAlignment, valign PageBlockVerticalAlignment) *PageBlockTableCell {
 	pageBlockTableCellTemp := PageBlockTableCell{
 		tdCommon: tdCommon{Type: "pageBlockTableCell"},
 		Text:     text,
@@ -8428,7 +13355,7 @@ func (pageBlockTableCell *PageBlockTableCell) UnmarshalJSON(b []byte) error {
 	pageBlockTableCell.Rowspan = tempObj.Rowspan
 
 	fieldText, _ := unmarshalRichText(objMap["text"])
-	pageBlockTableCell.Text = fieldText
+	pageBlockTableCell.Text = &fieldText
 
 	fieldAlign, _ := unmarshalPageBlockHorizontalAlignment(objMap["align"])
 	pageBlockTableCell.Align = fieldAlign
@@ -8475,6 +13402,38 @@ func NewPageBlockRelatedArticle(uRL string, title string, description string, ph
 	}
 
 	return &pageBlockRelatedArticleTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pageBlockRelatedArticle *PageBlockRelatedArticle) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		URL         string `json:"url"`          // Related article URL
+		Title       string `json:"title"`        // Article title; may be empty
+		Description string `json:"description"`  // Article description; may be empty
+		Photo       *Photo `json:"photo"`        // Article photo; may be null
+		Author      string `json:"author"`       // Article author; may be empty
+		PublishDate int32  `json:"publish_date"` // Point in time (Unix timestamp) when the article was published; 0 if unknown
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockRelatedArticle.tdCommon = tempObj.tdCommon
+	pageBlockRelatedArticle.URL = tempObj.URL
+	pageBlockRelatedArticle.Title = tempObj.Title
+	pageBlockRelatedArticle.Description = tempObj.Description
+	pageBlockRelatedArticle.Photo = tempObj.Photo
+	pageBlockRelatedArticle.Author = tempObj.Author
+	pageBlockRelatedArticle.PublishDate = tempObj.PublishDate
+
+	return nil
 }
 
 // PageBlockTitle The title of a page
@@ -8966,6 +13925,26 @@ func NewPageBlockDivider() *PageBlockDivider {
 	return &pageBlockDividerTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pageBlockDivider *PageBlockDivider) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockDivider.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetPageBlockEnum return the enum type of this object
 func (pageBlockDivider *PageBlockDivider) GetPageBlockEnum() PageBlockEnum {
 	return PageBlockDividerType
@@ -8994,6 +13973,28 @@ func NewPageBlockAnchor(name string) *PageBlockAnchor {
 	return &pageBlockAnchorTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pageBlockAnchor *PageBlockAnchor) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Name string `json:"name"` // Name of the anchor
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockAnchor.tdCommon = tempObj.tdCommon
+	pageBlockAnchor.Name = tempObj.Name
+
+	return nil
+}
+
 // GetPageBlockEnum return the enum type of this object
 func (pageBlockAnchor *PageBlockAnchor) GetPageBlockEnum() PageBlockEnum {
 	return PageBlockAnchorType
@@ -9020,6 +14021,28 @@ func NewPageBlockList(items []PageBlockListItem) *PageBlockList {
 	}
 
 	return &pageBlockListTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pageBlockList *PageBlockList) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Items []PageBlockListItem `json:"items"` // The items of the list
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockList.tdCommon = tempObj.tdCommon
+	pageBlockList.Items = tempObj.Items
+
+	return nil
 }
 
 // GetPageBlockEnum return the enum type of this object
@@ -9170,6 +14193,40 @@ func NewPageBlockAnimation(animation *Animation, caption *PageBlockCaption, need
 	return &pageBlockAnimationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pageBlockAnimation *PageBlockAnimation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Animation    *Animation `json:"animation"`     // Animation file; may be null
+		NeedAutoplay bool       `json:"need_autoplay"` // True, if the animation must be played automatically
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockAnimation.tdCommon = tempObj.tdCommon
+	pageBlockAnimation.Animation = tempObj.Animation
+	pageBlockAnimation.NeedAutoplay = tempObj.NeedAutoplay
+
+	var caption PageBlockCaption
+	if objMap["caption"] != nil {
+		err = caption.UnmarshalJSON(*objMap["caption"])
+		if err != nil {
+			return err
+		}
+	}
+
+	pageBlockAnimation.Caption = &caption
+
+	return nil
+}
+
 // GetPageBlockEnum return the enum type of this object
 func (pageBlockAnimation *PageBlockAnimation) GetPageBlockEnum() PageBlockEnum {
 	return PageBlockAnimationType
@@ -9199,6 +14256,39 @@ func NewPageBlockAudio(audio *Audio, caption *PageBlockCaption) *PageBlockAudio 
 	}
 
 	return &pageBlockAudioTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pageBlockAudio *PageBlockAudio) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Audio *Audio `json:"audio"` // Audio file; may be null
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockAudio.tdCommon = tempObj.tdCommon
+	pageBlockAudio.Audio = tempObj.Audio
+
+	var caption PageBlockCaption
+	if objMap["caption"] != nil {
+		err = caption.UnmarshalJSON(*objMap["caption"])
+		if err != nil {
+			return err
+		}
+	}
+
+	pageBlockAudio.Caption = &caption
+
+	return nil
 }
 
 // GetPageBlockEnum return the enum type of this object
@@ -9233,6 +14323,40 @@ func NewPageBlockPhoto(photo *Photo, caption *PageBlockCaption, uRL string) *Pag
 	}
 
 	return &pageBlockPhotoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pageBlockPhoto *PageBlockPhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Photo *Photo `json:"photo"` // Photo file; may be null
+		URL   string `json:"url"`   // URL that needs to be opened when the photo is clicked
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockPhoto.tdCommon = tempObj.tdCommon
+	pageBlockPhoto.Photo = tempObj.Photo
+	pageBlockPhoto.URL = tempObj.URL
+
+	var caption PageBlockCaption
+	if objMap["caption"] != nil {
+		err = caption.UnmarshalJSON(*objMap["caption"])
+		if err != nil {
+			return err
+		}
+	}
+
+	pageBlockPhoto.Caption = &caption
+
+	return nil
 }
 
 // GetPageBlockEnum return the enum type of this object
@@ -9272,6 +14396,42 @@ func NewPageBlockVideo(video *Video, caption *PageBlockCaption, needAutoplay boo
 	return &pageBlockVideoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pageBlockVideo *PageBlockVideo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Video        *Video `json:"video"`         // Video file; may be null
+		NeedAutoplay bool   `json:"need_autoplay"` // True, if the video must be played automatically
+		IsLooped     bool   `json:"is_looped"`     // True, if the video must be looped
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockVideo.tdCommon = tempObj.tdCommon
+	pageBlockVideo.Video = tempObj.Video
+	pageBlockVideo.NeedAutoplay = tempObj.NeedAutoplay
+	pageBlockVideo.IsLooped = tempObj.IsLooped
+
+	var caption PageBlockCaption
+	if objMap["caption"] != nil {
+		err = caption.UnmarshalJSON(*objMap["caption"])
+		if err != nil {
+			return err
+		}
+	}
+
+	pageBlockVideo.Caption = &caption
+
+	return nil
+}
+
 // GetPageBlockEnum return the enum type of this object
 func (pageBlockVideo *PageBlockVideo) GetPageBlockEnum() PageBlockEnum {
 	return PageBlockVideoType
@@ -9301,6 +14461,39 @@ func NewPageBlockVoiceNote(voiceNote *VoiceNote, caption *PageBlockCaption) *Pag
 	}
 
 	return &pageBlockVoiceNoteTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pageBlockVoiceNote *PageBlockVoiceNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		VoiceNote *VoiceNote `json:"voice_note"` // Voice note; may be null
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockVoiceNote.tdCommon = tempObj.tdCommon
+	pageBlockVoiceNote.VoiceNote = tempObj.VoiceNote
+
+	var caption PageBlockCaption
+	if objMap["caption"] != nil {
+		err = caption.UnmarshalJSON(*objMap["caption"])
+		if err != nil {
+			return err
+		}
+	}
+
+	pageBlockVoiceNote.Caption = &caption
+
+	return nil
 }
 
 // GetPageBlockEnum return the enum type of this object
@@ -9403,6 +14596,50 @@ func NewPageBlockEmbedded(uRL string, hTML string, posterPhoto *Photo, width int
 	return &pageBlockEmbeddedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pageBlockEmbedded *PageBlockEmbedded) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		URL            string `json:"url"`             // Web page URL, if available
+		HTML           string `json:"html"`            // HTML-markup of the embedded page
+		PosterPhoto    *Photo `json:"poster_photo"`    // Poster photo, if available; may be null
+		Width          int32  `json:"width"`           // Block width; 0 if unknown
+		Height         int32  `json:"height"`          // Block height; 0 if unknown
+		IsFullWidth    bool   `json:"is_full_width"`   // True, if the block must be full width
+		AllowScrolling bool   `json:"allow_scrolling"` // True, if scrolling needs to be allowed
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockEmbedded.tdCommon = tempObj.tdCommon
+	pageBlockEmbedded.URL = tempObj.URL
+	pageBlockEmbedded.HTML = tempObj.HTML
+	pageBlockEmbedded.PosterPhoto = tempObj.PosterPhoto
+	pageBlockEmbedded.Width = tempObj.Width
+	pageBlockEmbedded.Height = tempObj.Height
+	pageBlockEmbedded.IsFullWidth = tempObj.IsFullWidth
+	pageBlockEmbedded.AllowScrolling = tempObj.AllowScrolling
+
+	var caption PageBlockCaption
+	if objMap["caption"] != nil {
+		err = caption.UnmarshalJSON(*objMap["caption"])
+		if err != nil {
+			return err
+		}
+	}
+
+	pageBlockEmbedded.Caption = &caption
+
+	return nil
+}
+
 // GetPageBlockEnum return the enum type of this object
 func (pageBlockEmbedded *PageBlockEmbedded) GetPageBlockEnum() PageBlockEnum {
 	return PageBlockEmbeddedType
@@ -9446,6 +14683,48 @@ func NewPageBlockEmbeddedPost(uRL string, author string, authorPhoto *Photo, dat
 	return &pageBlockEmbeddedPostTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pageBlockEmbeddedPost *PageBlockEmbeddedPost) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		URL         string `json:"url"`          // Web page URL
+		Author      string `json:"author"`       // Post author
+		AuthorPhoto *Photo `json:"author_photo"` // Post author photo; may be null
+		Date        int32  `json:"date"`         // Point in time (Unix timestamp) when the post was created; 0 if unknown
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockEmbeddedPost.tdCommon = tempObj.tdCommon
+	pageBlockEmbeddedPost.URL = tempObj.URL
+	pageBlockEmbeddedPost.Author = tempObj.Author
+	pageBlockEmbeddedPost.AuthorPhoto = tempObj.AuthorPhoto
+	pageBlockEmbeddedPost.Date = tempObj.Date
+
+	var caption PageBlockCaption
+	if objMap["caption"] != nil {
+		err = caption.UnmarshalJSON(*objMap["caption"])
+		if err != nil {
+			return err
+		}
+	}
+
+	pageBlockEmbeddedPost.Caption = &caption
+
+	fieldPageBlocks, _ := unmarshalPageBlockSlice(objMap["page_blocks"])
+	pageBlockEmbeddedPost.PageBlocks = fieldPageBlocks
+
+	return nil
+}
+
 // GetPageBlockEnum return the enum type of this object
 func (pageBlockEmbeddedPost *PageBlockEmbeddedPost) GetPageBlockEnum() PageBlockEnum {
 	return PageBlockEmbeddedPostType
@@ -9477,6 +14756,39 @@ func NewPageBlockCollage(pageBlocks []PageBlock, caption *PageBlockCaption) *Pag
 	return &pageBlockCollageTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pageBlockCollage *PageBlockCollage) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockCollage.tdCommon = tempObj.tdCommon
+
+	var caption PageBlockCaption
+	if objMap["caption"] != nil {
+		err = caption.UnmarshalJSON(*objMap["caption"])
+		if err != nil {
+			return err
+		}
+	}
+
+	pageBlockCollage.Caption = &caption
+
+	fieldPageBlocks, _ := unmarshalPageBlockSlice(objMap["page_blocks"])
+	pageBlockCollage.PageBlocks = fieldPageBlocks
+
+	return nil
+}
+
 // GetPageBlockEnum return the enum type of this object
 func (pageBlockCollage *PageBlockCollage) GetPageBlockEnum() PageBlockEnum {
 	return PageBlockCollageType
@@ -9506,6 +14818,39 @@ func NewPageBlockSlideshow(pageBlocks []PageBlock, caption *PageBlockCaption) *P
 	}
 
 	return &pageBlockSlideshowTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pageBlockSlideshow *PageBlockSlideshow) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockSlideshow.tdCommon = tempObj.tdCommon
+
+	var caption PageBlockCaption
+	if objMap["caption"] != nil {
+		err = caption.UnmarshalJSON(*objMap["caption"])
+		if err != nil {
+			return err
+		}
+	}
+
+	pageBlockSlideshow.Caption = &caption
+
+	fieldPageBlocks, _ := unmarshalPageBlockSlice(objMap["page_blocks"])
+	pageBlockSlideshow.PageBlocks = fieldPageBlocks
+
+	return nil
 }
 
 // GetPageBlockEnum return the enum type of this object
@@ -9540,6 +14885,32 @@ func NewPageBlockChatLink(title string, photo *ChatPhotoInfo, username string) *
 	}
 
 	return &pageBlockChatLinkTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pageBlockChatLink *PageBlockChatLink) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Title    string         `json:"title"`    // Chat title
+		Photo    *ChatPhotoInfo `json:"photo"`    // Chat photo; may be null
+		Username string         `json:"username"` // Chat username, by which all other information about the chat can be resolved
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockChatLink.tdCommon = tempObj.tdCommon
+	pageBlockChatLink.Title = tempObj.Title
+	pageBlockChatLink.Photo = tempObj.Photo
+	pageBlockChatLink.Username = tempObj.Username
+
+	return nil
 }
 
 // GetPageBlockEnum return the enum type of this object
@@ -9651,8 +15022,7 @@ func (pageBlockDetails *PageBlockDetails) UnmarshalJSON(b []byte) error {
 	}
 	tempObj := struct {
 		tdCommon
-		PageBlocks []PageBlock `json:"page_blocks"` // Block contents
-		IsOpen     bool        `json:"is_open"`     // True, if the block is open by default
+		IsOpen bool `json:"is_open"` // True, if the block is open by default
 	}{}
 	err = json.Unmarshal(b, &tempObj)
 	if err != nil {
@@ -9660,11 +15030,13 @@ func (pageBlockDetails *PageBlockDetails) UnmarshalJSON(b []byte) error {
 	}
 
 	pageBlockDetails.tdCommon = tempObj.tdCommon
-	pageBlockDetails.PageBlocks = tempObj.PageBlocks
 	pageBlockDetails.IsOpen = tempObj.IsOpen
 
 	fieldHeader, _ := unmarshalRichText(objMap["header"])
 	pageBlockDetails.Header = fieldHeader
+
+	fieldPageBlocks, _ := unmarshalPageBlockSlice(objMap["page_blocks"])
+	pageBlockDetails.PageBlocks = fieldPageBlocks
 
 	return nil
 }
@@ -9765,6 +15137,45 @@ func NewPageBlockMap(location *Location, zoom int32, width int32, height int32, 
 	return &pageBlockMapTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pageBlockMap *PageBlockMap) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Location *Location `json:"location"` // Location of the map center
+		Zoom     int32     `json:"zoom"`     // Map zoom level
+		Width    int32     `json:"width"`    // Map width
+		Height   int32     `json:"height"`   // Map height
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pageBlockMap.tdCommon = tempObj.tdCommon
+	pageBlockMap.Location = tempObj.Location
+	pageBlockMap.Zoom = tempObj.Zoom
+	pageBlockMap.Width = tempObj.Width
+	pageBlockMap.Height = tempObj.Height
+
+	var caption PageBlockCaption
+	if objMap["caption"] != nil {
+		err = caption.UnmarshalJSON(*objMap["caption"])
+		if err != nil {
+			return err
+		}
+	}
+
+	pageBlockMap.Caption = &caption
+
+	return nil
+}
+
 // GetPageBlockEnum return the enum type of this object
 func (pageBlockMap *PageBlockMap) GetPageBlockEnum() PageBlockEnum {
 	return PageBlockMapType
@@ -9817,11 +15228,10 @@ func (webPageInstantView *WebPageInstantView) UnmarshalJSON(b []byte) error {
 	}
 	tempObj := struct {
 		tdCommon
-		PageBlocks []PageBlock `json:"page_blocks"` // Content of the web page
-		ViewCount  int32       `json:"view_count"`  // Number of the instant view views; 0 if unknown
-		Version    int32       `json:"version"`     // Version of the instant view; currently, can be 1 or 2
-		IsRtl      bool        `json:"is_rtl"`      // True, if the instant view must be shown from right to left
-		IsFull     bool        `json:"is_full"`     // True, if the instant view contains the full page. A network request might be needed to get the full web page instant view
+		ViewCount int32 `json:"view_count"` // Number of the instant view views; 0 if unknown
+		Version   int32 `json:"version"`    // Version of the instant view; currently, can be 1 or 2
+		IsRtl     bool  `json:"is_rtl"`     // True, if the instant view must be shown from right to left
+		IsFull    bool  `json:"is_full"`    // True, if the instant view contains the full page. A network request might be needed to get the full web page instant view
 
 	}{}
 	err = json.Unmarshal(b, &tempObj)
@@ -9830,7 +15240,6 @@ func (webPageInstantView *WebPageInstantView) UnmarshalJSON(b []byte) error {
 	}
 
 	webPageInstantView.tdCommon = tempObj.tdCommon
-	webPageInstantView.PageBlocks = tempObj.PageBlocks
 	webPageInstantView.ViewCount = tempObj.ViewCount
 	webPageInstantView.Version = tempObj.Version
 	webPageInstantView.IsRtl = tempObj.IsRtl
@@ -9838,6 +15247,9 @@ func (webPageInstantView *WebPageInstantView) UnmarshalJSON(b []byte) error {
 
 	fieldFeedbackLink, _ := unmarshalInternalLinkType(objMap["feedback_link"])
 	webPageInstantView.FeedbackLink = fieldFeedbackLink
+
+	fieldPageBlocks, _ := unmarshalPageBlockSlice(objMap["page_blocks"])
+	webPageInstantView.PageBlocks = fieldPageBlocks
 
 	return nil
 }
@@ -9925,6 +15337,68 @@ func NewWebPage(uRL string, displayURL string, typeParam string, siteName string
 	return &webPageTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (webPage *WebPage) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		URL                string         `json:"url"`                  // Original URL of the link
+		DisplayURL         string         `json:"display_url"`          // URL to display
+		Type               string         `json:"type"`                 // Type of the web page. Can be: article, photo, audio, video, document, profile, app, or something else
+		SiteName           string         `json:"site_name"`            // Short name of the site (e.g., Google Docs, App Store)
+		Title              string         `json:"title"`                // Title of the content
+		Description        *FormattedText `json:"description"`          // Description of the content
+		Photo              *Photo         `json:"photo"`                // Image representing the content; may be null
+		EmbedURL           string         `json:"embed_url"`            // URL to show in the embedded preview
+		EmbedType          string         `json:"embed_type"`           // MIME type of the embedded preview, (e.g., text/html or video/mp4)
+		EmbedWidth         int32          `json:"embed_width"`          // Width of the embedded preview
+		EmbedHeight        int32          `json:"embed_height"`         // Height of the embedded preview
+		Duration           int32          `json:"duration"`             // Duration of the content, in seconds
+		Author             string         `json:"author"`               // Author of the content
+		Animation          *Animation     `json:"animation"`            // Preview of the content as an animation, if available; may be null
+		Audio              *Audio         `json:"audio"`                // Preview of the content as an audio file, if available; may be null
+		Document           *Document      `json:"document"`             // Preview of the content as a document, if available; may be null
+		Sticker            *Sticker       `json:"sticker"`              // Preview of the content as a sticker for small WEBP files, if available; may be null
+		Video              *Video         `json:"video"`                // Preview of the content as a video, if available; may be null
+		VideoNote          *VideoNote     `json:"video_note"`           // Preview of the content as a video note, if available; may be null
+		VoiceNote          *VoiceNote     `json:"voice_note"`           // Preview of the content as a voice note, if available; may be null
+		InstantViewVersion int32          `json:"instant_view_version"` // Version of instant view, available for the web page (currently, can be 1 or 2), 0 if none
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	webPage.tdCommon = tempObj.tdCommon
+	webPage.URL = tempObj.URL
+	webPage.DisplayURL = tempObj.DisplayURL
+	webPage.Type = tempObj.Type
+	webPage.SiteName = tempObj.SiteName
+	webPage.Title = tempObj.Title
+	webPage.Description = tempObj.Description
+	webPage.Photo = tempObj.Photo
+	webPage.EmbedURL = tempObj.EmbedURL
+	webPage.EmbedType = tempObj.EmbedType
+	webPage.EmbedWidth = tempObj.EmbedWidth
+	webPage.EmbedHeight = tempObj.EmbedHeight
+	webPage.Duration = tempObj.Duration
+	webPage.Author = tempObj.Author
+	webPage.Animation = tempObj.Animation
+	webPage.Audio = tempObj.Audio
+	webPage.Document = tempObj.Document
+	webPage.Sticker = tempObj.Sticker
+	webPage.Video = tempObj.Video
+	webPage.VideoNote = tempObj.VideoNote
+	webPage.VoiceNote = tempObj.VoiceNote
+	webPage.InstantViewVersion = tempObj.InstantViewVersion
+
+	return nil
+}
+
 // CountryInfo Contains information about a country
 type CountryInfo struct {
 	tdCommon
@@ -9960,6 +15434,36 @@ func NewCountryInfo(countryCode string, name string, englishName string, isHidde
 	return &countryInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (countryInfo *CountryInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		CountryCode  string   `json:"country_code"`  // A two-letter ISO 3166-1 alpha-2 country code
+		Name         string   `json:"name"`          // Native name of the country
+		EnglishName  string   `json:"english_name"`  // English name of the country
+		IsHidden     bool     `json:"is_hidden"`     // True, if the country must be hidden from the list of all countries
+		CallingCodes []string `json:"calling_codes"` // List of country calling codes
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	countryInfo.tdCommon = tempObj.tdCommon
+	countryInfo.CountryCode = tempObj.CountryCode
+	countryInfo.Name = tempObj.Name
+	countryInfo.EnglishName = tempObj.EnglishName
+	countryInfo.IsHidden = tempObj.IsHidden
+	countryInfo.CallingCodes = tempObj.CallingCodes
+
+	return nil
+}
+
 // Countries Contains information about countries
 type Countries struct {
 	tdCommon
@@ -9981,6 +15485,28 @@ func NewCountries(countries []CountryInfo) *Countries {
 	}
 
 	return &countriesTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (countries *Countries) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Countries []CountryInfo `json:"countries"` // The list of countries
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	countries.tdCommon = tempObj.tdCommon
+	countries.Countries = tempObj.Countries
+
+	return nil
 }
 
 // PhoneNumberInfo Contains information about a phone number
@@ -10012,6 +15538,32 @@ func NewPhoneNumberInfo(country *CountryInfo, countryCallingCode string, formatt
 	return &phoneNumberInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (phoneNumberInfo *PhoneNumberInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Country              *CountryInfo `json:"country"`                // Information about the country to which the phone number belongs; may be null
+		CountryCallingCode   string       `json:"country_calling_code"`   // The part of the phone number denoting country calling code or its part
+		FormattedPhoneNumber string       `json:"formatted_phone_number"` // The phone number without country calling code formatted accordingly to local rules. Expected digits are returned as '-', but even more digits might be entered by the user
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	phoneNumberInfo.tdCommon = tempObj.tdCommon
+	phoneNumberInfo.Country = tempObj.Country
+	phoneNumberInfo.CountryCallingCode = tempObj.CountryCallingCode
+	phoneNumberInfo.FormattedPhoneNumber = tempObj.FormattedPhoneNumber
+
+	return nil
+}
+
 // BankCardActionOpenURL Describes an action associated with a bank card number
 type BankCardActionOpenURL struct {
 	tdCommon
@@ -10038,6 +15590,30 @@ func NewBankCardActionOpenURL(text string, uRL string) *BankCardActionOpenURL {
 	return &bankCardActionOpenURLTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (bankCardActionOpenURL *BankCardActionOpenURL) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Text string `json:"text"` // Action text
+		URL  string `json:"url"`  // The URL to be opened
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	bankCardActionOpenURL.tdCommon = tempObj.tdCommon
+	bankCardActionOpenURL.Text = tempObj.Text
+	bankCardActionOpenURL.URL = tempObj.URL
+
+	return nil
+}
+
 // BankCardInfo Information about a bank card
 type BankCardInfo struct {
 	tdCommon
@@ -10062,6 +15638,30 @@ func NewBankCardInfo(title string, actions []BankCardActionOpenURL) *BankCardInf
 	}
 
 	return &bankCardInfoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (bankCardInfo *BankCardInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Title   string                  `json:"title"`   // Title of the bank card description
+		Actions []BankCardActionOpenURL `json:"actions"` // Actions that can be done with the bank card number
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	bankCardInfo.tdCommon = tempObj.tdCommon
+	bankCardInfo.Title = tempObj.Title
+	bankCardInfo.Actions = tempObj.Actions
+
+	return nil
 }
 
 // Address Describes an address
@@ -10102,6 +15702,38 @@ func NewAddress(countryCode string, state string, city string, streetLine1 strin
 	return &addressTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (address *Address) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		CountryCode string `json:"country_code"` // A two-letter ISO 3166-1 alpha-2 country code
+		State       string `json:"state"`        // State, if applicable
+		City        string `json:"city"`         // City
+		StreetLine1 string `json:"street_line1"` // First line of the address
+		StreetLine2 string `json:"street_line2"` // Second line of the address
+		PostalCode  string `json:"postal_code"`  // Address postal code
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	address.tdCommon = tempObj.tdCommon
+	address.CountryCode = tempObj.CountryCode
+	address.State = tempObj.State
+	address.City = tempObj.City
+	address.StreetLine1 = tempObj.StreetLine1
+	address.StreetLine2 = tempObj.StreetLine2
+	address.PostalCode = tempObj.PostalCode
+
+	return nil
+}
+
 // LabeledPricePart Portion of the price of a product (e.g., "delivery cost", "tax amount")
 type LabeledPricePart struct {
 	tdCommon
@@ -10126,6 +15758,30 @@ func NewLabeledPricePart(label string, amount int64) *LabeledPricePart {
 	}
 
 	return &labeledPricePartTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (labeledPricePart *LabeledPricePart) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Label  string `json:"label"`  // Label for this portion of the product price
+		Amount int64  `json:"amount"` // Currency amount in the smallest units of the currency
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	labeledPricePart.tdCommon = tempObj.tdCommon
+	labeledPricePart.Label = tempObj.Label
+	labeledPricePart.Amount = tempObj.Amount
+
+	return nil
 }
 
 // Invoice Product invoice
@@ -10184,6 +15840,50 @@ func NewInvoice(currency string, priceParts []LabeledPricePart, maxTipAmount int
 	return &invoiceTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (invoice *Invoice) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Currency                   string             `json:"currency"`                       // ISO 4217 currency code
+		PriceParts                 []LabeledPricePart `json:"price_parts"`                    // A list of objects used to calculate the total price of the product
+		MaxTipAmount               int64              `json:"max_tip_amount"`                 // The maximum allowed amount of tip in the smallest units of the currency
+		SuggestedTipAmounts        []int64            `json:"suggested_tip_amounts"`          // Suggested amounts of tip in the smallest units of the currency
+		IsTest                     bool               `json:"is_test"`                        // True, if the payment is a test payment
+		NeedName                   bool               `json:"need_name"`                      // True, if the user's name is needed for payment
+		NeedPhoneNumber            bool               `json:"need_phone_number"`              // True, if the user's phone number is needed for payment
+		NeedEmailAddress           bool               `json:"need_email_address"`             // True, if the user's email address is needed for payment
+		NeedShippingAddress        bool               `json:"need_shipping_address"`          // True, if the user's shipping address is needed for payment
+		SendPhoneNumberToProvider  bool               `json:"send_phone_number_to_provider"`  // True, if the user's phone number will be sent to the provider
+		SendEmailAddressToProvider bool               `json:"send_email_address_to_provider"` // True, if the user's email address will be sent to the provider
+		IsFlexible                 bool               `json:"is_flexible"`                    // True, if the total price depends on the shipping method
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	invoice.tdCommon = tempObj.tdCommon
+	invoice.Currency = tempObj.Currency
+	invoice.PriceParts = tempObj.PriceParts
+	invoice.MaxTipAmount = tempObj.MaxTipAmount
+	invoice.SuggestedTipAmounts = tempObj.SuggestedTipAmounts
+	invoice.IsTest = tempObj.IsTest
+	invoice.NeedName = tempObj.NeedName
+	invoice.NeedPhoneNumber = tempObj.NeedPhoneNumber
+	invoice.NeedEmailAddress = tempObj.NeedEmailAddress
+	invoice.NeedShippingAddress = tempObj.NeedShippingAddress
+	invoice.SendPhoneNumberToProvider = tempObj.SendPhoneNumberToProvider
+	invoice.SendEmailAddressToProvider = tempObj.SendEmailAddressToProvider
+	invoice.IsFlexible = tempObj.IsFlexible
+
+	return nil
+}
+
 // OrderInfo Order information
 type OrderInfo struct {
 	tdCommon
@@ -10216,6 +15916,34 @@ func NewOrderInfo(name string, phoneNumber string, emailAddress string, shipping
 	return &orderInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (orderInfo *OrderInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Name            string   `json:"name"`             // Name of the user
+		PhoneNumber     string   `json:"phone_number"`     // Phone number of the user
+		EmailAddress    string   `json:"email_address"`    // Email address of the user
+		ShippingAddress *Address `json:"shipping_address"` // Shipping address for this order; may be null
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	orderInfo.tdCommon = tempObj.tdCommon
+	orderInfo.Name = tempObj.Name
+	orderInfo.PhoneNumber = tempObj.PhoneNumber
+	orderInfo.EmailAddress = tempObj.EmailAddress
+	orderInfo.ShippingAddress = tempObj.ShippingAddress
+
+	return nil
+}
+
 // ShippingOption One shipping option
 type ShippingOption struct {
 	tdCommon
@@ -10245,6 +15973,32 @@ func NewShippingOption(iD string, title string, priceParts []LabeledPricePart) *
 	return &shippingOptionTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (shippingOption *ShippingOption) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID         string             `json:"id"`          // Shipping option identifier
+		Title      string             `json:"title"`       // Option title
+		PriceParts []LabeledPricePart `json:"price_parts"` // A list of objects used to calculate the total shipping costs
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	shippingOption.tdCommon = tempObj.tdCommon
+	shippingOption.ID = tempObj.ID
+	shippingOption.Title = tempObj.Title
+	shippingOption.PriceParts = tempObj.PriceParts
+
+	return nil
+}
+
 // SavedCredentials Contains information about saved card credentials
 type SavedCredentials struct {
 	tdCommon
@@ -10271,6 +16025,30 @@ func NewSavedCredentials(iD string, title string) *SavedCredentials {
 	return &savedCredentialsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (savedCredentials *SavedCredentials) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID    string `json:"id"`    // Unique identifier of the saved credentials
+		Title string `json:"title"` // Title of the saved credentials
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	savedCredentials.tdCommon = tempObj.tdCommon
+	savedCredentials.ID = tempObj.ID
+	savedCredentials.Title = tempObj.Title
+
+	return nil
+}
+
 // InputCredentialsSaved Applies if a user chooses some previously saved payment credentials. To use their previously saved credentials, the user must have a valid temporary password
 type InputCredentialsSaved struct {
 	tdCommon
@@ -10292,6 +16070,28 @@ func NewInputCredentialsSaved(savedCredentialsID string) *InputCredentialsSaved 
 	}
 
 	return &inputCredentialsSavedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputCredentialsSaved *InputCredentialsSaved) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SavedCredentialsID string `json:"saved_credentials_id"` // Identifier of the saved credentials
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputCredentialsSaved.tdCommon = tempObj.tdCommon
+	inputCredentialsSaved.SavedCredentialsID = tempObj.SavedCredentialsID
+
+	return nil
 }
 
 // GetInputCredentialsEnum return the enum type of this object
@@ -10325,6 +16125,30 @@ func NewInputCredentialsNew(data string, allowSave bool) *InputCredentialsNew {
 	return &inputCredentialsNewTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputCredentialsNew *InputCredentialsNew) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Data      string `json:"data"`       // JSON-encoded data with the credential identifier from the payment provider
+		AllowSave bool   `json:"allow_save"` // True, if the credential identifier can be saved on the server side
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputCredentialsNew.tdCommon = tempObj.tdCommon
+	inputCredentialsNew.Data = tempObj.Data
+	inputCredentialsNew.AllowSave = tempObj.AllowSave
+
+	return nil
+}
+
 // GetInputCredentialsEnum return the enum type of this object
 func (inputCredentialsNew *InputCredentialsNew) GetInputCredentialsEnum() InputCredentialsEnum {
 	return InputCredentialsNewType
@@ -10353,6 +16177,28 @@ func NewInputCredentialsApplePay(data string) *InputCredentialsApplePay {
 	return &inputCredentialsApplePayTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputCredentialsApplePay *InputCredentialsApplePay) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Data string `json:"data"` // JSON-encoded data with the credential identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputCredentialsApplePay.tdCommon = tempObj.tdCommon
+	inputCredentialsApplePay.Data = tempObj.Data
+
+	return nil
+}
+
 // GetInputCredentialsEnum return the enum type of this object
 func (inputCredentialsApplePay *InputCredentialsApplePay) GetInputCredentialsEnum() InputCredentialsEnum {
 	return InputCredentialsApplePayType
@@ -10379,6 +16225,28 @@ func NewInputCredentialsGooglePay(data string) *InputCredentialsGooglePay {
 	}
 
 	return &inputCredentialsGooglePayTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputCredentialsGooglePay *InputCredentialsGooglePay) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Data string `json:"data"` // JSON-encoded data with the credential identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputCredentialsGooglePay.tdCommon = tempObj.tdCommon
+	inputCredentialsGooglePay.Data = tempObj.Data
+
+	return nil
 }
 
 // GetInputCredentialsEnum return the enum type of this object
@@ -10418,6 +16286,34 @@ func NewPaymentsProviderStripe(publishableKey string, needCountry bool, needPost
 	return &paymentsProviderStripeTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (paymentsProviderStripe *PaymentsProviderStripe) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		PublishableKey     string `json:"publishable_key"`      // Stripe API publishable key
+		NeedCountry        bool   `json:"need_country"`         // True, if the user country must be provided
+		NeedPostalCode     bool   `json:"need_postal_code"`     // True, if the user ZIP/postal code must be provided
+		NeedCardholderName bool   `json:"need_cardholder_name"` // True, if the cardholder name must be provided
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	paymentsProviderStripe.tdCommon = tempObj.tdCommon
+	paymentsProviderStripe.PublishableKey = tempObj.PublishableKey
+	paymentsProviderStripe.NeedCountry = tempObj.NeedCountry
+	paymentsProviderStripe.NeedPostalCode = tempObj.NeedPostalCode
+	paymentsProviderStripe.NeedCardholderName = tempObj.NeedCardholderName
+
+	return nil
+}
+
 // PaymentFormTheme Theme colors for a payment form
 type PaymentFormTheme struct {
 	tdCommon
@@ -10454,6 +16350,38 @@ func NewPaymentFormTheme(backgroundColor int32, textColor int32, hintColor int32
 	}
 
 	return &paymentFormThemeTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (paymentFormTheme *PaymentFormTheme) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		BackgroundColor int32 `json:"background_color"`  // A color of the payment form background in the RGB24 format
+		TextColor       int32 `json:"text_color"`        // A color of text in the RGB24 format
+		HintColor       int32 `json:"hint_color"`        // A color of hints in the RGB24 format
+		LinkColor       int32 `json:"link_color"`        // A color of links in the RGB24 format
+		ButtonColor     int32 `json:"button_color"`      // A color of the buttons in the RGB24 format
+		ButtonTextColor int32 `json:"button_text_color"` // A color of text on the buttons in the RGB24 format
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	paymentFormTheme.tdCommon = tempObj.tdCommon
+	paymentFormTheme.BackgroundColor = tempObj.BackgroundColor
+	paymentFormTheme.TextColor = tempObj.TextColor
+	paymentFormTheme.HintColor = tempObj.HintColor
+	paymentFormTheme.LinkColor = tempObj.LinkColor
+	paymentFormTheme.ButtonColor = tempObj.ButtonColor
+	paymentFormTheme.ButtonTextColor = tempObj.ButtonTextColor
+
+	return nil
 }
 
 // PaymentForm Contains information about an invoice payment form
@@ -10506,6 +16434,46 @@ func NewPaymentForm(iD JSONInt64, invoice *Invoice, uRL string, sellerBotUserID 
 	return &paymentFormTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (paymentForm *PaymentForm) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID                     JSONInt64               `json:"id"`                        // The payment form identifier
+		Invoice                *Invoice                `json:"invoice"`                   // Full information of the invoice
+		URL                    string                  `json:"url"`                       // Payment form URL
+		SellerBotUserID        int64                   `json:"seller_bot_user_id"`        // User identifier of the seller bot
+		PaymentsProviderUserID int64                   `json:"payments_provider_user_id"` // User identifier of the payment provider bot
+		PaymentsProvider       *PaymentsProviderStripe `json:"payments_provider"`         // Information about the payment provider, if available, to support it natively without the need for opening the URL; may be null
+		SavedOrderInfo         *OrderInfo              `json:"saved_order_info"`          // Saved server-side order information; may be null
+		SavedCredentials       *SavedCredentials       `json:"saved_credentials"`         // Information about saved card credentials; may be null
+		CanSaveCredentials     bool                    `json:"can_save_credentials"`      // True, if the user can choose to save credentials
+		NeedPassword           bool                    `json:"need_password"`             // True, if the user will be able to save credentials protected by a password they set up
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	paymentForm.tdCommon = tempObj.tdCommon
+	paymentForm.ID = tempObj.ID
+	paymentForm.Invoice = tempObj.Invoice
+	paymentForm.URL = tempObj.URL
+	paymentForm.SellerBotUserID = tempObj.SellerBotUserID
+	paymentForm.PaymentsProviderUserID = tempObj.PaymentsProviderUserID
+	paymentForm.PaymentsProvider = tempObj.PaymentsProvider
+	paymentForm.SavedOrderInfo = tempObj.SavedOrderInfo
+	paymentForm.SavedCredentials = tempObj.SavedCredentials
+	paymentForm.CanSaveCredentials = tempObj.CanSaveCredentials
+	paymentForm.NeedPassword = tempObj.NeedPassword
+
+	return nil
+}
+
 // ValidatedOrderInfo Contains a temporary identifier of validated order information, which is stored for one hour. Also contains the available shipping options
 type ValidatedOrderInfo struct {
 	tdCommon
@@ -10532,6 +16500,30 @@ func NewValidatedOrderInfo(orderInfoID string, shippingOptions []ShippingOption)
 	return &validatedOrderInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (validatedOrderInfo *ValidatedOrderInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		OrderInfoID     string           `json:"order_info_id"`    // Temporary identifier of the order information
+		ShippingOptions []ShippingOption `json:"shipping_options"` // Available shipping options
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	validatedOrderInfo.tdCommon = tempObj.tdCommon
+	validatedOrderInfo.OrderInfoID = tempObj.OrderInfoID
+	validatedOrderInfo.ShippingOptions = tempObj.ShippingOptions
+
+	return nil
+}
+
 // PaymentResult Contains the result of a payment request
 type PaymentResult struct {
 	tdCommon
@@ -10556,6 +16548,30 @@ func NewPaymentResult(success bool, verificationURL string) *PaymentResult {
 	}
 
 	return &paymentResultTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (paymentResult *PaymentResult) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Success         bool   `json:"success"`          // True, if the payment request was successful; otherwise the verification_url will be non-empty
+		VerificationURL string `json:"verification_url"` // URL for additional payment credentials verification
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	paymentResult.tdCommon = tempObj.tdCommon
+	paymentResult.Success = tempObj.Success
+	paymentResult.VerificationURL = tempObj.VerificationURL
+
+	return nil
 }
 
 // PaymentReceipt Contains information about a successful payment
@@ -10611,6 +16627,48 @@ func NewPaymentReceipt(title string, description string, photo *Photo, date int3
 	return &paymentReceiptTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (paymentReceipt *PaymentReceipt) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Title                  string          `json:"title"`                     // Product title
+		Description            string          `json:"description"`               // Product description
+		Photo                  *Photo          `json:"photo"`                     // Product photo; may be null
+		Date                   int32           `json:"date"`                      // Point in time (Unix timestamp) when the payment was made
+		SellerBotUserID        int64           `json:"seller_bot_user_id"`        // User identifier of the seller bot
+		PaymentsProviderUserID int64           `json:"payments_provider_user_id"` // User identifier of the payment provider bot
+		Invoice                *Invoice        `json:"invoice"`                   // Information about the invoice
+		OrderInfo              *OrderInfo      `json:"order_info"`                // Order information; may be null
+		ShippingOption         *ShippingOption `json:"shipping_option"`           // Chosen shipping option; may be null
+		CredentialsTitle       string          `json:"credentials_title"`         // Title of the saved credentials chosen by the buyer
+		TipAmount              int64           `json:"tip_amount"`                // The amount of tip chosen by the buyer in the smallest units of the currency
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	paymentReceipt.tdCommon = tempObj.tdCommon
+	paymentReceipt.Title = tempObj.Title
+	paymentReceipt.Description = tempObj.Description
+	paymentReceipt.Photo = tempObj.Photo
+	paymentReceipt.Date = tempObj.Date
+	paymentReceipt.SellerBotUserID = tempObj.SellerBotUserID
+	paymentReceipt.PaymentsProviderUserID = tempObj.PaymentsProviderUserID
+	paymentReceipt.Invoice = tempObj.Invoice
+	paymentReceipt.OrderInfo = tempObj.OrderInfo
+	paymentReceipt.ShippingOption = tempObj.ShippingOption
+	paymentReceipt.CredentialsTitle = tempObj.CredentialsTitle
+	paymentReceipt.TipAmount = tempObj.TipAmount
+
+	return nil
+}
+
 // DatedFile File with the date it was uploaded
 type DatedFile struct {
 	tdCommon
@@ -10637,6 +16695,30 @@ func NewDatedFile(file *File, date int32) *DatedFile {
 	return &datedFileTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (datedFile *DatedFile) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		File *File `json:"file"` // The file
+		Date int32 `json:"date"` // Point in time (Unix timestamp) when the file was uploaded
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	datedFile.tdCommon = tempObj.tdCommon
+	datedFile.File = tempObj.File
+	datedFile.Date = tempObj.Date
+
+	return nil
+}
+
 // PassportElementTypePersonalDetails A Telegram Passport element containing the user's personal details
 type PassportElementTypePersonalDetails struct {
 	tdCommon
@@ -10655,6 +16737,26 @@ func NewPassportElementTypePersonalDetails() *PassportElementTypePersonalDetails
 	}
 
 	return &passportElementTypePersonalDetailsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementTypePersonalDetails *PassportElementTypePersonalDetails) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementTypePersonalDetails.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPassportElementTypeEnum return the enum type of this object
@@ -10682,6 +16784,26 @@ func NewPassportElementTypePassport() *PassportElementTypePassport {
 	return &passportElementTypePassportTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementTypePassport *PassportElementTypePassport) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementTypePassport.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetPassportElementTypeEnum return the enum type of this object
 func (passportElementTypePassport *PassportElementTypePassport) GetPassportElementTypeEnum() PassportElementTypeEnum {
 	return PassportElementTypePassportType
@@ -10705,6 +16827,26 @@ func NewPassportElementTypeDriverLicense() *PassportElementTypeDriverLicense {
 	}
 
 	return &passportElementTypeDriverLicenseTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementTypeDriverLicense *PassportElementTypeDriverLicense) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementTypeDriverLicense.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPassportElementTypeEnum return the enum type of this object
@@ -10732,6 +16874,26 @@ func NewPassportElementTypeIDentityCard() *PassportElementTypeIDentityCard {
 	return &passportElementTypeIDentityCardTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementTypeIDentityCard *PassportElementTypeIDentityCard) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementTypeIDentityCard.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetPassportElementTypeEnum return the enum type of this object
 func (passportElementTypeIDentityCard *PassportElementTypeIDentityCard) GetPassportElementTypeEnum() PassportElementTypeEnum {
 	return PassportElementTypeIDentityCardType
@@ -10755,6 +16917,26 @@ func NewPassportElementTypeInternalPassport() *PassportElementTypeInternalPasspo
 	}
 
 	return &passportElementTypeInternalPassportTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementTypeInternalPassport *PassportElementTypeInternalPassport) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementTypeInternalPassport.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPassportElementTypeEnum return the enum type of this object
@@ -10782,6 +16964,26 @@ func NewPassportElementTypeAddress() *PassportElementTypeAddress {
 	return &passportElementTypeAddressTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementTypeAddress *PassportElementTypeAddress) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementTypeAddress.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetPassportElementTypeEnum return the enum type of this object
 func (passportElementTypeAddress *PassportElementTypeAddress) GetPassportElementTypeEnum() PassportElementTypeEnum {
 	return PassportElementTypeAddressType
@@ -10805,6 +17007,26 @@ func NewPassportElementTypeUtilityBill() *PassportElementTypeUtilityBill {
 	}
 
 	return &passportElementTypeUtilityBillTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementTypeUtilityBill *PassportElementTypeUtilityBill) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementTypeUtilityBill.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPassportElementTypeEnum return the enum type of this object
@@ -10832,6 +17054,26 @@ func NewPassportElementTypeBankStatement() *PassportElementTypeBankStatement {
 	return &passportElementTypeBankStatementTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementTypeBankStatement *PassportElementTypeBankStatement) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementTypeBankStatement.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetPassportElementTypeEnum return the enum type of this object
 func (passportElementTypeBankStatement *PassportElementTypeBankStatement) GetPassportElementTypeEnum() PassportElementTypeEnum {
 	return PassportElementTypeBankStatementType
@@ -10855,6 +17097,26 @@ func NewPassportElementTypeRentalAgreement() *PassportElementTypeRentalAgreement
 	}
 
 	return &passportElementTypeRentalAgreementTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementTypeRentalAgreement *PassportElementTypeRentalAgreement) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementTypeRentalAgreement.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPassportElementTypeEnum return the enum type of this object
@@ -10882,6 +17144,26 @@ func NewPassportElementTypePassportRegistration() *PassportElementTypePassportRe
 	return &passportElementTypePassportRegistrationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementTypePassportRegistration *PassportElementTypePassportRegistration) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementTypePassportRegistration.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetPassportElementTypeEnum return the enum type of this object
 func (passportElementTypePassportRegistration *PassportElementTypePassportRegistration) GetPassportElementTypeEnum() PassportElementTypeEnum {
 	return PassportElementTypePassportRegistrationType
@@ -10905,6 +17187,26 @@ func NewPassportElementTypeTemporaryRegistration() *PassportElementTypeTemporary
 	}
 
 	return &passportElementTypeTemporaryRegistrationTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementTypeTemporaryRegistration *PassportElementTypeTemporaryRegistration) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementTypeTemporaryRegistration.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPassportElementTypeEnum return the enum type of this object
@@ -10932,6 +17234,26 @@ func NewPassportElementTypePhoneNumber() *PassportElementTypePhoneNumber {
 	return &passportElementTypePhoneNumberTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementTypePhoneNumber *PassportElementTypePhoneNumber) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementTypePhoneNumber.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetPassportElementTypeEnum return the enum type of this object
 func (passportElementTypePhoneNumber *PassportElementTypePhoneNumber) GetPassportElementTypeEnum() PassportElementTypeEnum {
 	return PassportElementTypePhoneNumberType
@@ -10955,6 +17277,26 @@ func NewPassportElementTypeEmailAddress() *PassportElementTypeEmailAddress {
 	}
 
 	return &passportElementTypeEmailAddressTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementTypeEmailAddress *PassportElementTypeEmailAddress) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementTypeEmailAddress.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPassportElementTypeEnum return the enum type of this object
@@ -10989,6 +17331,32 @@ func NewDate(day int32, month int32, year int32) *Date {
 	}
 
 	return &dateTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (date *Date) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Day   int32 `json:"day"`   // Day of the month; 1-31
+		Month int32 `json:"month"` // Month; 1-12
+		Year  int32 `json:"year"`  // Year; 1-9999
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	date.tdCommon = tempObj.tdCommon
+	date.Day = tempObj.Day
+	date.Month = tempObj.Month
+	date.Year = tempObj.Year
+
+	return nil
 }
 
 // PersonalDetails Contains the user's personal details
@@ -11041,6 +17409,46 @@ func NewPersonalDetails(firstName string, middleName string, lastName string, na
 	return &personalDetailsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (personalDetails *PersonalDetails) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		FirstName            string `json:"first_name"`             // First name of the user written in English; 1-255 characters
+		MiddleName           string `json:"middle_name"`            // Middle name of the user written in English; 0-255 characters
+		LastName             string `json:"last_name"`              // Last name of the user written in English; 1-255 characters
+		NativeFirstName      string `json:"native_first_name"`      // Native first name of the user; 1-255 characters
+		NativeMiddleName     string `json:"native_middle_name"`     // Native middle name of the user; 0-255 characters
+		NativeLastName       string `json:"native_last_name"`       // Native last name of the user; 1-255 characters
+		Birthdate            *Date  `json:"birthdate"`              // Birthdate of the user
+		Gender               string `json:"gender"`                 // Gender of the user, "male" or "female"
+		CountryCode          string `json:"country_code"`           // A two-letter ISO 3166-1 alpha-2 country code of the user's country
+		ResidenceCountryCode string `json:"residence_country_code"` // A two-letter ISO 3166-1 alpha-2 country code of the user's residence country
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	personalDetails.tdCommon = tempObj.tdCommon
+	personalDetails.FirstName = tempObj.FirstName
+	personalDetails.MiddleName = tempObj.MiddleName
+	personalDetails.LastName = tempObj.LastName
+	personalDetails.NativeFirstName = tempObj.NativeFirstName
+	personalDetails.NativeMiddleName = tempObj.NativeMiddleName
+	personalDetails.NativeLastName = tempObj.NativeLastName
+	personalDetails.Birthdate = tempObj.Birthdate
+	personalDetails.Gender = tempObj.Gender
+	personalDetails.CountryCode = tempObj.CountryCode
+	personalDetails.ResidenceCountryCode = tempObj.ResidenceCountryCode
+
+	return nil
+}
+
 // IDentityDocument An identity document
 type IDentityDocument struct {
 	tdCommon
@@ -11077,6 +17485,38 @@ func NewIDentityDocument(number string, expiryDate *Date, frontSide *DatedFile, 
 	}
 
 	return &iDentityDocumentTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (iDentityDocument *IDentityDocument) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Number      string      `json:"number"`       // Document number; 1-24 characters
+		ExpiryDate  *Date       `json:"expiry_date"`  // Document expiry date; may be null if not applicable
+		FrontSide   *DatedFile  `json:"front_side"`   // Front side of the document
+		ReverseSide *DatedFile  `json:"reverse_side"` // Reverse side of the document; only for driver license and identity card; may be null
+		Selfie      *DatedFile  `json:"selfie"`       // Selfie with the document; may be null
+		Translation []DatedFile `json:"translation"`  // List of files containing a certified English translation of the document
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	iDentityDocument.tdCommon = tempObj.tdCommon
+	iDentityDocument.Number = tempObj.Number
+	iDentityDocument.ExpiryDate = tempObj.ExpiryDate
+	iDentityDocument.FrontSide = tempObj.FrontSide
+	iDentityDocument.ReverseSide = tempObj.ReverseSide
+	iDentityDocument.Selfie = tempObj.Selfie
+	iDentityDocument.Translation = tempObj.Translation
+
+	return nil
 }
 
 // InputIDentityDocument An identity document to be saved to Telegram Passport
@@ -11126,9 +17566,9 @@ func (inputIDentityDocument *InputIDentityDocument) UnmarshalJSON(b []byte) erro
 	}
 	tempObj := struct {
 		tdCommon
-		Number      string      `json:"number"`      // Document number; 1-24 characters
-		ExpiryDate  *Date       `json:"expiry_date"` // Document expiry date; pass null if not applicable
-		Translation []InputFile `json:"translation"` // List of files containing a certified English translation of the document
+		Number     string `json:"number"`      // Document number; 1-24 characters
+		ExpiryDate *Date  `json:"expiry_date"` // Document expiry date; pass null if not applicable
+
 	}{}
 	err = json.Unmarshal(b, &tempObj)
 	if err != nil {
@@ -11138,7 +17578,6 @@ func (inputIDentityDocument *InputIDentityDocument) UnmarshalJSON(b []byte) erro
 	inputIDentityDocument.tdCommon = tempObj.tdCommon
 	inputIDentityDocument.Number = tempObj.Number
 	inputIDentityDocument.ExpiryDate = tempObj.ExpiryDate
-	inputIDentityDocument.Translation = tempObj.Translation
 
 	fieldFrontSide, _ := unmarshalInputFile(objMap["front_side"])
 	inputIDentityDocument.FrontSide = fieldFrontSide
@@ -11148,6 +17587,9 @@ func (inputIDentityDocument *InputIDentityDocument) UnmarshalJSON(b []byte) erro
 
 	fieldSelfie, _ := unmarshalInputFile(objMap["selfie"])
 	inputIDentityDocument.Selfie = fieldSelfie
+
+	fieldTranslation, _ := unmarshalInputFileSlice(objMap["translation"])
+	inputIDentityDocument.Translation = fieldTranslation
 
 	return nil
 }
@@ -11178,6 +17620,30 @@ func NewPersonalDocument(files []DatedFile, translation []DatedFile) *PersonalDo
 	return &personalDocumentTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (personalDocument *PersonalDocument) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Files       []DatedFile `json:"files"`       // List of files containing the pages of the document
+		Translation []DatedFile `json:"translation"` // List of files containing a certified English translation of the document
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	personalDocument.tdCommon = tempObj.tdCommon
+	personalDocument.Files = tempObj.Files
+	personalDocument.Translation = tempObj.Translation
+
+	return nil
+}
+
 // InputPersonalDocument A personal document to be saved to Telegram Passport
 type InputPersonalDocument struct {
 	tdCommon
@@ -11204,6 +17670,32 @@ func NewInputPersonalDocument(files []InputFile, translation []InputFile) *Input
 	return &inputPersonalDocumentTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputPersonalDocument *InputPersonalDocument) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPersonalDocument.tdCommon = tempObj.tdCommon
+
+	fieldFiles, _ := unmarshalInputFileSlice(objMap["files"])
+	inputPersonalDocument.Files = fieldFiles
+
+	fieldTranslation, _ := unmarshalInputFileSlice(objMap["translation"])
+	inputPersonalDocument.Translation = fieldTranslation
+
+	return nil
+}
+
 // PassportElementPersonalDetails A Telegram Passport element containing the user's personal details
 type PassportElementPersonalDetails struct {
 	tdCommon
@@ -11225,6 +17717,28 @@ func NewPassportElementPersonalDetails(personalDetails *PersonalDetails) *Passpo
 	}
 
 	return &passportElementPersonalDetailsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementPersonalDetails *PassportElementPersonalDetails) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		PersonalDetails *PersonalDetails `json:"personal_details"` // Personal details of the user
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementPersonalDetails.tdCommon = tempObj.tdCommon
+	passportElementPersonalDetails.PersonalDetails = tempObj.PersonalDetails
+
+	return nil
 }
 
 // GetPassportElementEnum return the enum type of this object
@@ -11255,6 +17769,28 @@ func NewPassportElementPassport(passport *IDentityDocument) *PassportElementPass
 	return &passportElementPassportTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementPassport *PassportElementPassport) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Passport *IDentityDocument `json:"passport"` // Passport
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementPassport.tdCommon = tempObj.tdCommon
+	passportElementPassport.Passport = tempObj.Passport
+
+	return nil
+}
+
 // GetPassportElementEnum return the enum type of this object
 func (passportElementPassport *PassportElementPassport) GetPassportElementEnum() PassportElementEnum {
 	return PassportElementPassportType
@@ -11281,6 +17817,28 @@ func NewPassportElementDriverLicense(driverLicense *IDentityDocument) *PassportE
 	}
 
 	return &passportElementDriverLicenseTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementDriverLicense *PassportElementDriverLicense) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		DriverLicense *IDentityDocument `json:"driver_license"` // Driver license
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementDriverLicense.tdCommon = tempObj.tdCommon
+	passportElementDriverLicense.DriverLicense = tempObj.DriverLicense
+
+	return nil
 }
 
 // GetPassportElementEnum return the enum type of this object
@@ -11311,6 +17869,28 @@ func NewPassportElementIDentityCard(iDentityCard *IDentityDocument) *PassportEle
 	return &passportElementIDentityCardTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementIDentityCard *PassportElementIDentityCard) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		IDentityCard *IDentityDocument `json:"identity_card"` // Identity card
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementIDentityCard.tdCommon = tempObj.tdCommon
+	passportElementIDentityCard.IDentityCard = tempObj.IDentityCard
+
+	return nil
+}
+
 // GetPassportElementEnum return the enum type of this object
 func (passportElementIDentityCard *PassportElementIDentityCard) GetPassportElementEnum() PassportElementEnum {
 	return PassportElementIDentityCardType
@@ -11337,6 +17917,28 @@ func NewPassportElementInternalPassport(internalPassport *IDentityDocument) *Pas
 	}
 
 	return &passportElementInternalPassportTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementInternalPassport *PassportElementInternalPassport) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		InternalPassport *IDentityDocument `json:"internal_passport"` // Internal passport
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementInternalPassport.tdCommon = tempObj.tdCommon
+	passportElementInternalPassport.InternalPassport = tempObj.InternalPassport
+
+	return nil
 }
 
 // GetPassportElementEnum return the enum type of this object
@@ -11367,6 +17969,28 @@ func NewPassportElementAddress(address *Address) *PassportElementAddress {
 	return &passportElementAddressTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementAddress *PassportElementAddress) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Address *Address `json:"address"` // Address
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementAddress.tdCommon = tempObj.tdCommon
+	passportElementAddress.Address = tempObj.Address
+
+	return nil
+}
+
 // GetPassportElementEnum return the enum type of this object
 func (passportElementAddress *PassportElementAddress) GetPassportElementEnum() PassportElementEnum {
 	return PassportElementAddressType
@@ -11393,6 +18017,28 @@ func NewPassportElementUtilityBill(utilityBill *PersonalDocument) *PassportEleme
 	}
 
 	return &passportElementUtilityBillTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementUtilityBill *PassportElementUtilityBill) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UtilityBill *PersonalDocument `json:"utility_bill"` // Utility bill
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementUtilityBill.tdCommon = tempObj.tdCommon
+	passportElementUtilityBill.UtilityBill = tempObj.UtilityBill
+
+	return nil
 }
 
 // GetPassportElementEnum return the enum type of this object
@@ -11423,6 +18069,28 @@ func NewPassportElementBankStatement(bankStatement *PersonalDocument) *PassportE
 	return &passportElementBankStatementTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementBankStatement *PassportElementBankStatement) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		BankStatement *PersonalDocument `json:"bank_statement"` // Bank statement
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementBankStatement.tdCommon = tempObj.tdCommon
+	passportElementBankStatement.BankStatement = tempObj.BankStatement
+
+	return nil
+}
+
 // GetPassportElementEnum return the enum type of this object
 func (passportElementBankStatement *PassportElementBankStatement) GetPassportElementEnum() PassportElementEnum {
 	return PassportElementBankStatementType
@@ -11449,6 +18117,28 @@ func NewPassportElementRentalAgreement(rentalAgreement *PersonalDocument) *Passp
 	}
 
 	return &passportElementRentalAgreementTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementRentalAgreement *PassportElementRentalAgreement) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		RentalAgreement *PersonalDocument `json:"rental_agreement"` // Rental agreement
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementRentalAgreement.tdCommon = tempObj.tdCommon
+	passportElementRentalAgreement.RentalAgreement = tempObj.RentalAgreement
+
+	return nil
 }
 
 // GetPassportElementEnum return the enum type of this object
@@ -11479,6 +18169,28 @@ func NewPassportElementPassportRegistration(passportRegistration *PersonalDocume
 	return &passportElementPassportRegistrationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementPassportRegistration *PassportElementPassportRegistration) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		PassportRegistration *PersonalDocument `json:"passport_registration"` // Passport registration pages
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementPassportRegistration.tdCommon = tempObj.tdCommon
+	passportElementPassportRegistration.PassportRegistration = tempObj.PassportRegistration
+
+	return nil
+}
+
 // GetPassportElementEnum return the enum type of this object
 func (passportElementPassportRegistration *PassportElementPassportRegistration) GetPassportElementEnum() PassportElementEnum {
 	return PassportElementPassportRegistrationType
@@ -11505,6 +18217,28 @@ func NewPassportElementTemporaryRegistration(temporaryRegistration *PersonalDocu
 	}
 
 	return &passportElementTemporaryRegistrationTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementTemporaryRegistration *PassportElementTemporaryRegistration) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TemporaryRegistration *PersonalDocument `json:"temporary_registration"` // Temporary registration
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementTemporaryRegistration.tdCommon = tempObj.tdCommon
+	passportElementTemporaryRegistration.TemporaryRegistration = tempObj.TemporaryRegistration
+
+	return nil
 }
 
 // GetPassportElementEnum return the enum type of this object
@@ -11535,6 +18269,28 @@ func NewPassportElementPhoneNumber(phoneNumber string) *PassportElementPhoneNumb
 	return &passportElementPhoneNumberTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementPhoneNumber *PassportElementPhoneNumber) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		PhoneNumber string `json:"phone_number"` // Phone number
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementPhoneNumber.tdCommon = tempObj.tdCommon
+	passportElementPhoneNumber.PhoneNumber = tempObj.PhoneNumber
+
+	return nil
+}
+
 // GetPassportElementEnum return the enum type of this object
 func (passportElementPhoneNumber *PassportElementPhoneNumber) GetPassportElementEnum() PassportElementEnum {
 	return PassportElementPhoneNumberType
@@ -11561,6 +18317,28 @@ func NewPassportElementEmailAddress(emailAddress string) *PassportElementEmailAd
 	}
 
 	return &passportElementEmailAddressTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementEmailAddress *PassportElementEmailAddress) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		EmailAddress string `json:"email_address"` // Email address
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementEmailAddress.tdCommon = tempObj.tdCommon
+	passportElementEmailAddress.EmailAddress = tempObj.EmailAddress
+
+	return nil
 }
 
 // GetPassportElementEnum return the enum type of this object
@@ -11591,6 +18369,28 @@ func NewInputPassportElementPersonalDetails(personalDetails *PersonalDetails) *I
 	return &inputPassportElementPersonalDetailsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementPersonalDetails *InputPassportElementPersonalDetails) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		PersonalDetails *PersonalDetails `json:"personal_details"` // Personal details of the user
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementPersonalDetails.tdCommon = tempObj.tdCommon
+	inputPassportElementPersonalDetails.PersonalDetails = tempObj.PersonalDetails
+
+	return nil
+}
+
 // GetInputPassportElementEnum return the enum type of this object
 func (inputPassportElementPersonalDetails *InputPassportElementPersonalDetails) GetInputPassportElementEnum() InputPassportElementEnum {
 	return InputPassportElementPersonalDetailsType
@@ -11617,6 +18417,36 @@ func NewInputPassportElementPassport(passport *InputIDentityDocument) *InputPass
 	}
 
 	return &inputPassportElementPassportTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementPassport *InputPassportElementPassport) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementPassport.tdCommon = tempObj.tdCommon
+
+	var passport InputIDentityDocument
+	if objMap["passport"] != nil {
+		err = passport.UnmarshalJSON(*objMap["passport"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputPassportElementPassport.Passport = &passport
+
+	return nil
 }
 
 // GetInputPassportElementEnum return the enum type of this object
@@ -11647,6 +18477,36 @@ func NewInputPassportElementDriverLicense(driverLicense *InputIDentityDocument) 
 	return &inputPassportElementDriverLicenseTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementDriverLicense *InputPassportElementDriverLicense) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementDriverLicense.tdCommon = tempObj.tdCommon
+
+	var driverLicense InputIDentityDocument
+	if objMap["driver_license"] != nil {
+		err = driverLicense.UnmarshalJSON(*objMap["driver_license"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputPassportElementDriverLicense.DriverLicense = &driverLicense
+
+	return nil
+}
+
 // GetInputPassportElementEnum return the enum type of this object
 func (inputPassportElementDriverLicense *InputPassportElementDriverLicense) GetInputPassportElementEnum() InputPassportElementEnum {
 	return InputPassportElementDriverLicenseType
@@ -11673,6 +18533,36 @@ func NewInputPassportElementIDentityCard(iDentityCard *InputIDentityDocument) *I
 	}
 
 	return &inputPassportElementIDentityCardTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementIDentityCard *InputPassportElementIDentityCard) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementIDentityCard.tdCommon = tempObj.tdCommon
+
+	var identityCard InputIDentityDocument
+	if objMap["identity_card"] != nil {
+		err = identityCard.UnmarshalJSON(*objMap["identity_card"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputPassportElementIDentityCard.IDentityCard = &identityCard
+
+	return nil
 }
 
 // GetInputPassportElementEnum return the enum type of this object
@@ -11703,6 +18593,36 @@ func NewInputPassportElementInternalPassport(internalPassport *InputIDentityDocu
 	return &inputPassportElementInternalPassportTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementInternalPassport *InputPassportElementInternalPassport) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementInternalPassport.tdCommon = tempObj.tdCommon
+
+	var internalPassport InputIDentityDocument
+	if objMap["internal_passport"] != nil {
+		err = internalPassport.UnmarshalJSON(*objMap["internal_passport"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputPassportElementInternalPassport.InternalPassport = &internalPassport
+
+	return nil
+}
+
 // GetInputPassportElementEnum return the enum type of this object
 func (inputPassportElementInternalPassport *InputPassportElementInternalPassport) GetInputPassportElementEnum() InputPassportElementEnum {
 	return InputPassportElementInternalPassportType
@@ -11729,6 +18649,28 @@ func NewInputPassportElementAddress(address *Address) *InputPassportElementAddre
 	}
 
 	return &inputPassportElementAddressTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementAddress *InputPassportElementAddress) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Address *Address `json:"address"` // The address to be saved
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementAddress.tdCommon = tempObj.tdCommon
+	inputPassportElementAddress.Address = tempObj.Address
+
+	return nil
 }
 
 // GetInputPassportElementEnum return the enum type of this object
@@ -11759,6 +18701,36 @@ func NewInputPassportElementUtilityBill(utilityBill *InputPersonalDocument) *Inp
 	return &inputPassportElementUtilityBillTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementUtilityBill *InputPassportElementUtilityBill) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementUtilityBill.tdCommon = tempObj.tdCommon
+
+	var utilityBill InputPersonalDocument
+	if objMap["utility_bill"] != nil {
+		err = utilityBill.UnmarshalJSON(*objMap["utility_bill"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputPassportElementUtilityBill.UtilityBill = &utilityBill
+
+	return nil
+}
+
 // GetInputPassportElementEnum return the enum type of this object
 func (inputPassportElementUtilityBill *InputPassportElementUtilityBill) GetInputPassportElementEnum() InputPassportElementEnum {
 	return InputPassportElementUtilityBillType
@@ -11785,6 +18757,36 @@ func NewInputPassportElementBankStatement(bankStatement *InputPersonalDocument) 
 	}
 
 	return &inputPassportElementBankStatementTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementBankStatement *InputPassportElementBankStatement) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementBankStatement.tdCommon = tempObj.tdCommon
+
+	var bankStatement InputPersonalDocument
+	if objMap["bank_statement"] != nil {
+		err = bankStatement.UnmarshalJSON(*objMap["bank_statement"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputPassportElementBankStatement.BankStatement = &bankStatement
+
+	return nil
 }
 
 // GetInputPassportElementEnum return the enum type of this object
@@ -11815,6 +18817,36 @@ func NewInputPassportElementRentalAgreement(rentalAgreement *InputPersonalDocume
 	return &inputPassportElementRentalAgreementTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementRentalAgreement *InputPassportElementRentalAgreement) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementRentalAgreement.tdCommon = tempObj.tdCommon
+
+	var rentalAgreement InputPersonalDocument
+	if objMap["rental_agreement"] != nil {
+		err = rentalAgreement.UnmarshalJSON(*objMap["rental_agreement"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputPassportElementRentalAgreement.RentalAgreement = &rentalAgreement
+
+	return nil
+}
+
 // GetInputPassportElementEnum return the enum type of this object
 func (inputPassportElementRentalAgreement *InputPassportElementRentalAgreement) GetInputPassportElementEnum() InputPassportElementEnum {
 	return InputPassportElementRentalAgreementType
@@ -11841,6 +18873,36 @@ func NewInputPassportElementPassportRegistration(passportRegistration *InputPers
 	}
 
 	return &inputPassportElementPassportRegistrationTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementPassportRegistration *InputPassportElementPassportRegistration) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementPassportRegistration.tdCommon = tempObj.tdCommon
+
+	var passportRegistration InputPersonalDocument
+	if objMap["passport_registration"] != nil {
+		err = passportRegistration.UnmarshalJSON(*objMap["passport_registration"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputPassportElementPassportRegistration.PassportRegistration = &passportRegistration
+
+	return nil
 }
 
 // GetInputPassportElementEnum return the enum type of this object
@@ -11871,6 +18933,36 @@ func NewInputPassportElementTemporaryRegistration(temporaryRegistration *InputPe
 	return &inputPassportElementTemporaryRegistrationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementTemporaryRegistration *InputPassportElementTemporaryRegistration) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementTemporaryRegistration.tdCommon = tempObj.tdCommon
+
+	var temporaryRegistration InputPersonalDocument
+	if objMap["temporary_registration"] != nil {
+		err = temporaryRegistration.UnmarshalJSON(*objMap["temporary_registration"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputPassportElementTemporaryRegistration.TemporaryRegistration = &temporaryRegistration
+
+	return nil
+}
+
 // GetInputPassportElementEnum return the enum type of this object
 func (inputPassportElementTemporaryRegistration *InputPassportElementTemporaryRegistration) GetInputPassportElementEnum() InputPassportElementEnum {
 	return InputPassportElementTemporaryRegistrationType
@@ -11897,6 +18989,28 @@ func NewInputPassportElementPhoneNumber(phoneNumber string) *InputPassportElemen
 	}
 
 	return &inputPassportElementPhoneNumberTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementPhoneNumber *InputPassportElementPhoneNumber) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		PhoneNumber string `json:"phone_number"` // The phone number to be saved
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementPhoneNumber.tdCommon = tempObj.tdCommon
+	inputPassportElementPhoneNumber.PhoneNumber = tempObj.PhoneNumber
+
+	return nil
 }
 
 // GetInputPassportElementEnum return the enum type of this object
@@ -11927,6 +19041,28 @@ func NewInputPassportElementEmailAddress(emailAddress string) *InputPassportElem
 	return &inputPassportElementEmailAddressTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementEmailAddress *InputPassportElementEmailAddress) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		EmailAddress string `json:"email_address"` // The email address to be saved
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementEmailAddress.tdCommon = tempObj.tdCommon
+	inputPassportElementEmailAddress.EmailAddress = tempObj.EmailAddress
+
+	return nil
+}
+
 // GetInputPassportElementEnum return the enum type of this object
 func (inputPassportElementEmailAddress *InputPassportElementEmailAddress) GetInputPassportElementEnum() InputPassportElementEnum {
 	return InputPassportElementEmailAddressType
@@ -11955,6 +19091,29 @@ func NewPassportElements(elements []PassportElement) *PassportElements {
 	return &passportElementsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElements *PassportElements) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElements.tdCommon = tempObj.tdCommon
+
+	fieldElements, _ := unmarshalPassportElementSlice(objMap["elements"])
+	passportElements.Elements = fieldElements
+
+	return nil
+}
+
 // PassportElementErrorSourceUnspecified The element contains an error in an unspecified place. The error will be considered resolved when new data is added
 type PassportElementErrorSourceUnspecified struct {
 	tdCommon
@@ -11973,6 +19132,26 @@ func NewPassportElementErrorSourceUnspecified() *PassportElementErrorSourceUnspe
 	}
 
 	return &passportElementErrorSourceUnspecifiedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementErrorSourceUnspecified *PassportElementErrorSourceUnspecified) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementErrorSourceUnspecified.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPassportElementErrorSourceEnum return the enum type of this object
@@ -12003,6 +19182,28 @@ func NewPassportElementErrorSourceDataField(fieldName string) *PassportElementEr
 	return &passportElementErrorSourceDataFieldTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementErrorSourceDataField *PassportElementErrorSourceDataField) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		FieldName string `json:"field_name"` // Field name
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementErrorSourceDataField.tdCommon = tempObj.tdCommon
+	passportElementErrorSourceDataField.FieldName = tempObj.FieldName
+
+	return nil
+}
+
 // GetPassportElementErrorSourceEnum return the enum type of this object
 func (passportElementErrorSourceDataField *PassportElementErrorSourceDataField) GetPassportElementErrorSourceEnum() PassportElementErrorSourceEnum {
 	return PassportElementErrorSourceDataFieldType
@@ -12026,6 +19227,26 @@ func NewPassportElementErrorSourceFrontSide() *PassportElementErrorSourceFrontSi
 	}
 
 	return &passportElementErrorSourceFrontSideTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementErrorSourceFrontSide *PassportElementErrorSourceFrontSide) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementErrorSourceFrontSide.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPassportElementErrorSourceEnum return the enum type of this object
@@ -12053,6 +19274,26 @@ func NewPassportElementErrorSourceReverseSide() *PassportElementErrorSourceRever
 	return &passportElementErrorSourceReverseSideTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementErrorSourceReverseSide *PassportElementErrorSourceReverseSide) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementErrorSourceReverseSide.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetPassportElementErrorSourceEnum return the enum type of this object
 func (passportElementErrorSourceReverseSide *PassportElementErrorSourceReverseSide) GetPassportElementErrorSourceEnum() PassportElementErrorSourceEnum {
 	return PassportElementErrorSourceReverseSideType
@@ -12076,6 +19317,26 @@ func NewPassportElementErrorSourceSelfie() *PassportElementErrorSourceSelfie {
 	}
 
 	return &passportElementErrorSourceSelfieTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementErrorSourceSelfie *PassportElementErrorSourceSelfie) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementErrorSourceSelfie.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPassportElementErrorSourceEnum return the enum type of this object
@@ -12106,6 +19367,28 @@ func NewPassportElementErrorSourceTranslationFile(fileIndex int32) *PassportElem
 	return &passportElementErrorSourceTranslationFileTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementErrorSourceTranslationFile *PassportElementErrorSourceTranslationFile) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		FileIndex int32 `json:"file_index"` // Index of a file with the error
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementErrorSourceTranslationFile.tdCommon = tempObj.tdCommon
+	passportElementErrorSourceTranslationFile.FileIndex = tempObj.FileIndex
+
+	return nil
+}
+
 // GetPassportElementErrorSourceEnum return the enum type of this object
 func (passportElementErrorSourceTranslationFile *PassportElementErrorSourceTranslationFile) GetPassportElementErrorSourceEnum() PassportElementErrorSourceEnum {
 	return PassportElementErrorSourceTranslationFileType
@@ -12129,6 +19412,26 @@ func NewPassportElementErrorSourceTranslationFiles() *PassportElementErrorSource
 	}
 
 	return &passportElementErrorSourceTranslationFilesTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementErrorSourceTranslationFiles *PassportElementErrorSourceTranslationFiles) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementErrorSourceTranslationFiles.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPassportElementErrorSourceEnum return the enum type of this object
@@ -12159,6 +19462,28 @@ func NewPassportElementErrorSourceFile(fileIndex int32) *PassportElementErrorSou
 	return &passportElementErrorSourceFileTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportElementErrorSourceFile *PassportElementErrorSourceFile) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		FileIndex int32 `json:"file_index"` // Index of a file with the error
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementErrorSourceFile.tdCommon = tempObj.tdCommon
+	passportElementErrorSourceFile.FileIndex = tempObj.FileIndex
+
+	return nil
+}
+
 // GetPassportElementErrorSourceEnum return the enum type of this object
 func (passportElementErrorSourceFile *PassportElementErrorSourceFile) GetPassportElementErrorSourceEnum() PassportElementErrorSourceEnum {
 	return PassportElementErrorSourceFileType
@@ -12182,6 +19507,26 @@ func NewPassportElementErrorSourceFiles() *PassportElementErrorSourceFiles {
 	}
 
 	return &passportElementErrorSourceFilesTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementErrorSourceFiles *PassportElementErrorSourceFiles) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementErrorSourceFiles.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPassportElementErrorSourceEnum return the enum type of this object
@@ -12331,6 +19676,28 @@ func NewPassportRequiredElement(suitableElements []PassportSuitableElement) *Pas
 	return &passportRequiredElementTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportRequiredElement *PassportRequiredElement) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SuitableElements []PassportSuitableElement `json:"suitable_elements"` // List of Telegram Passport elements any of which is enough to provide
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportRequiredElement.tdCommon = tempObj.tdCommon
+	passportRequiredElement.SuitableElements = tempObj.SuitableElements
+
+	return nil
+}
+
 // PassportAuthorizationForm Contains information about a Telegram Passport authorization form that was requested
 type PassportAuthorizationForm struct {
 	tdCommon
@@ -12360,6 +19727,32 @@ func NewPassportAuthorizationForm(iD int32, requiredElements []PassportRequiredE
 	return &passportAuthorizationFormTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (passportAuthorizationForm *PassportAuthorizationForm) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID               int32                     `json:"id"`                 // Unique identifier of the authorization form
+		RequiredElements []PassportRequiredElement `json:"required_elements"`  // Telegram Passport elements that must be provided to complete the form
+		PrivacyPolicyURL string                    `json:"privacy_policy_url"` // URL for the privacy policy of the service; may be empty
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportAuthorizationForm.tdCommon = tempObj.tdCommon
+	passportAuthorizationForm.ID = tempObj.ID
+	passportAuthorizationForm.RequiredElements = tempObj.RequiredElements
+	passportAuthorizationForm.PrivacyPolicyURL = tempObj.PrivacyPolicyURL
+
+	return nil
+}
+
 // PassportElementsWithErrors Contains information about a Telegram Passport elements and corresponding errors
 type PassportElementsWithErrors struct {
 	tdCommon
@@ -12384,6 +19777,31 @@ func NewPassportElementsWithErrors(elements []PassportElement, errors []Passport
 	}
 
 	return &passportElementsWithErrorsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (passportElementsWithErrors *PassportElementsWithErrors) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Errors []PassportElementError `json:"errors"` // Errors in the elements that are already available
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	passportElementsWithErrors.tdCommon = tempObj.tdCommon
+	passportElementsWithErrors.Errors = tempObj.Errors
+
+	fieldElements, _ := unmarshalPassportElementSlice(objMap["elements"])
+	passportElementsWithErrors.Elements = fieldElements
+
+	return nil
 }
 
 // EncryptedCredentials Contains encrypted Telegram Passport data credentials
@@ -12413,6 +19831,32 @@ func NewEncryptedCredentials(data []byte, hash []byte, secret []byte) *Encrypted
 	}
 
 	return &encryptedCredentialsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (encryptedCredentials *EncryptedCredentials) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Data   []byte `json:"data"`   // The encrypted credentials
+		Hash   []byte `json:"hash"`   // The decrypted data hash
+		Secret []byte `json:"secret"` // Secret for data decryption, encrypted with the service's public key
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	encryptedCredentials.tdCommon = tempObj.tdCommon
+	encryptedCredentials.Data = tempObj.Data
+	encryptedCredentials.Hash = tempObj.Hash
+	encryptedCredentials.Secret = tempObj.Secret
+
+	return nil
 }
 
 // EncryptedPassportElement Contains information about an encrypted Telegram Passport element; for bots only
@@ -12524,6 +19968,28 @@ func NewInputPassportElementErrorSourceUnspecified(elementHash []byte) *InputPas
 	return &inputPassportElementErrorSourceUnspecifiedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementErrorSourceUnspecified *InputPassportElementErrorSourceUnspecified) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ElementHash []byte `json:"element_hash"` // Current hash of the entire element
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementErrorSourceUnspecified.tdCommon = tempObj.tdCommon
+	inputPassportElementErrorSourceUnspecified.ElementHash = tempObj.ElementHash
+
+	return nil
+}
+
 // GetInputPassportElementErrorSourceEnum return the enum type of this object
 func (inputPassportElementErrorSourceUnspecified *InputPassportElementErrorSourceUnspecified) GetInputPassportElementErrorSourceEnum() InputPassportElementErrorSourceEnum {
 	return InputPassportElementErrorSourceUnspecifiedType
@@ -12555,6 +20021,30 @@ func NewInputPassportElementErrorSourceDataField(fieldName string, dataHash []by
 	return &inputPassportElementErrorSourceDataFieldTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementErrorSourceDataField *InputPassportElementErrorSourceDataField) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		FieldName string `json:"field_name"` // Field name
+		DataHash  []byte `json:"data_hash"`  // Current data hash
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementErrorSourceDataField.tdCommon = tempObj.tdCommon
+	inputPassportElementErrorSourceDataField.FieldName = tempObj.FieldName
+	inputPassportElementErrorSourceDataField.DataHash = tempObj.DataHash
+
+	return nil
+}
+
 // GetInputPassportElementErrorSourceEnum return the enum type of this object
 func (inputPassportElementErrorSourceDataField *InputPassportElementErrorSourceDataField) GetInputPassportElementErrorSourceEnum() InputPassportElementErrorSourceEnum {
 	return InputPassportElementErrorSourceDataFieldType
@@ -12581,6 +20071,28 @@ func NewInputPassportElementErrorSourceFrontSide(fileHash []byte) *InputPassport
 	}
 
 	return &inputPassportElementErrorSourceFrontSideTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementErrorSourceFrontSide *InputPassportElementErrorSourceFrontSide) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		FileHash []byte `json:"file_hash"` // Current hash of the file containing the front side
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementErrorSourceFrontSide.tdCommon = tempObj.tdCommon
+	inputPassportElementErrorSourceFrontSide.FileHash = tempObj.FileHash
+
+	return nil
 }
 
 // GetInputPassportElementErrorSourceEnum return the enum type of this object
@@ -12611,6 +20123,28 @@ func NewInputPassportElementErrorSourceReverseSide(fileHash []byte) *InputPasspo
 	return &inputPassportElementErrorSourceReverseSideTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementErrorSourceReverseSide *InputPassportElementErrorSourceReverseSide) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		FileHash []byte `json:"file_hash"` // Current hash of the file containing the reverse side
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementErrorSourceReverseSide.tdCommon = tempObj.tdCommon
+	inputPassportElementErrorSourceReverseSide.FileHash = tempObj.FileHash
+
+	return nil
+}
+
 // GetInputPassportElementErrorSourceEnum return the enum type of this object
 func (inputPassportElementErrorSourceReverseSide *InputPassportElementErrorSourceReverseSide) GetInputPassportElementErrorSourceEnum() InputPassportElementErrorSourceEnum {
 	return InputPassportElementErrorSourceReverseSideType
@@ -12637,6 +20171,28 @@ func NewInputPassportElementErrorSourceSelfie(fileHash []byte) *InputPassportEle
 	}
 
 	return &inputPassportElementErrorSourceSelfieTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementErrorSourceSelfie *InputPassportElementErrorSourceSelfie) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		FileHash []byte `json:"file_hash"` // Current hash of the file containing the selfie
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementErrorSourceSelfie.tdCommon = tempObj.tdCommon
+	inputPassportElementErrorSourceSelfie.FileHash = tempObj.FileHash
+
+	return nil
 }
 
 // GetInputPassportElementErrorSourceEnum return the enum type of this object
@@ -12667,6 +20223,28 @@ func NewInputPassportElementErrorSourceTranslationFile(fileHash []byte) *InputPa
 	return &inputPassportElementErrorSourceTranslationFileTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementErrorSourceTranslationFile *InputPassportElementErrorSourceTranslationFile) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		FileHash []byte `json:"file_hash"` // Current hash of the file containing the translation
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementErrorSourceTranslationFile.tdCommon = tempObj.tdCommon
+	inputPassportElementErrorSourceTranslationFile.FileHash = tempObj.FileHash
+
+	return nil
+}
+
 // GetInputPassportElementErrorSourceEnum return the enum type of this object
 func (inputPassportElementErrorSourceTranslationFile *InputPassportElementErrorSourceTranslationFile) GetInputPassportElementErrorSourceEnum() InputPassportElementErrorSourceEnum {
 	return InputPassportElementErrorSourceTranslationFileType
@@ -12693,6 +20271,28 @@ func NewInputPassportElementErrorSourceTranslationFiles(fileHashes [][]byte) *In
 	}
 
 	return &inputPassportElementErrorSourceTranslationFilesTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementErrorSourceTranslationFiles *InputPassportElementErrorSourceTranslationFiles) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		FileHashes [][]byte `json:"file_hashes"` // Current hashes of all files with the translation
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementErrorSourceTranslationFiles.tdCommon = tempObj.tdCommon
+	inputPassportElementErrorSourceTranslationFiles.FileHashes = tempObj.FileHashes
+
+	return nil
 }
 
 // GetInputPassportElementErrorSourceEnum return the enum type of this object
@@ -12723,6 +20323,28 @@ func NewInputPassportElementErrorSourceFile(fileHash []byte) *InputPassportEleme
 	return &inputPassportElementErrorSourceFileTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementErrorSourceFile *InputPassportElementErrorSourceFile) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		FileHash []byte `json:"file_hash"` // Current hash of the file which has the error
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementErrorSourceFile.tdCommon = tempObj.tdCommon
+	inputPassportElementErrorSourceFile.FileHash = tempObj.FileHash
+
+	return nil
+}
+
 // GetInputPassportElementErrorSourceEnum return the enum type of this object
 func (inputPassportElementErrorSourceFile *InputPassportElementErrorSourceFile) GetInputPassportElementErrorSourceEnum() InputPassportElementErrorSourceEnum {
 	return InputPassportElementErrorSourceFileType
@@ -12749,6 +20371,28 @@ func NewInputPassportElementErrorSourceFiles(fileHashes [][]byte) *InputPassport
 	}
 
 	return &inputPassportElementErrorSourceFilesTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputPassportElementErrorSourceFiles *InputPassportElementErrorSourceFiles) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		FileHashes [][]byte `json:"file_hashes"` // Current hashes of all attached files
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputPassportElementErrorSourceFiles.tdCommon = tempObj.tdCommon
+	inputPassportElementErrorSourceFiles.FileHashes = tempObj.FileHashes
+
+	return nil
 }
 
 // GetInputPassportElementErrorSourceEnum return the enum type of this object
@@ -12840,6 +20484,30 @@ func NewMessageText(text *FormattedText, webPage *WebPage) *MessageText {
 	return &messageTextTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageText *MessageText) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Text    *FormattedText `json:"text"`     // Text of the message
+		WebPage *WebPage       `json:"web_page"` // A preview of the web page that's mentioned in the text; may be null
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageText.tdCommon = tempObj.tdCommon
+	messageText.Text = tempObj.Text
+	messageText.WebPage = tempObj.WebPage
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageText *MessageText) GetMessageContentEnum() MessageContentEnum {
 	return MessageTextType
@@ -12874,6 +20542,32 @@ func NewMessageAnimation(animation *Animation, caption *FormattedText, isSecret 
 	return &messageAnimationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageAnimation *MessageAnimation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Animation *Animation     `json:"animation"` // The animation description
+		Caption   *FormattedText `json:"caption"`   // Animation caption
+		IsSecret  bool           `json:"is_secret"` // True, if the animation thumbnail must be blurred and the animation must be shown only while tapped
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageAnimation.tdCommon = tempObj.tdCommon
+	messageAnimation.Animation = tempObj.Animation
+	messageAnimation.Caption = tempObj.Caption
+	messageAnimation.IsSecret = tempObj.IsSecret
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageAnimation *MessageAnimation) GetMessageContentEnum() MessageContentEnum {
 	return MessageAnimationType
@@ -12905,6 +20599,30 @@ func NewMessageAudio(audio *Audio, caption *FormattedText) *MessageAudio {
 	return &messageAudioTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageAudio *MessageAudio) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Audio   *Audio         `json:"audio"`   // The audio description
+		Caption *FormattedText `json:"caption"` // Audio caption
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageAudio.tdCommon = tempObj.tdCommon
+	messageAudio.Audio = tempObj.Audio
+	messageAudio.Caption = tempObj.Caption
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageAudio *MessageAudio) GetMessageContentEnum() MessageContentEnum {
 	return MessageAudioType
@@ -12934,6 +20652,30 @@ func NewMessageDocument(document *Document, caption *FormattedText) *MessageDocu
 	}
 
 	return &messageDocumentTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageDocument *MessageDocument) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Document *Document      `json:"document"` // The document description
+		Caption  *FormattedText `json:"caption"`  // Document caption
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageDocument.tdCommon = tempObj.tdCommon
+	messageDocument.Document = tempObj.Document
+	messageDocument.Caption = tempObj.Caption
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -12970,6 +20712,32 @@ func NewMessagePhoto(photo *Photo, caption *FormattedText, isSecret bool) *Messa
 	return &messagePhotoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messagePhoto *MessagePhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Photo    *Photo         `json:"photo"`     // The photo description
+		Caption  *FormattedText `json:"caption"`   // Photo caption
+		IsSecret bool           `json:"is_secret"` // True, if the photo must be blurred and must be shown only while tapped
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messagePhoto.tdCommon = tempObj.tdCommon
+	messagePhoto.Photo = tempObj.Photo
+	messagePhoto.Caption = tempObj.Caption
+	messagePhoto.IsSecret = tempObj.IsSecret
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messagePhoto *MessagePhoto) GetMessageContentEnum() MessageContentEnum {
 	return MessagePhotoType
@@ -12993,6 +20761,26 @@ func NewMessageExpiredPhoto() *MessageExpiredPhoto {
 	}
 
 	return &messageExpiredPhotoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageExpiredPhoto *MessageExpiredPhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageExpiredPhoto.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -13021,6 +20809,28 @@ func NewMessageSticker(sticker *Sticker) *MessageSticker {
 	}
 
 	return &messageStickerTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageSticker *MessageSticker) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Sticker *Sticker `json:"sticker"` // The sticker description
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageSticker.tdCommon = tempObj.tdCommon
+	messageSticker.Sticker = tempObj.Sticker
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -13057,6 +20867,32 @@ func NewMessageVideo(video *Video, caption *FormattedText, isSecret bool) *Messa
 	return &messageVideoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageVideo *MessageVideo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Video    *Video         `json:"video"`     // The video description
+		Caption  *FormattedText `json:"caption"`   // Video caption
+		IsSecret bool           `json:"is_secret"` // True, if the video thumbnail must be blurred and the video must be shown only while tapped
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageVideo.tdCommon = tempObj.tdCommon
+	messageVideo.Video = tempObj.Video
+	messageVideo.Caption = tempObj.Caption
+	messageVideo.IsSecret = tempObj.IsSecret
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageVideo *MessageVideo) GetMessageContentEnum() MessageContentEnum {
 	return MessageVideoType
@@ -13080,6 +20916,26 @@ func NewMessageExpiredVideo() *MessageExpiredVideo {
 	}
 
 	return &messageExpiredVideoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageExpiredVideo *MessageExpiredVideo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageExpiredVideo.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -13116,6 +20972,32 @@ func NewMessageVideoNote(videoNote *VideoNote, isViewed bool, isSecret bool) *Me
 	return &messageVideoNoteTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageVideoNote *MessageVideoNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		VideoNote *VideoNote `json:"video_note"` // The video note description
+		IsViewed  bool       `json:"is_viewed"`  // True, if at least one of the recipients has viewed the video note
+		IsSecret  bool       `json:"is_secret"`  // True, if the video note thumbnail must be blurred and the video note must be shown only while tapped
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageVideoNote.tdCommon = tempObj.tdCommon
+	messageVideoNote.VideoNote = tempObj.VideoNote
+	messageVideoNote.IsViewed = tempObj.IsViewed
+	messageVideoNote.IsSecret = tempObj.IsSecret
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageVideoNote *MessageVideoNote) GetMessageContentEnum() MessageContentEnum {
 	return MessageVideoNoteType
@@ -13148,6 +21030,32 @@ func NewMessageVoiceNote(voiceNote *VoiceNote, caption *FormattedText, isListene
 	}
 
 	return &messageVoiceNoteTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageVoiceNote *MessageVoiceNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		VoiceNote  *VoiceNote     `json:"voice_note"`  // The voice note description
+		Caption    *FormattedText `json:"caption"`     // Voice note caption
+		IsListened bool           `json:"is_listened"` // True, if at least one of the recipients has listened to the voice note
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageVoiceNote.tdCommon = tempObj.tdCommon
+	messageVoiceNote.VoiceNote = tempObj.VoiceNote
+	messageVoiceNote.Caption = tempObj.Caption
+	messageVoiceNote.IsListened = tempObj.IsListened
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -13190,6 +21098,36 @@ func NewMessageLocation(location *Location, livePeriod int32, expiresIn int32, h
 	return &messageLocationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageLocation *MessageLocation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Location             *Location `json:"location"`               // The location description
+		LivePeriod           int32     `json:"live_period"`            // Time relative to the message send date, for which the location can be updated, in seconds
+		ExpiresIn            int32     `json:"expires_in"`             // Left time for which the location can be updated, in seconds. updateMessageContent is not sent when this field changes
+		Heading              int32     `json:"heading"`                // For live locations, a direction in which the location moves, in degrees; 1-360. If 0 the direction is unknown
+		ProximityAlertRadius int32     `json:"proximity_alert_radius"` // For live locations, a maximum distance to another chat member for proximity alerts, in meters (0-100000). 0 if the notification is disabled. Available only for the message sender
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageLocation.tdCommon = tempObj.tdCommon
+	messageLocation.Location = tempObj.Location
+	messageLocation.LivePeriod = tempObj.LivePeriod
+	messageLocation.ExpiresIn = tempObj.ExpiresIn
+	messageLocation.Heading = tempObj.Heading
+	messageLocation.ProximityAlertRadius = tempObj.ProximityAlertRadius
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageLocation *MessageLocation) GetMessageContentEnum() MessageContentEnum {
 	return MessageLocationType
@@ -13218,6 +21156,28 @@ func NewMessageVenue(venue *Venue) *MessageVenue {
 	return &messageVenueTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageVenue *MessageVenue) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Venue *Venue `json:"venue"` // The venue description
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageVenue.tdCommon = tempObj.tdCommon
+	messageVenue.Venue = tempObj.Venue
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageVenue *MessageVenue) GetMessageContentEnum() MessageContentEnum {
 	return MessageVenueType
@@ -13244,6 +21204,28 @@ func NewMessageContact(contact *Contact) *MessageContact {
 	}
 
 	return &messageContactTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageContact *MessageContact) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Contact *Contact `json:"contact"` // The contact description
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageContact.tdCommon = tempObj.tdCommon
+	messageContact.Contact = tempObj.Contact
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -13277,6 +21259,30 @@ func NewMessageAnimatedEmoji(animatedEmoji *AnimatedEmoji, emoji string) *Messag
 	return &messageAnimatedEmojiTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageAnimatedEmoji *MessageAnimatedEmoji) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		AnimatedEmoji *AnimatedEmoji `json:"animated_emoji"` // The animated emoji
+		Emoji         string         `json:"emoji"`          // The corresponding emoji
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageAnimatedEmoji.tdCommon = tempObj.tdCommon
+	messageAnimatedEmoji.AnimatedEmoji = tempObj.AnimatedEmoji
+	messageAnimatedEmoji.Emoji = tempObj.Emoji
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageAnimatedEmoji *MessageAnimatedEmoji) GetMessageContentEnum() MessageContentEnum {
 	return MessageAnimatedEmojiType
@@ -13285,11 +21291,11 @@ func (messageAnimatedEmoji *MessageAnimatedEmoji) GetMessageContentEnum() Messag
 // MessageDice A dice message. The dice value is randomly generated by the server
 type MessageDice struct {
 	tdCommon
-	InitialState                DiceStickers `json:"initial_state"`                  // The animated stickers with the initial dice animation; may be null if unknown. updateMessageContent will be sent when the sticker became known
-	FinalState                  DiceStickers `json:"final_state"`                    // The animated stickers with the final dice animation; may be null if unknown. updateMessageContent will be sent when the sticker became known
-	Emoji                       string       `json:"emoji"`                          // Emoji on which the dice throw animation is based
-	Value                       int32        `json:"value"`                          // The dice value. If the value is 0, the dice don't have final state yet
-	SuccessAnimationFrameNumber int32        `json:"success_animation_frame_number"` // Number of frame after which a success animation like a shower of confetti needs to be shown on updateMessageSendSucceeded
+	InitialState                *DiceStickers `json:"initial_state"`                  // The animated stickers with the initial dice animation; may be null if unknown. updateMessageContent will be sent when the sticker became known
+	FinalState                  *DiceStickers `json:"final_state"`                    // The animated stickers with the final dice animation; may be null if unknown. updateMessageContent will be sent when the sticker became known
+	Emoji                       string        `json:"emoji"`                          // Emoji on which the dice throw animation is based
+	Value                       int32         `json:"value"`                          // The dice value. If the value is 0, the dice don't have final state yet
+	SuccessAnimationFrameNumber int32         `json:"success_animation_frame_number"` // Number of frame after which a success animation like a shower of confetti needs to be shown on updateMessageSendSucceeded
 }
 
 // MessageType return the string telegram-type of MessageDice
@@ -13304,7 +21310,7 @@ func (messageDice *MessageDice) MessageType() string {
 // @param emoji Emoji on which the dice throw animation is based
 // @param value The dice value. If the value is 0, the dice don't have final state yet
 // @param successAnimationFrameNumber Number of frame after which a success animation like a shower of confetti needs to be shown on updateMessageSendSucceeded
-func NewMessageDice(initialState DiceStickers, finalState DiceStickers, emoji string, value int32, successAnimationFrameNumber int32) *MessageDice {
+func NewMessageDice(initialState *DiceStickers, finalState *DiceStickers, emoji string, value int32, successAnimationFrameNumber int32) *MessageDice {
 	messageDiceTemp := MessageDice{
 		tdCommon:                    tdCommon{Type: "messageDice"},
 		InitialState:                initialState,
@@ -13341,10 +21347,10 @@ func (messageDice *MessageDice) UnmarshalJSON(b []byte) error {
 	messageDice.SuccessAnimationFrameNumber = tempObj.SuccessAnimationFrameNumber
 
 	fieldInitialState, _ := unmarshalDiceStickers(objMap["initial_state"])
-	messageDice.InitialState = fieldInitialState
+	messageDice.InitialState = &fieldInitialState
 
 	fieldFinalState, _ := unmarshalDiceStickers(objMap["final_state"])
-	messageDice.FinalState = fieldFinalState
+	messageDice.FinalState = &fieldFinalState
 
 	return nil
 }
@@ -13377,6 +21383,28 @@ func NewMessageGame(game *Game) *MessageGame {
 	return &messageGameTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageGame *MessageGame) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Game *Game `json:"game"` // The game description
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageGame.tdCommon = tempObj.tdCommon
+	messageGame.Game = tempObj.Game
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageGame *MessageGame) GetMessageContentEnum() MessageContentEnum {
 	return MessageGameType
@@ -13403,6 +21431,36 @@ func NewMessagePoll(poll *Poll) *MessagePoll {
 	}
 
 	return &messagePollTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messagePoll *MessagePoll) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messagePoll.tdCommon = tempObj.tdCommon
+
+	var poll Poll
+	if objMap["poll"] != nil {
+		err = poll.UnmarshalJSON(*objMap["poll"])
+		if err != nil {
+			return err
+		}
+	}
+
+	messagePoll.Poll = &poll
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -13455,6 +21513,44 @@ func NewMessageInvoice(title string, description string, photo *Photo, currency 
 	}
 
 	return &messageInvoiceTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageInvoice *MessageInvoice) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Title               string `json:"title"`                 // Product title
+		Description         string `json:"description"`           // Product description
+		Photo               *Photo `json:"photo"`                 // Product photo; may be null
+		Currency            string `json:"currency"`              // Currency for the product price
+		TotalAmount         int64  `json:"total_amount"`          // Product total price in the smallest units of the currency
+		StartParameter      string `json:"start_parameter"`       // Unique invoice bot start_parameter. To share an invoice use the URL https://t.me/{bot_username}?start={start_parameter}
+		IsTest              bool   `json:"is_test"`               // True, if the invoice is a test invoice
+		NeedShippingAddress bool   `json:"need_shipping_address"` // True, if the shipping address must be specified
+		ReceiptMessageID    int64  `json:"receipt_message_id"`    // The identifier of the message with the receipt, after the product has been purchased
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageInvoice.tdCommon = tempObj.tdCommon
+	messageInvoice.Title = tempObj.Title
+	messageInvoice.Description = tempObj.Description
+	messageInvoice.Photo = tempObj.Photo
+	messageInvoice.Currency = tempObj.Currency
+	messageInvoice.TotalAmount = tempObj.TotalAmount
+	messageInvoice.StartParameter = tempObj.StartParameter
+	messageInvoice.IsTest = tempObj.IsTest
+	messageInvoice.NeedShippingAddress = tempObj.NeedShippingAddress
+	messageInvoice.ReceiptMessageID = tempObj.ReceiptMessageID
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -13549,6 +21645,30 @@ func NewMessageVideoChatScheduled(groupCallID int32, startDate int32) *MessageVi
 	return &messageVideoChatScheduledTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageVideoChatScheduled *MessageVideoChatScheduled) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		GroupCallID int32 `json:"group_call_id"` // Identifier of the video chat. The video chat can be received through the method getGroupCall
+		StartDate   int32 `json:"start_date"`    // Point in time (Unix timestamp) when the group call is supposed to be started by an administrator
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageVideoChatScheduled.tdCommon = tempObj.tdCommon
+	messageVideoChatScheduled.GroupCallID = tempObj.GroupCallID
+	messageVideoChatScheduled.StartDate = tempObj.StartDate
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageVideoChatScheduled *MessageVideoChatScheduled) GetMessageContentEnum() MessageContentEnum {
 	return MessageVideoChatScheduledType
@@ -13577,6 +21697,28 @@ func NewMessageVideoChatStarted(groupCallID int32) *MessageVideoChatStarted {
 	return &messageVideoChatStartedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageVideoChatStarted *MessageVideoChatStarted) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		GroupCallID int32 `json:"group_call_id"` // Identifier of the video chat. The video chat can be received through the method getGroupCall
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageVideoChatStarted.tdCommon = tempObj.tdCommon
+	messageVideoChatStarted.GroupCallID = tempObj.GroupCallID
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageVideoChatStarted *MessageVideoChatStarted) GetMessageContentEnum() MessageContentEnum {
 	return MessageVideoChatStartedType
@@ -13603,6 +21745,28 @@ func NewMessageVideoChatEnded(duration int32) *MessageVideoChatEnded {
 	}
 
 	return &messageVideoChatEndedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageVideoChatEnded *MessageVideoChatEnded) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Duration int32 `json:"duration"` // Call duration, in seconds
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageVideoChatEnded.tdCommon = tempObj.tdCommon
+	messageVideoChatEnded.Duration = tempObj.Duration
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -13636,6 +21800,30 @@ func NewMessageInviteVideoChatParticipants(groupCallID int32, userIDs []int64) *
 	return &messageInviteVideoChatParticipantsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageInviteVideoChatParticipants *MessageInviteVideoChatParticipants) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		GroupCallID int32   `json:"group_call_id"` // Identifier of the video chat. The video chat can be received through the method getGroupCall
+		UserIDs     []int64 `json:"user_ids"`      // Invited user identifiers
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageInviteVideoChatParticipants.tdCommon = tempObj.tdCommon
+	messageInviteVideoChatParticipants.GroupCallID = tempObj.GroupCallID
+	messageInviteVideoChatParticipants.UserIDs = tempObj.UserIDs
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageInviteVideoChatParticipants *MessageInviteVideoChatParticipants) GetMessageContentEnum() MessageContentEnum {
 	return MessageInviteVideoChatParticipantsType
@@ -13667,6 +21855,30 @@ func NewMessageBasicGroupChatCreate(title string, memberUserIDs []int64) *Messag
 	return &messageBasicGroupChatCreateTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageBasicGroupChatCreate *MessageBasicGroupChatCreate) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Title         string  `json:"title"`           // Title of the basic group
+		MemberUserIDs []int64 `json:"member_user_ids"` // User identifiers of members in the basic group
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageBasicGroupChatCreate.tdCommon = tempObj.tdCommon
+	messageBasicGroupChatCreate.Title = tempObj.Title
+	messageBasicGroupChatCreate.MemberUserIDs = tempObj.MemberUserIDs
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageBasicGroupChatCreate *MessageBasicGroupChatCreate) GetMessageContentEnum() MessageContentEnum {
 	return MessageBasicGroupChatCreateType
@@ -13693,6 +21905,28 @@ func NewMessageSupergroupChatCreate(title string) *MessageSupergroupChatCreate {
 	}
 
 	return &messageSupergroupChatCreateTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageSupergroupChatCreate *MessageSupergroupChatCreate) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Title string `json:"title"` // Title of the supergroup or channel
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageSupergroupChatCreate.tdCommon = tempObj.tdCommon
+	messageSupergroupChatCreate.Title = tempObj.Title
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -13723,6 +21957,28 @@ func NewMessageChatChangeTitle(title string) *MessageChatChangeTitle {
 	return &messageChatChangeTitleTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageChatChangeTitle *MessageChatChangeTitle) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Title string `json:"title"` // New chat title
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageChatChangeTitle.tdCommon = tempObj.tdCommon
+	messageChatChangeTitle.Title = tempObj.Title
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageChatChangeTitle *MessageChatChangeTitle) GetMessageContentEnum() MessageContentEnum {
 	return MessageChatChangeTitleType
@@ -13751,6 +22007,28 @@ func NewMessageChatChangePhoto(photo *ChatPhoto) *MessageChatChangePhoto {
 	return &messageChatChangePhotoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageChatChangePhoto *MessageChatChangePhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Photo *ChatPhoto `json:"photo"` // New chat photo
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageChatChangePhoto.tdCommon = tempObj.tdCommon
+	messageChatChangePhoto.Photo = tempObj.Photo
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageChatChangePhoto *MessageChatChangePhoto) GetMessageContentEnum() MessageContentEnum {
 	return MessageChatChangePhotoType
@@ -13774,6 +22052,26 @@ func NewMessageChatDeletePhoto() *MessageChatDeletePhoto {
 	}
 
 	return &messageChatDeletePhotoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageChatDeletePhoto *MessageChatDeletePhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageChatDeletePhoto.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -13804,6 +22102,28 @@ func NewMessageChatAddMembers(memberUserIDs []int64) *MessageChatAddMembers {
 	return &messageChatAddMembersTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageChatAddMembers *MessageChatAddMembers) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		MemberUserIDs []int64 `json:"member_user_ids"` // User identifiers of the new members
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageChatAddMembers.tdCommon = tempObj.tdCommon
+	messageChatAddMembers.MemberUserIDs = tempObj.MemberUserIDs
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageChatAddMembers *MessageChatAddMembers) GetMessageContentEnum() MessageContentEnum {
 	return MessageChatAddMembersType
@@ -13829,6 +22149,26 @@ func NewMessageChatJoinByLink() *MessageChatJoinByLink {
 	return &messageChatJoinByLinkTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageChatJoinByLink *MessageChatJoinByLink) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageChatJoinByLink.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageChatJoinByLink *MessageChatJoinByLink) GetMessageContentEnum() MessageContentEnum {
 	return MessageChatJoinByLinkType
@@ -13852,6 +22192,26 @@ func NewMessageChatJoinByRequest() *MessageChatJoinByRequest {
 	}
 
 	return &messageChatJoinByRequestTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageChatJoinByRequest *MessageChatJoinByRequest) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageChatJoinByRequest.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -13882,6 +22242,28 @@ func NewMessageChatDeleteMember(userID int64) *MessageChatDeleteMember {
 	return &messageChatDeleteMemberTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageChatDeleteMember *MessageChatDeleteMember) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserID int64 `json:"user_id"` // User identifier of the deleted chat member
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageChatDeleteMember.tdCommon = tempObj.tdCommon
+	messageChatDeleteMember.UserID = tempObj.UserID
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageChatDeleteMember *MessageChatDeleteMember) GetMessageContentEnum() MessageContentEnum {
 	return MessageChatDeleteMemberType
@@ -13908,6 +22290,28 @@ func NewMessageChatUpgradeTo(supergroupID int64) *MessageChatUpgradeTo {
 	}
 
 	return &messageChatUpgradeToTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageChatUpgradeTo *MessageChatUpgradeTo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SupergroupID int64 `json:"supergroup_id"` // Identifier of the supergroup to which the basic group was upgraded
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageChatUpgradeTo.tdCommon = tempObj.tdCommon
+	messageChatUpgradeTo.SupergroupID = tempObj.SupergroupID
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -13941,6 +22345,30 @@ func NewMessageChatUpgradeFrom(title string, basicGroupID int64) *MessageChatUpg
 	return &messageChatUpgradeFromTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageChatUpgradeFrom *MessageChatUpgradeFrom) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Title        string `json:"title"`          // Title of the newly created supergroup
+		BasicGroupID int64  `json:"basic_group_id"` // The identifier of the original basic group
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageChatUpgradeFrom.tdCommon = tempObj.tdCommon
+	messageChatUpgradeFrom.Title = tempObj.Title
+	messageChatUpgradeFrom.BasicGroupID = tempObj.BasicGroupID
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageChatUpgradeFrom *MessageChatUpgradeFrom) GetMessageContentEnum() MessageContentEnum {
 	return MessageChatUpgradeFromType
@@ -13969,6 +22397,28 @@ func NewMessagePinMessage(messageID int64) *MessagePinMessage {
 	return &messagePinMessageTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messagePinMessage *MessagePinMessage) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		MessageID int64 `json:"message_id"` // Identifier of the pinned message, can be an identifier of a deleted message or 0
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messagePinMessage.tdCommon = tempObj.tdCommon
+	messagePinMessage.MessageID = tempObj.MessageID
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messagePinMessage *MessagePinMessage) GetMessageContentEnum() MessageContentEnum {
 	return MessagePinMessageType
@@ -13992,6 +22442,26 @@ func NewMessageScreenshotTaken() *MessageScreenshotTaken {
 	}
 
 	return &messageScreenshotTakenTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageScreenshotTaken *MessageScreenshotTaken) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageScreenshotTaken.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -14022,6 +22492,28 @@ func NewMessageChatSetTheme(themeName string) *MessageChatSetTheme {
 	return &messageChatSetThemeTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageChatSetTheme *MessageChatSetTheme) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ThemeName string `json:"theme_name"` // If non-empty, name of a new theme, set for the chat. Otherwise chat theme was reset to the default one
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageChatSetTheme.tdCommon = tempObj.tdCommon
+	messageChatSetTheme.ThemeName = tempObj.ThemeName
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageChatSetTheme *MessageChatSetTheme) GetMessageContentEnum() MessageContentEnum {
 	return MessageChatSetThemeType
@@ -14050,6 +22542,28 @@ func NewMessageChatSetTTL(tTL int32) *MessageChatSetTTL {
 	return &messageChatSetTTLTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageChatSetTTL *MessageChatSetTTL) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TTL int32 `json:"ttl"` // New message TTL
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageChatSetTTL.tdCommon = tempObj.tdCommon
+	messageChatSetTTL.TTL = tempObj.TTL
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageChatSetTTL *MessageChatSetTTL) GetMessageContentEnum() MessageContentEnum {
 	return MessageChatSetTTLType
@@ -14076,6 +22590,28 @@ func NewMessageCustomServiceAction(text string) *MessageCustomServiceAction {
 	}
 
 	return &messageCustomServiceActionTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageCustomServiceAction *MessageCustomServiceAction) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Text string `json:"text"` // Message text to be shown in the chat
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageCustomServiceAction.tdCommon = tempObj.tdCommon
+	messageCustomServiceAction.Text = tempObj.Text
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -14110,6 +22646,32 @@ func NewMessageGameScore(gameMessageID int64, gameID JSONInt64, score int32) *Me
 	}
 
 	return &messageGameScoreTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageGameScore *MessageGameScore) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		GameMessageID int64     `json:"game_message_id"` // Identifier of the message with the game, can be an identifier of a deleted message
+		GameID        JSONInt64 `json:"game_id"`         // Identifier of the game; may be different from the games presented in the message with the game
+		Score         int32     `json:"score"`           // New score
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageGameScore.tdCommon = tempObj.tdCommon
+	messageGameScore.GameMessageID = tempObj.GameMessageID
+	messageGameScore.GameID = tempObj.GameID
+	messageGameScore.Score = tempObj.Score
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -14147,6 +22709,34 @@ func NewMessagePaymentSuccessful(invoiceChatID int64, invoiceMessageID int64, cu
 	}
 
 	return &messagePaymentSuccessfulTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messagePaymentSuccessful *MessagePaymentSuccessful) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		InvoiceChatID    int64  `json:"invoice_chat_id"`    // Identifier of the chat, containing the corresponding invoice message; 0 if unknown
+		InvoiceMessageID int64  `json:"invoice_message_id"` // Identifier of the message with the corresponding invoice; can be an identifier of a deleted message
+		Currency         string `json:"currency"`           // Currency for the price of the product
+		TotalAmount      int64  `json:"total_amount"`       // Total price for the product, in the smallest units of the currency
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messagePaymentSuccessful.tdCommon = tempObj.tdCommon
+	messagePaymentSuccessful.InvoiceChatID = tempObj.InvoiceChatID
+	messagePaymentSuccessful.InvoiceMessageID = tempObj.InvoiceMessageID
+	messagePaymentSuccessful.Currency = tempObj.Currency
+	messagePaymentSuccessful.TotalAmount = tempObj.TotalAmount
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -14195,6 +22785,40 @@ func NewMessagePaymentSuccessfulBot(currency string, totalAmount int64, invoiceP
 	return &messagePaymentSuccessfulBotTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messagePaymentSuccessfulBot *MessagePaymentSuccessfulBot) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Currency                string     `json:"currency"`                   // Currency for price of the product
+		TotalAmount             int64      `json:"total_amount"`               // Total price for the product, in the smallest units of the currency
+		InvoicePayload          []byte     `json:"invoice_payload"`            // Invoice payload
+		ShippingOptionID        string     `json:"shipping_option_id"`         // Identifier of the shipping option chosen by the user; may be empty if not applicable
+		OrderInfo               *OrderInfo `json:"order_info"`                 // Information about the order; may be null
+		TelegramPaymentChargeID string     `json:"telegram_payment_charge_id"` // Telegram payment identifier
+		ProviderPaymentChargeID string     `json:"provider_payment_charge_id"` // Provider payment identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messagePaymentSuccessfulBot.tdCommon = tempObj.tdCommon
+	messagePaymentSuccessfulBot.Currency = tempObj.Currency
+	messagePaymentSuccessfulBot.TotalAmount = tempObj.TotalAmount
+	messagePaymentSuccessfulBot.InvoicePayload = tempObj.InvoicePayload
+	messagePaymentSuccessfulBot.ShippingOptionID = tempObj.ShippingOptionID
+	messagePaymentSuccessfulBot.OrderInfo = tempObj.OrderInfo
+	messagePaymentSuccessfulBot.TelegramPaymentChargeID = tempObj.TelegramPaymentChargeID
+	messagePaymentSuccessfulBot.ProviderPaymentChargeID = tempObj.ProviderPaymentChargeID
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messagePaymentSuccessfulBot *MessagePaymentSuccessfulBot) GetMessageContentEnum() MessageContentEnum {
 	return MessagePaymentSuccessfulBotType
@@ -14218,6 +22842,26 @@ func NewMessageContactRegistered() *MessageContactRegistered {
 	}
 
 	return &messageContactRegisteredTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageContactRegistered *MessageContactRegistered) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageContactRegistered.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -14248,6 +22892,28 @@ func NewMessageWebsiteConnected(domainName string) *MessageWebsiteConnected {
 	return &messageWebsiteConnectedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageWebsiteConnected *MessageWebsiteConnected) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		DomainName string `json:"domain_name"` // Domain name of the connected website
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageWebsiteConnected.tdCommon = tempObj.tdCommon
+	messageWebsiteConnected.DomainName = tempObj.DomainName
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageWebsiteConnected *MessageWebsiteConnected) GetMessageContentEnum() MessageContentEnum {
 	return MessageWebsiteConnectedType
@@ -14274,6 +22940,29 @@ func NewMessagePassportDataSent(typeParams []PassportElementType) *MessagePasspo
 	}
 
 	return &messagePassportDataSentTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messagePassportDataSent *MessagePassportDataSent) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messagePassportDataSent.tdCommon = tempObj.tdCommon
+
+	fieldTypes, _ := unmarshalPassportElementTypeSlice(objMap["types"])
+	messagePassportDataSent.Types = fieldTypes
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -14305,6 +22994,30 @@ func NewMessagePassportDataReceived(elements []EncryptedPassportElement, credent
 	}
 
 	return &messagePassportDataReceivedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messagePassportDataReceived *MessagePassportDataReceived) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Elements    []EncryptedPassportElement `json:"elements"`    // List of received Telegram Passport elements
+		Credentials *EncryptedCredentials      `json:"credentials"` // Encrypted data credentials
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messagePassportDataReceived.tdCommon = tempObj.tdCommon
+	messagePassportDataReceived.Elements = tempObj.Elements
+	messagePassportDataReceived.Credentials = tempObj.Credentials
+
+	return nil
 }
 
 // GetMessageContentEnum return the enum type of this object
@@ -14394,6 +23107,26 @@ func NewMessageUnsupported() *MessageUnsupported {
 	return &messageUnsupportedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageUnsupported *MessageUnsupported) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageUnsupported.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetMessageContentEnum return the enum type of this object
 func (messageUnsupported *MessageUnsupported) GetMessageContentEnum() MessageContentEnum {
 	return MessageUnsupportedType
@@ -14417,6 +23150,26 @@ func NewTextEntityTypeMention() *TextEntityTypeMention {
 	}
 
 	return &textEntityTypeMentionTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (textEntityTypeMention *TextEntityTypeMention) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypeMention.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetTextEntityTypeEnum return the enum type of this object
@@ -14444,6 +23197,26 @@ func NewTextEntityTypeHashtag() *TextEntityTypeHashtag {
 	return &textEntityTypeHashtagTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (textEntityTypeHashtag *TextEntityTypeHashtag) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypeHashtag.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetTextEntityTypeEnum return the enum type of this object
 func (textEntityTypeHashtag *TextEntityTypeHashtag) GetTextEntityTypeEnum() TextEntityTypeEnum {
 	return TextEntityTypeHashtagType
@@ -14467,6 +23240,26 @@ func NewTextEntityTypeCashtag() *TextEntityTypeCashtag {
 	}
 
 	return &textEntityTypeCashtagTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (textEntityTypeCashtag *TextEntityTypeCashtag) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypeCashtag.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetTextEntityTypeEnum return the enum type of this object
@@ -14494,6 +23287,26 @@ func NewTextEntityTypeBotCommand() *TextEntityTypeBotCommand {
 	return &textEntityTypeBotCommandTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (textEntityTypeBotCommand *TextEntityTypeBotCommand) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypeBotCommand.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetTextEntityTypeEnum return the enum type of this object
 func (textEntityTypeBotCommand *TextEntityTypeBotCommand) GetTextEntityTypeEnum() TextEntityTypeEnum {
 	return TextEntityTypeBotCommandType
@@ -14517,6 +23330,26 @@ func NewTextEntityTypeURL() *TextEntityTypeURL {
 	}
 
 	return &textEntityTypeURLTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (textEntityTypeURL *TextEntityTypeURL) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypeURL.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetTextEntityTypeEnum return the enum type of this object
@@ -14544,6 +23377,26 @@ func NewTextEntityTypeEmailAddress() *TextEntityTypeEmailAddress {
 	return &textEntityTypeEmailAddressTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (textEntityTypeEmailAddress *TextEntityTypeEmailAddress) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypeEmailAddress.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetTextEntityTypeEnum return the enum type of this object
 func (textEntityTypeEmailAddress *TextEntityTypeEmailAddress) GetTextEntityTypeEnum() TextEntityTypeEnum {
 	return TextEntityTypeEmailAddressType
@@ -14567,6 +23420,26 @@ func NewTextEntityTypePhoneNumber() *TextEntityTypePhoneNumber {
 	}
 
 	return &textEntityTypePhoneNumberTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (textEntityTypePhoneNumber *TextEntityTypePhoneNumber) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypePhoneNumber.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetTextEntityTypeEnum return the enum type of this object
@@ -14594,6 +23467,26 @@ func NewTextEntityTypeBankCardNumber() *TextEntityTypeBankCardNumber {
 	return &textEntityTypeBankCardNumberTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (textEntityTypeBankCardNumber *TextEntityTypeBankCardNumber) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypeBankCardNumber.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetTextEntityTypeEnum return the enum type of this object
 func (textEntityTypeBankCardNumber *TextEntityTypeBankCardNumber) GetTextEntityTypeEnum() TextEntityTypeEnum {
 	return TextEntityTypeBankCardNumberType
@@ -14617,6 +23510,26 @@ func NewTextEntityTypeBold() *TextEntityTypeBold {
 	}
 
 	return &textEntityTypeBoldTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (textEntityTypeBold *TextEntityTypeBold) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypeBold.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetTextEntityTypeEnum return the enum type of this object
@@ -14644,6 +23557,26 @@ func NewTextEntityTypeItalic() *TextEntityTypeItalic {
 	return &textEntityTypeItalicTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (textEntityTypeItalic *TextEntityTypeItalic) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypeItalic.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetTextEntityTypeEnum return the enum type of this object
 func (textEntityTypeItalic *TextEntityTypeItalic) GetTextEntityTypeEnum() TextEntityTypeEnum {
 	return TextEntityTypeItalicType
@@ -14667,6 +23600,26 @@ func NewTextEntityTypeUnderline() *TextEntityTypeUnderline {
 	}
 
 	return &textEntityTypeUnderlineTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (textEntityTypeUnderline *TextEntityTypeUnderline) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypeUnderline.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetTextEntityTypeEnum return the enum type of this object
@@ -14694,6 +23647,26 @@ func NewTextEntityTypeStrikethrough() *TextEntityTypeStrikethrough {
 	return &textEntityTypeStrikethroughTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (textEntityTypeStrikethrough *TextEntityTypeStrikethrough) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypeStrikethrough.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetTextEntityTypeEnum return the enum type of this object
 func (textEntityTypeStrikethrough *TextEntityTypeStrikethrough) GetTextEntityTypeEnum() TextEntityTypeEnum {
 	return TextEntityTypeStrikethroughType
@@ -14719,6 +23692,26 @@ func NewTextEntityTypeCode() *TextEntityTypeCode {
 	return &textEntityTypeCodeTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (textEntityTypeCode *TextEntityTypeCode) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypeCode.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetTextEntityTypeEnum return the enum type of this object
 func (textEntityTypeCode *TextEntityTypeCode) GetTextEntityTypeEnum() TextEntityTypeEnum {
 	return TextEntityTypeCodeType
@@ -14742,6 +23735,26 @@ func NewTextEntityTypePre() *TextEntityTypePre {
 	}
 
 	return &textEntityTypePreTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (textEntityTypePre *TextEntityTypePre) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypePre.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetTextEntityTypeEnum return the enum type of this object
@@ -14772,6 +23785,28 @@ func NewTextEntityTypePreCode(language string) *TextEntityTypePreCode {
 	return &textEntityTypePreCodeTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (textEntityTypePreCode *TextEntityTypePreCode) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Language string `json:"language"` // Programming language of the code; as defined by the sender
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypePreCode.tdCommon = tempObj.tdCommon
+	textEntityTypePreCode.Language = tempObj.Language
+
+	return nil
+}
+
 // GetTextEntityTypeEnum return the enum type of this object
 func (textEntityTypePreCode *TextEntityTypePreCode) GetTextEntityTypeEnum() TextEntityTypeEnum {
 	return TextEntityTypePreCodeType
@@ -14798,6 +23833,28 @@ func NewTextEntityTypeTextURL(uRL string) *TextEntityTypeTextURL {
 	}
 
 	return &textEntityTypeTextURLTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (textEntityTypeTextURL *TextEntityTypeTextURL) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		URL string `json:"url"` // HTTP or tg:// URL to be opened when the link is clicked
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypeTextURL.tdCommon = tempObj.tdCommon
+	textEntityTypeTextURL.URL = tempObj.URL
+
+	return nil
 }
 
 // GetTextEntityTypeEnum return the enum type of this object
@@ -14828,6 +23885,28 @@ func NewTextEntityTypeMentionName(userID int64) *TextEntityTypeMentionName {
 	return &textEntityTypeMentionNameTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (textEntityTypeMentionName *TextEntityTypeMentionName) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserID int64 `json:"user_id"` // Identifier of the mentioned user
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypeMentionName.tdCommon = tempObj.tdCommon
+	textEntityTypeMentionName.UserID = tempObj.UserID
+
+	return nil
+}
+
 // GetTextEntityTypeEnum return the enum type of this object
 func (textEntityTypeMentionName *TextEntityTypeMentionName) GetTextEntityTypeEnum() TextEntityTypeEnum {
 	return TextEntityTypeMentionNameType
@@ -14854,6 +23933,28 @@ func NewTextEntityTypeMediaTimestamp(mediaTimestamp int32) *TextEntityTypeMediaT
 	}
 
 	return &textEntityTypeMediaTimestampTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (textEntityTypeMediaTimestamp *TextEntityTypeMediaTimestamp) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		MediaTimestamp int32 `json:"media_timestamp"` // Timestamp from which a video/audio/video note/voice note playing must start, in seconds. The media can be in the content or the web page preview of the current message, or in the same places in the replied message
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textEntityTypeMediaTimestamp.tdCommon = tempObj.tdCommon
+	textEntityTypeMediaTimestamp.MediaTimestamp = tempObj.MediaTimestamp
+
+	return nil
 }
 
 // GetTextEntityTypeEnum return the enum type of this object
@@ -14940,6 +24041,28 @@ func NewMessageSchedulingStateSendAtDate(sendDate int32) *MessageSchedulingState
 	return &messageSchedulingStateSendAtDateTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageSchedulingStateSendAtDate *MessageSchedulingStateSendAtDate) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SendDate int32 `json:"send_date"` // Date the message will be sent. The date must be within 367 days in the future
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageSchedulingStateSendAtDate.tdCommon = tempObj.tdCommon
+	messageSchedulingStateSendAtDate.SendDate = tempObj.SendDate
+
+	return nil
+}
+
 // GetMessageSchedulingStateEnum return the enum type of this object
 func (messageSchedulingStateSendAtDate *MessageSchedulingStateSendAtDate) GetMessageSchedulingStateEnum() MessageSchedulingStateEnum {
 	return MessageSchedulingStateSendAtDateType
@@ -14963,6 +24086,26 @@ func NewMessageSchedulingStateSendWhenOnline() *MessageSchedulingStateSendWhenOn
 	}
 
 	return &messageSchedulingStateSendWhenOnlineTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageSchedulingStateSendWhenOnline *MessageSchedulingStateSendWhenOnline) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageSchedulingStateSendWhenOnline.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetMessageSchedulingStateEnum return the enum type of this object
@@ -15056,6 +24199,32 @@ func NewMessageCopyOptions(sendCopy bool, replaceCaption bool, newCaption *Forma
 	return &messageCopyOptionsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageCopyOptions *MessageCopyOptions) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SendCopy       bool           `json:"send_copy"`       // True, if content of the message needs to be copied without reference to the original sender. Always true if the message is forwarded to a secret chat or is local
+		ReplaceCaption bool           `json:"replace_caption"` // True, if media caption of the message copy needs to be replaced. Ignored if send_copy is false
+		NewCaption     *FormattedText `json:"new_caption"`     // New message caption; pass null to copy message without caption. Ignored if replace_caption is false
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageCopyOptions.tdCommon = tempObj.tdCommon
+	messageCopyOptions.SendCopy = tempObj.SendCopy
+	messageCopyOptions.ReplaceCaption = tempObj.ReplaceCaption
+	messageCopyOptions.NewCaption = tempObj.NewCaption
+
+	return nil
+}
+
 // InputMessageText A text message
 type InputMessageText struct {
 	tdCommon
@@ -15083,6 +24252,32 @@ func NewInputMessageText(text *FormattedText, disableWebPagePreview bool, clearD
 	}
 
 	return &inputMessageTextTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputMessageText *InputMessageText) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Text                  *FormattedText `json:"text"`                     // Formatted text to be sent; 1-GetOption("message_text_length_max") characters. Only Bold, Italic, Underline, Strikethrough, Code, Pre, PreCode, TextUrl and MentionName entities are allowed to be specified manually
+		DisableWebPagePreview bool           `json:"disable_web_page_preview"` // True, if rich web page previews for URLs in the message text must be disabled
+		ClearDraft            bool           `json:"clear_draft"`              // True, if a chat message draft must be deleted
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputMessageText.tdCommon = tempObj.tdCommon
+	inputMessageText.Text = tempObj.Text
+	inputMessageText.DisableWebPagePreview = tempObj.DisableWebPagePreview
+	inputMessageText.ClearDraft = tempObj.ClearDraft
+
+	return nil
 }
 
 // GetInputMessageContentEnum return the enum type of this object
@@ -15140,12 +24335,11 @@ func (inputMessageAnimation *InputMessageAnimation) UnmarshalJSON(b []byte) erro
 	}
 	tempObj := struct {
 		tdCommon
-		Thumbnail           *InputThumbnail `json:"thumbnail"`              // Animation thumbnail; pass null to skip thumbnail uploading
-		AddedStickerFileIDs []int32         `json:"added_sticker_file_ids"` // File identifiers of the stickers added to the animation, if applicable
-		Duration            int32           `json:"duration"`               // Duration of the animation, in seconds
-		Width               int32           `json:"width"`                  // Width of the animation; may be replaced by the server
-		Height              int32           `json:"height"`                 // Height of the animation; may be replaced by the server
-		Caption             *FormattedText  `json:"caption"`                // Animation caption; pass null to use an empty caption; 0-GetOption("message_caption_length_max") characters
+		AddedStickerFileIDs []int32        `json:"added_sticker_file_ids"` // File identifiers of the stickers added to the animation, if applicable
+		Duration            int32          `json:"duration"`               // Duration of the animation, in seconds
+		Width               int32          `json:"width"`                  // Width of the animation; may be replaced by the server
+		Height              int32          `json:"height"`                 // Height of the animation; may be replaced by the server
+		Caption             *FormattedText `json:"caption"`                // Animation caption; pass null to use an empty caption; 0-GetOption("message_caption_length_max") characters
 	}{}
 	err = json.Unmarshal(b, &tempObj)
 	if err != nil {
@@ -15153,7 +24347,6 @@ func (inputMessageAnimation *InputMessageAnimation) UnmarshalJSON(b []byte) erro
 	}
 
 	inputMessageAnimation.tdCommon = tempObj.tdCommon
-	inputMessageAnimation.Thumbnail = tempObj.Thumbnail
 	inputMessageAnimation.AddedStickerFileIDs = tempObj.AddedStickerFileIDs
 	inputMessageAnimation.Duration = tempObj.Duration
 	inputMessageAnimation.Width = tempObj.Width
@@ -15162,6 +24355,16 @@ func (inputMessageAnimation *InputMessageAnimation) UnmarshalJSON(b []byte) erro
 
 	fieldAnimation, _ := unmarshalInputFile(objMap["animation"])
 	inputMessageAnimation.Animation = fieldAnimation
+
+	var thumbnail InputThumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputMessageAnimation.Thumbnail = &thumbnail
 
 	return nil
 }
@@ -15218,11 +24421,10 @@ func (inputMessageAudio *InputMessageAudio) UnmarshalJSON(b []byte) error {
 	}
 	tempObj := struct {
 		tdCommon
-		AlbumCoverThumbnail *InputThumbnail `json:"album_cover_thumbnail"` // Thumbnail of the cover for the album; pass null to skip thumbnail uploading
-		Duration            int32           `json:"duration"`              // Duration of the audio, in seconds; may be replaced by the server
-		Title               string          `json:"title"`                 // Title of the audio; 0-64 characters; may be replaced by the server
-		Performer           string          `json:"performer"`             // Performer of the audio; 0-64 characters, may be replaced by the server
-		Caption             *FormattedText  `json:"caption"`               // Audio caption; pass null to use an empty caption; 0-GetOption("message_caption_length_max") characters
+		Duration  int32          `json:"duration"`  // Duration of the audio, in seconds; may be replaced by the server
+		Title     string         `json:"title"`     // Title of the audio; 0-64 characters; may be replaced by the server
+		Performer string         `json:"performer"` // Performer of the audio; 0-64 characters, may be replaced by the server
+		Caption   *FormattedText `json:"caption"`   // Audio caption; pass null to use an empty caption; 0-GetOption("message_caption_length_max") characters
 	}{}
 	err = json.Unmarshal(b, &tempObj)
 	if err != nil {
@@ -15230,7 +24432,6 @@ func (inputMessageAudio *InputMessageAudio) UnmarshalJSON(b []byte) error {
 	}
 
 	inputMessageAudio.tdCommon = tempObj.tdCommon
-	inputMessageAudio.AlbumCoverThumbnail = tempObj.AlbumCoverThumbnail
 	inputMessageAudio.Duration = tempObj.Duration
 	inputMessageAudio.Title = tempObj.Title
 	inputMessageAudio.Performer = tempObj.Performer
@@ -15238,6 +24439,16 @@ func (inputMessageAudio *InputMessageAudio) UnmarshalJSON(b []byte) error {
 
 	fieldAudio, _ := unmarshalInputFile(objMap["audio"])
 	inputMessageAudio.Audio = fieldAudio
+
+	var albumCoverThumbnail InputThumbnail
+	if objMap["album_cover_thumbnail"] != nil {
+		err = albumCoverThumbnail.UnmarshalJSON(*objMap["album_cover_thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputMessageAudio.AlbumCoverThumbnail = &albumCoverThumbnail
 
 	return nil
 }
@@ -15288,9 +24499,8 @@ func (inputMessageDocument *InputMessageDocument) UnmarshalJSON(b []byte) error 
 	}
 	tempObj := struct {
 		tdCommon
-		Thumbnail                   *InputThumbnail `json:"thumbnail"`                      // Document thumbnail; pass null to skip thumbnail uploading
-		DisableContentTypeDetection bool            `json:"disable_content_type_detection"` // If true, automatic file type detection will be disabled and the document will be always sent as file. Always true for files sent to secret chats
-		Caption                     *FormattedText  `json:"caption"`                        // Document caption; pass null to use an empty caption; 0-GetOption("message_caption_length_max") characters
+		DisableContentTypeDetection bool           `json:"disable_content_type_detection"` // If true, automatic file type detection will be disabled and the document will be always sent as file. Always true for files sent to secret chats
+		Caption                     *FormattedText `json:"caption"`                        // Document caption; pass null to use an empty caption; 0-GetOption("message_caption_length_max") characters
 	}{}
 	err = json.Unmarshal(b, &tempObj)
 	if err != nil {
@@ -15298,12 +24508,21 @@ func (inputMessageDocument *InputMessageDocument) UnmarshalJSON(b []byte) error 
 	}
 
 	inputMessageDocument.tdCommon = tempObj.tdCommon
-	inputMessageDocument.Thumbnail = tempObj.Thumbnail
 	inputMessageDocument.DisableContentTypeDetection = tempObj.DisableContentTypeDetection
 	inputMessageDocument.Caption = tempObj.Caption
 
 	fieldDocument, _ := unmarshalInputFile(objMap["document"])
 	inputMessageDocument.Document = fieldDocument
+
+	var thumbnail InputThumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputMessageDocument.Thumbnail = &thumbnail
 
 	return nil
 }
@@ -15363,12 +24582,11 @@ func (inputMessagePhoto *InputMessagePhoto) UnmarshalJSON(b []byte) error {
 	}
 	tempObj := struct {
 		tdCommon
-		Thumbnail           *InputThumbnail `json:"thumbnail"`              // Photo thumbnail to be sent; pass null to skip thumbnail uploading. The thumbnail is sent to the other party only in secret chats
-		AddedStickerFileIDs []int32         `json:"added_sticker_file_ids"` // File identifiers of the stickers added to the photo, if applicable
-		Width               int32           `json:"width"`                  // Photo width
-		Height              int32           `json:"height"`                 // Photo height
-		Caption             *FormattedText  `json:"caption"`                // Photo caption; pass null to use an empty caption; 0-GetOption("message_caption_length_max") characters
-		TTL                 int32           `json:"ttl"`                    // Photo TTL (Time To Live), in seconds (0-60). A non-zero TTL can be specified only in private chats
+		AddedStickerFileIDs []int32        `json:"added_sticker_file_ids"` // File identifiers of the stickers added to the photo, if applicable
+		Width               int32          `json:"width"`                  // Photo width
+		Height              int32          `json:"height"`                 // Photo height
+		Caption             *FormattedText `json:"caption"`                // Photo caption; pass null to use an empty caption; 0-GetOption("message_caption_length_max") characters
+		TTL                 int32          `json:"ttl"`                    // Photo TTL (Time To Live), in seconds (0-60). A non-zero TTL can be specified only in private chats
 	}{}
 	err = json.Unmarshal(b, &tempObj)
 	if err != nil {
@@ -15376,7 +24594,6 @@ func (inputMessagePhoto *InputMessagePhoto) UnmarshalJSON(b []byte) error {
 	}
 
 	inputMessagePhoto.tdCommon = tempObj.tdCommon
-	inputMessagePhoto.Thumbnail = tempObj.Thumbnail
 	inputMessagePhoto.AddedStickerFileIDs = tempObj.AddedStickerFileIDs
 	inputMessagePhoto.Width = tempObj.Width
 	inputMessagePhoto.Height = tempObj.Height
@@ -15385,6 +24602,16 @@ func (inputMessagePhoto *InputMessagePhoto) UnmarshalJSON(b []byte) error {
 
 	fieldPhoto, _ := unmarshalInputFile(objMap["photo"])
 	inputMessagePhoto.Photo = fieldPhoto
+
+	var thumbnail InputThumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputMessagePhoto.Thumbnail = &thumbnail
 
 	return nil
 }
@@ -15438,10 +24665,9 @@ func (inputMessageSticker *InputMessageSticker) UnmarshalJSON(b []byte) error {
 	}
 	tempObj := struct {
 		tdCommon
-		Thumbnail *InputThumbnail `json:"thumbnail"` // Sticker thumbnail; pass null to skip thumbnail uploading
-		Width     int32           `json:"width"`     // Sticker width
-		Height    int32           `json:"height"`    // Sticker height
-		Emoji     string          `json:"emoji"`     // Emoji used to choose the sticker
+		Width  int32  `json:"width"`  // Sticker width
+		Height int32  `json:"height"` // Sticker height
+		Emoji  string `json:"emoji"`  // Emoji used to choose the sticker
 	}{}
 	err = json.Unmarshal(b, &tempObj)
 	if err != nil {
@@ -15449,13 +24675,22 @@ func (inputMessageSticker *InputMessageSticker) UnmarshalJSON(b []byte) error {
 	}
 
 	inputMessageSticker.tdCommon = tempObj.tdCommon
-	inputMessageSticker.Thumbnail = tempObj.Thumbnail
 	inputMessageSticker.Width = tempObj.Width
 	inputMessageSticker.Height = tempObj.Height
 	inputMessageSticker.Emoji = tempObj.Emoji
 
 	fieldSticker, _ := unmarshalInputFile(objMap["sticker"])
 	inputMessageSticker.Sticker = fieldSticker
+
+	var thumbnail InputThumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputMessageSticker.Thumbnail = &thumbnail
 
 	return nil
 }
@@ -15521,14 +24756,13 @@ func (inputMessageVideo *InputMessageVideo) UnmarshalJSON(b []byte) error {
 	}
 	tempObj := struct {
 		tdCommon
-		Thumbnail           *InputThumbnail `json:"thumbnail"`              // Video thumbnail; pass null to skip thumbnail uploading
-		AddedStickerFileIDs []int32         `json:"added_sticker_file_ids"` // File identifiers of the stickers added to the video, if applicable
-		Duration            int32           `json:"duration"`               // Duration of the video, in seconds
-		Width               int32           `json:"width"`                  // Video width
-		Height              int32           `json:"height"`                 // Video height
-		SupportsStreaming   bool            `json:"supports_streaming"`     // True, if the video is supposed to be streamed
-		Caption             *FormattedText  `json:"caption"`                // Video caption; pass null to use an empty caption; 0-GetOption("message_caption_length_max") characters
-		TTL                 int32           `json:"ttl"`                    // Video TTL (Time To Live), in seconds (0-60). A non-zero TTL can be specified only in private chats
+		AddedStickerFileIDs []int32        `json:"added_sticker_file_ids"` // File identifiers of the stickers added to the video, if applicable
+		Duration            int32          `json:"duration"`               // Duration of the video, in seconds
+		Width               int32          `json:"width"`                  // Video width
+		Height              int32          `json:"height"`                 // Video height
+		SupportsStreaming   bool           `json:"supports_streaming"`     // True, if the video is supposed to be streamed
+		Caption             *FormattedText `json:"caption"`                // Video caption; pass null to use an empty caption; 0-GetOption("message_caption_length_max") characters
+		TTL                 int32          `json:"ttl"`                    // Video TTL (Time To Live), in seconds (0-60). A non-zero TTL can be specified only in private chats
 	}{}
 	err = json.Unmarshal(b, &tempObj)
 	if err != nil {
@@ -15536,7 +24770,6 @@ func (inputMessageVideo *InputMessageVideo) UnmarshalJSON(b []byte) error {
 	}
 
 	inputMessageVideo.tdCommon = tempObj.tdCommon
-	inputMessageVideo.Thumbnail = tempObj.Thumbnail
 	inputMessageVideo.AddedStickerFileIDs = tempObj.AddedStickerFileIDs
 	inputMessageVideo.Duration = tempObj.Duration
 	inputMessageVideo.Width = tempObj.Width
@@ -15547,6 +24780,16 @@ func (inputMessageVideo *InputMessageVideo) UnmarshalJSON(b []byte) error {
 
 	fieldVideo, _ := unmarshalInputFile(objMap["video"])
 	inputMessageVideo.Video = fieldVideo
+
+	var thumbnail InputThumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputMessageVideo.Thumbnail = &thumbnail
 
 	return nil
 }
@@ -15597,9 +24840,8 @@ func (inputMessageVideoNote *InputMessageVideoNote) UnmarshalJSON(b []byte) erro
 	}
 	tempObj := struct {
 		tdCommon
-		Thumbnail *InputThumbnail `json:"thumbnail"` // Video thumbnail; pass null to skip thumbnail uploading
-		Duration  int32           `json:"duration"`  // Duration of the video, in seconds
-		Length    int32           `json:"length"`    // Video width and height; must be positive and not greater than 640
+		Duration int32 `json:"duration"` // Duration of the video, in seconds
+		Length   int32 `json:"length"`   // Video width and height; must be positive and not greater than 640
 	}{}
 	err = json.Unmarshal(b, &tempObj)
 	if err != nil {
@@ -15607,12 +24849,21 @@ func (inputMessageVideoNote *InputMessageVideoNote) UnmarshalJSON(b []byte) erro
 	}
 
 	inputMessageVideoNote.tdCommon = tempObj.tdCommon
-	inputMessageVideoNote.Thumbnail = tempObj.Thumbnail
 	inputMessageVideoNote.Duration = tempObj.Duration
 	inputMessageVideoNote.Length = tempObj.Length
 
 	fieldVideoNote, _ := unmarshalInputFile(objMap["video_note"])
 	inputMessageVideoNote.VideoNote = fieldVideoNote
+
+	var thumbnail InputThumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputMessageVideoNote.Thumbnail = &thumbnail
 
 	return nil
 }
@@ -15720,6 +24971,34 @@ func NewInputMessageLocation(location *Location, livePeriod int32, heading int32
 	return &inputMessageLocationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputMessageLocation *InputMessageLocation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Location             *Location `json:"location"`               // Location to be sent
+		LivePeriod           int32     `json:"live_period"`            // Period for which the location can be updated, in seconds; must be between 60 and 86400 for a live location and 0 otherwise
+		Heading              int32     `json:"heading"`                // For live locations, a direction in which the location moves, in degrees; 1-360. Pass 0 if unknown
+		ProximityAlertRadius int32     `json:"proximity_alert_radius"` // For live locations, a maximum distance to another chat member for proximity alerts, in meters (0-100000). Pass 0 if the notification is disabled. Can't be enabled in channels and Saved Messages
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputMessageLocation.tdCommon = tempObj.tdCommon
+	inputMessageLocation.Location = tempObj.Location
+	inputMessageLocation.LivePeriod = tempObj.LivePeriod
+	inputMessageLocation.Heading = tempObj.Heading
+	inputMessageLocation.ProximityAlertRadius = tempObj.ProximityAlertRadius
+
+	return nil
+}
+
 // GetInputMessageContentEnum return the enum type of this object
 func (inputMessageLocation *InputMessageLocation) GetInputMessageContentEnum() InputMessageContentEnum {
 	return InputMessageLocationType
@@ -15748,6 +25027,28 @@ func NewInputMessageVenue(venue *Venue) *InputMessageVenue {
 	return &inputMessageVenueTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputMessageVenue *InputMessageVenue) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Venue *Venue `json:"venue"` // Venue to send
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputMessageVenue.tdCommon = tempObj.tdCommon
+	inputMessageVenue.Venue = tempObj.Venue
+
+	return nil
+}
+
 // GetInputMessageContentEnum return the enum type of this object
 func (inputMessageVenue *InputMessageVenue) GetInputMessageContentEnum() InputMessageContentEnum {
 	return InputMessageVenueType
@@ -15774,6 +25075,28 @@ func NewInputMessageContact(contact *Contact) *InputMessageContact {
 	}
 
 	return &inputMessageContactTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputMessageContact *InputMessageContact) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Contact *Contact `json:"contact"` // Contact to send
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputMessageContact.tdCommon = tempObj.tdCommon
+	inputMessageContact.Contact = tempObj.Contact
+
+	return nil
 }
 
 // GetInputMessageContentEnum return the enum type of this object
@@ -15807,6 +25130,30 @@ func NewInputMessageDice(emoji string, clearDraft bool) *InputMessageDice {
 	return &inputMessageDiceTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputMessageDice *InputMessageDice) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Emoji      string `json:"emoji"`       // Emoji on which the dice throw animation is based
+		ClearDraft bool   `json:"clear_draft"` // True, if the chat message draft must be deleted
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputMessageDice.tdCommon = tempObj.tdCommon
+	inputMessageDice.Emoji = tempObj.Emoji
+	inputMessageDice.ClearDraft = tempObj.ClearDraft
+
+	return nil
+}
+
 // GetInputMessageContentEnum return the enum type of this object
 func (inputMessageDice *InputMessageDice) GetInputMessageContentEnum() InputMessageContentEnum {
 	return InputMessageDiceType
@@ -15836,6 +25183,30 @@ func NewInputMessageGame(botUserID int64, gameShortName string) *InputMessageGam
 	}
 
 	return &inputMessageGameTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputMessageGame *InputMessageGame) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		BotUserID     int64  `json:"bot_user_id"`     // User identifier of the bot that owns the game
+		GameShortName string `json:"game_short_name"` // Short name of the game
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputMessageGame.tdCommon = tempObj.tdCommon
+	inputMessageGame.BotUserID = tempObj.BotUserID
+	inputMessageGame.GameShortName = tempObj.GameShortName
+
+	return nil
 }
 
 // GetInputMessageContentEnum return the enum type of this object
@@ -15894,6 +25265,48 @@ func NewInputMessageInvoice(invoice *Invoice, title string, description string, 
 	}
 
 	return &inputMessageInvoiceTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inputMessageInvoice *InputMessageInvoice) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Invoice        *Invoice `json:"invoice"`         // Invoice
+		Title          string   `json:"title"`           // Product title; 1-32 characters
+		Description    string   `json:"description"`     // Product description; 0-255 characters
+		PhotoURL       string   `json:"photo_url"`       // Product photo URL; optional
+		PhotoSize      int32    `json:"photo_size"`      // Product photo size
+		PhotoWidth     int32    `json:"photo_width"`     // Product photo width
+		PhotoHeight    int32    `json:"photo_height"`    // Product photo height
+		Payload        []byte   `json:"payload"`         // The invoice payload
+		ProviderToken  string   `json:"provider_token"`  // Payment provider token
+		ProviderData   string   `json:"provider_data"`   // JSON-encoded data about the invoice, which will be shared with the payment provider
+		StartParameter string   `json:"start_parameter"` // Unique invoice bot deep link parameter for the generation of this invoice. If empty, it would be possible to pay directly from forwards of the invoice message
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputMessageInvoice.tdCommon = tempObj.tdCommon
+	inputMessageInvoice.Invoice = tempObj.Invoice
+	inputMessageInvoice.Title = tempObj.Title
+	inputMessageInvoice.Description = tempObj.Description
+	inputMessageInvoice.PhotoURL = tempObj.PhotoURL
+	inputMessageInvoice.PhotoSize = tempObj.PhotoSize
+	inputMessageInvoice.PhotoWidth = tempObj.PhotoWidth
+	inputMessageInvoice.PhotoHeight = tempObj.PhotoHeight
+	inputMessageInvoice.Payload = tempObj.Payload
+	inputMessageInvoice.ProviderToken = tempObj.ProviderToken
+	inputMessageInvoice.ProviderData = tempObj.ProviderData
+	inputMessageInvoice.StartParameter = tempObj.StartParameter
+
+	return nil
 }
 
 // GetInputMessageContentEnum return the enum type of this object
@@ -16014,6 +25427,34 @@ func NewInputMessageForwarded(fromChatID int64, messageID int64, inGameShare boo
 	return &inputMessageForwardedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputMessageForwarded *InputMessageForwarded) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		FromChatID  int64               `json:"from_chat_id"`  // Identifier for the chat this forwarded message came from
+		MessageID   int64               `json:"message_id"`    // Identifier of the message to forward
+		InGameShare bool                `json:"in_game_share"` // True, if a game message is being shared from a launched game; applies only to game messages
+		CopyOptions *MessageCopyOptions `json:"copy_options"`  // Options to be used to copy content of the message without reference to the original sender; pass null to forward the message as usual
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputMessageForwarded.tdCommon = tempObj.tdCommon
+	inputMessageForwarded.FromChatID = tempObj.FromChatID
+	inputMessageForwarded.MessageID = tempObj.MessageID
+	inputMessageForwarded.InGameShare = tempObj.InGameShare
+	inputMessageForwarded.CopyOptions = tempObj.CopyOptions
+
+	return nil
+}
+
 // GetInputMessageContentEnum return the enum type of this object
 func (inputMessageForwarded *InputMessageForwarded) GetInputMessageContentEnum() InputMessageContentEnum {
 	return InputMessageForwardedType
@@ -16037,6 +25478,26 @@ func NewSearchMessagesFilterEmpty() *SearchMessagesFilterEmpty {
 	}
 
 	return &searchMessagesFilterEmptyTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterEmpty *SearchMessagesFilterEmpty) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterEmpty.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetSearchMessagesFilterEnum return the enum type of this object
@@ -16064,6 +25525,26 @@ func NewSearchMessagesFilterAnimation() *SearchMessagesFilterAnimation {
 	return &searchMessagesFilterAnimationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterAnimation *SearchMessagesFilterAnimation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterAnimation.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetSearchMessagesFilterEnum return the enum type of this object
 func (searchMessagesFilterAnimation *SearchMessagesFilterAnimation) GetSearchMessagesFilterEnum() SearchMessagesFilterEnum {
 	return SearchMessagesFilterAnimationType
@@ -16087,6 +25568,26 @@ func NewSearchMessagesFilterAudio() *SearchMessagesFilterAudio {
 	}
 
 	return &searchMessagesFilterAudioTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterAudio *SearchMessagesFilterAudio) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterAudio.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetSearchMessagesFilterEnum return the enum type of this object
@@ -16114,6 +25615,26 @@ func NewSearchMessagesFilterDocument() *SearchMessagesFilterDocument {
 	return &searchMessagesFilterDocumentTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterDocument *SearchMessagesFilterDocument) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterDocument.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetSearchMessagesFilterEnum return the enum type of this object
 func (searchMessagesFilterDocument *SearchMessagesFilterDocument) GetSearchMessagesFilterEnum() SearchMessagesFilterEnum {
 	return SearchMessagesFilterDocumentType
@@ -16137,6 +25658,26 @@ func NewSearchMessagesFilterPhoto() *SearchMessagesFilterPhoto {
 	}
 
 	return &searchMessagesFilterPhotoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterPhoto *SearchMessagesFilterPhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterPhoto.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetSearchMessagesFilterEnum return the enum type of this object
@@ -16164,6 +25705,26 @@ func NewSearchMessagesFilterVideo() *SearchMessagesFilterVideo {
 	return &searchMessagesFilterVideoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterVideo *SearchMessagesFilterVideo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterVideo.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetSearchMessagesFilterEnum return the enum type of this object
 func (searchMessagesFilterVideo *SearchMessagesFilterVideo) GetSearchMessagesFilterEnum() SearchMessagesFilterEnum {
 	return SearchMessagesFilterVideoType
@@ -16187,6 +25748,26 @@ func NewSearchMessagesFilterVoiceNote() *SearchMessagesFilterVoiceNote {
 	}
 
 	return &searchMessagesFilterVoiceNoteTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterVoiceNote *SearchMessagesFilterVoiceNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterVoiceNote.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetSearchMessagesFilterEnum return the enum type of this object
@@ -16214,6 +25795,26 @@ func NewSearchMessagesFilterPhotoAndVideo() *SearchMessagesFilterPhotoAndVideo {
 	return &searchMessagesFilterPhotoAndVideoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterPhotoAndVideo *SearchMessagesFilterPhotoAndVideo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterPhotoAndVideo.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetSearchMessagesFilterEnum return the enum type of this object
 func (searchMessagesFilterPhotoAndVideo *SearchMessagesFilterPhotoAndVideo) GetSearchMessagesFilterEnum() SearchMessagesFilterEnum {
 	return SearchMessagesFilterPhotoAndVideoType
@@ -16237,6 +25838,26 @@ func NewSearchMessagesFilterURL() *SearchMessagesFilterURL {
 	}
 
 	return &searchMessagesFilterURLTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterURL *SearchMessagesFilterURL) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterURL.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetSearchMessagesFilterEnum return the enum type of this object
@@ -16264,6 +25885,26 @@ func NewSearchMessagesFilterChatPhoto() *SearchMessagesFilterChatPhoto {
 	return &searchMessagesFilterChatPhotoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterChatPhoto *SearchMessagesFilterChatPhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterChatPhoto.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetSearchMessagesFilterEnum return the enum type of this object
 func (searchMessagesFilterChatPhoto *SearchMessagesFilterChatPhoto) GetSearchMessagesFilterEnum() SearchMessagesFilterEnum {
 	return SearchMessagesFilterChatPhotoType
@@ -16287,6 +25928,26 @@ func NewSearchMessagesFilterVideoNote() *SearchMessagesFilterVideoNote {
 	}
 
 	return &searchMessagesFilterVideoNoteTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterVideoNote *SearchMessagesFilterVideoNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterVideoNote.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetSearchMessagesFilterEnum return the enum type of this object
@@ -16314,6 +25975,26 @@ func NewSearchMessagesFilterVoiceAndVideoNote() *SearchMessagesFilterVoiceAndVid
 	return &searchMessagesFilterVoiceAndVideoNoteTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterVoiceAndVideoNote *SearchMessagesFilterVoiceAndVideoNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterVoiceAndVideoNote.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetSearchMessagesFilterEnum return the enum type of this object
 func (searchMessagesFilterVoiceAndVideoNote *SearchMessagesFilterVoiceAndVideoNote) GetSearchMessagesFilterEnum() SearchMessagesFilterEnum {
 	return SearchMessagesFilterVoiceAndVideoNoteType
@@ -16337,6 +26018,26 @@ func NewSearchMessagesFilterMention() *SearchMessagesFilterMention {
 	}
 
 	return &searchMessagesFilterMentionTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterMention *SearchMessagesFilterMention) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterMention.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetSearchMessagesFilterEnum return the enum type of this object
@@ -16364,6 +26065,26 @@ func NewSearchMessagesFilterUnreadMention() *SearchMessagesFilterUnreadMention {
 	return &searchMessagesFilterUnreadMentionTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterUnreadMention *SearchMessagesFilterUnreadMention) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterUnreadMention.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetSearchMessagesFilterEnum return the enum type of this object
 func (searchMessagesFilterUnreadMention *SearchMessagesFilterUnreadMention) GetSearchMessagesFilterEnum() SearchMessagesFilterEnum {
 	return SearchMessagesFilterUnreadMentionType
@@ -16387,6 +26108,26 @@ func NewSearchMessagesFilterFailedToSend() *SearchMessagesFilterFailedToSend {
 	}
 
 	return &searchMessagesFilterFailedToSendTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterFailedToSend *SearchMessagesFilterFailedToSend) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterFailedToSend.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetSearchMessagesFilterEnum return the enum type of this object
@@ -16414,6 +26155,26 @@ func NewSearchMessagesFilterPinned() *SearchMessagesFilterPinned {
 	return &searchMessagesFilterPinnedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (searchMessagesFilterPinned *SearchMessagesFilterPinned) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	searchMessagesFilterPinned.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetSearchMessagesFilterEnum return the enum type of this object
 func (searchMessagesFilterPinned *SearchMessagesFilterPinned) GetSearchMessagesFilterEnum() SearchMessagesFilterEnum {
 	return SearchMessagesFilterPinnedType
@@ -16439,6 +26200,26 @@ func NewChatActionTyping() *ChatActionTyping {
 	return &chatActionTypingTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatActionTyping *ChatActionTyping) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionTyping.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetChatActionEnum return the enum type of this object
 func (chatActionTyping *ChatActionTyping) GetChatActionEnum() ChatActionEnum {
 	return ChatActionTypingType
@@ -16462,6 +26243,26 @@ func NewChatActionRecordingVideo() *ChatActionRecordingVideo {
 	}
 
 	return &chatActionRecordingVideoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatActionRecordingVideo *ChatActionRecordingVideo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionRecordingVideo.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatActionEnum return the enum type of this object
@@ -16492,6 +26293,28 @@ func NewChatActionUploadingVideo(progress int32) *ChatActionUploadingVideo {
 	return &chatActionUploadingVideoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatActionUploadingVideo *ChatActionUploadingVideo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Progress int32 `json:"progress"` // Upload progress, as a percentage
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionUploadingVideo.tdCommon = tempObj.tdCommon
+	chatActionUploadingVideo.Progress = tempObj.Progress
+
+	return nil
+}
+
 // GetChatActionEnum return the enum type of this object
 func (chatActionUploadingVideo *ChatActionUploadingVideo) GetChatActionEnum() ChatActionEnum {
 	return ChatActionUploadingVideoType
@@ -16515,6 +26338,26 @@ func NewChatActionRecordingVoiceNote() *ChatActionRecordingVoiceNote {
 	}
 
 	return &chatActionRecordingVoiceNoteTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatActionRecordingVoiceNote *ChatActionRecordingVoiceNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionRecordingVoiceNote.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatActionEnum return the enum type of this object
@@ -16545,6 +26388,28 @@ func NewChatActionUploadingVoiceNote(progress int32) *ChatActionUploadingVoiceNo
 	return &chatActionUploadingVoiceNoteTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatActionUploadingVoiceNote *ChatActionUploadingVoiceNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Progress int32 `json:"progress"` // Upload progress, as a percentage
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionUploadingVoiceNote.tdCommon = tempObj.tdCommon
+	chatActionUploadingVoiceNote.Progress = tempObj.Progress
+
+	return nil
+}
+
 // GetChatActionEnum return the enum type of this object
 func (chatActionUploadingVoiceNote *ChatActionUploadingVoiceNote) GetChatActionEnum() ChatActionEnum {
 	return ChatActionUploadingVoiceNoteType
@@ -16571,6 +26436,28 @@ func NewChatActionUploadingPhoto(progress int32) *ChatActionUploadingPhoto {
 	}
 
 	return &chatActionUploadingPhotoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatActionUploadingPhoto *ChatActionUploadingPhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Progress int32 `json:"progress"` // Upload progress, as a percentage
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionUploadingPhoto.tdCommon = tempObj.tdCommon
+	chatActionUploadingPhoto.Progress = tempObj.Progress
+
+	return nil
 }
 
 // GetChatActionEnum return the enum type of this object
@@ -16601,6 +26488,28 @@ func NewChatActionUploadingDocument(progress int32) *ChatActionUploadingDocument
 	return &chatActionUploadingDocumentTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatActionUploadingDocument *ChatActionUploadingDocument) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Progress int32 `json:"progress"` // Upload progress, as a percentage
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionUploadingDocument.tdCommon = tempObj.tdCommon
+	chatActionUploadingDocument.Progress = tempObj.Progress
+
+	return nil
+}
+
 // GetChatActionEnum return the enum type of this object
 func (chatActionUploadingDocument *ChatActionUploadingDocument) GetChatActionEnum() ChatActionEnum {
 	return ChatActionUploadingDocumentType
@@ -16624,6 +26533,26 @@ func NewChatActionChoosingSticker() *ChatActionChoosingSticker {
 	}
 
 	return &chatActionChoosingStickerTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatActionChoosingSticker *ChatActionChoosingSticker) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionChoosingSticker.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatActionEnum return the enum type of this object
@@ -16651,6 +26580,26 @@ func NewChatActionChoosingLocation() *ChatActionChoosingLocation {
 	return &chatActionChoosingLocationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatActionChoosingLocation *ChatActionChoosingLocation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionChoosingLocation.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetChatActionEnum return the enum type of this object
 func (chatActionChoosingLocation *ChatActionChoosingLocation) GetChatActionEnum() ChatActionEnum {
 	return ChatActionChoosingLocationType
@@ -16674,6 +26623,26 @@ func NewChatActionChoosingContact() *ChatActionChoosingContact {
 	}
 
 	return &chatActionChoosingContactTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatActionChoosingContact *ChatActionChoosingContact) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionChoosingContact.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatActionEnum return the enum type of this object
@@ -16701,6 +26670,26 @@ func NewChatActionStartPlayingGame() *ChatActionStartPlayingGame {
 	return &chatActionStartPlayingGameTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatActionStartPlayingGame *ChatActionStartPlayingGame) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionStartPlayingGame.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetChatActionEnum return the enum type of this object
 func (chatActionStartPlayingGame *ChatActionStartPlayingGame) GetChatActionEnum() ChatActionEnum {
 	return ChatActionStartPlayingGameType
@@ -16724,6 +26713,26 @@ func NewChatActionRecordingVideoNote() *ChatActionRecordingVideoNote {
 	}
 
 	return &chatActionRecordingVideoNoteTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatActionRecordingVideoNote *ChatActionRecordingVideoNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionRecordingVideoNote.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatActionEnum return the enum type of this object
@@ -16754,6 +26763,28 @@ func NewChatActionUploadingVideoNote(progress int32) *ChatActionUploadingVideoNo
 	return &chatActionUploadingVideoNoteTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatActionUploadingVideoNote *ChatActionUploadingVideoNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Progress int32 `json:"progress"` // Upload progress, as a percentage
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionUploadingVideoNote.tdCommon = tempObj.tdCommon
+	chatActionUploadingVideoNote.Progress = tempObj.Progress
+
+	return nil
+}
+
 // GetChatActionEnum return the enum type of this object
 func (chatActionUploadingVideoNote *ChatActionUploadingVideoNote) GetChatActionEnum() ChatActionEnum {
 	return ChatActionUploadingVideoNoteType
@@ -16782,6 +26813,28 @@ func NewChatActionWatchingAnimations(emoji string) *ChatActionWatchingAnimations
 	return &chatActionWatchingAnimationsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatActionWatchingAnimations *ChatActionWatchingAnimations) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Emoji string `json:"emoji"` // The animated emoji
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionWatchingAnimations.tdCommon = tempObj.tdCommon
+	chatActionWatchingAnimations.Emoji = tempObj.Emoji
+
+	return nil
+}
+
 // GetChatActionEnum return the enum type of this object
 func (chatActionWatchingAnimations *ChatActionWatchingAnimations) GetChatActionEnum() ChatActionEnum {
 	return ChatActionWatchingAnimationsType
@@ -16807,6 +26860,26 @@ func NewChatActionCancel() *ChatActionCancel {
 	return &chatActionCancelTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatActionCancel *ChatActionCancel) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatActionCancel.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetChatActionEnum return the enum type of this object
 func (chatActionCancel *ChatActionCancel) GetChatActionEnum() ChatActionEnum {
 	return ChatActionCancelType
@@ -16830,6 +26903,26 @@ func NewUserStatusEmpty() *UserStatusEmpty {
 	}
 
 	return &userStatusEmptyTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (userStatusEmpty *UserStatusEmpty) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userStatusEmpty.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetUserStatusEnum return the enum type of this object
@@ -16860,6 +26953,28 @@ func NewUserStatusOnline(expires int32) *UserStatusOnline {
 	return &userStatusOnlineTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (userStatusOnline *UserStatusOnline) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Expires int32 `json:"expires"` // Point in time (Unix timestamp) when the user's online status will expire
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userStatusOnline.tdCommon = tempObj.tdCommon
+	userStatusOnline.Expires = tempObj.Expires
+
+	return nil
+}
+
 // GetUserStatusEnum return the enum type of this object
 func (userStatusOnline *UserStatusOnline) GetUserStatusEnum() UserStatusEnum {
 	return UserStatusOnlineType
@@ -16888,6 +27003,28 @@ func NewUserStatusOffline(wasOnline int32) *UserStatusOffline {
 	return &userStatusOfflineTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (userStatusOffline *UserStatusOffline) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		WasOnline int32 `json:"was_online"` // Point in time (Unix timestamp) when the user was last online
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userStatusOffline.tdCommon = tempObj.tdCommon
+	userStatusOffline.WasOnline = tempObj.WasOnline
+
+	return nil
+}
+
 // GetUserStatusEnum return the enum type of this object
 func (userStatusOffline *UserStatusOffline) GetUserStatusEnum() UserStatusEnum {
 	return UserStatusOfflineType
@@ -16911,6 +27048,26 @@ func NewUserStatusRecently() *UserStatusRecently {
 	}
 
 	return &userStatusRecentlyTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (userStatusRecently *UserStatusRecently) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userStatusRecently.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetUserStatusEnum return the enum type of this object
@@ -16938,6 +27095,26 @@ func NewUserStatusLastWeek() *UserStatusLastWeek {
 	return &userStatusLastWeekTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (userStatusLastWeek *UserStatusLastWeek) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userStatusLastWeek.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetUserStatusEnum return the enum type of this object
 func (userStatusLastWeek *UserStatusLastWeek) GetUserStatusEnum() UserStatusEnum {
 	return UserStatusLastWeekType
@@ -16961,6 +27138,26 @@ func NewUserStatusLastMonth() *UserStatusLastMonth {
 	}
 
 	return &userStatusLastMonthTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (userStatusLastMonth *UserStatusLastMonth) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userStatusLastMonth.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetUserStatusEnum return the enum type of this object
@@ -16991,6 +27188,28 @@ func NewStickers(stickers []Sticker) *Stickers {
 	return &stickersTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (stickers *Stickers) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Stickers []Sticker `json:"stickers"` // List of stickers
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	stickers.tdCommon = tempObj.tdCommon
+	stickers.Stickers = tempObj.Stickers
+
+	return nil
+}
+
 // Emojis Represents a list of emoji
 type Emojis struct {
 	tdCommon
@@ -17012,6 +27231,28 @@ func NewEmojis(emojis []string) *Emojis {
 	}
 
 	return &emojisTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (emojis *Emojis) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Emojis []string `json:"emojis"` // List of emojis
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	emojis.tdCommon = tempObj.tdCommon
+	emojis.Emojis = tempObj.Emojis
+
+	return nil
 }
 
 // StickerSet Represents a sticker set
@@ -17073,6 +27314,60 @@ func NewStickerSet(iD JSONInt64, title string, name string, thumbnail *Thumbnail
 	return &stickerSetTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (stickerSet *StickerSet) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID               JSONInt64          `json:"id"`                // Identifier of the sticker set
+		Title            string             `json:"title"`             // Title of the sticker set
+		Name             string             `json:"name"`              // Name of the sticker set
+		ThumbnailOutline []ClosedVectorPath `json:"thumbnail_outline"` // Sticker set thumbnail's outline represented as a list of closed vector paths; may be empty. The coordinate system origin is in the upper-left corner
+		IsInstalled      bool               `json:"is_installed"`      // True, if the sticker set has been installed by the current user
+		IsArchived       bool               `json:"is_archived"`       // True, if the sticker set has been archived. A sticker set can't be installed and archived simultaneously
+		IsOfficial       bool               `json:"is_official"`       // True, if the sticker set is official
+		IsAnimated       bool               `json:"is_animated"`       // True, is the stickers in the set are animated
+		IsMasks          bool               `json:"is_masks"`          // True, if the stickers in the set are masks
+		IsViewed         bool               `json:"is_viewed"`         // True for already viewed trending sticker sets
+		Stickers         []Sticker          `json:"stickers"`          // List of stickers in this set
+		Emojis           []Emojis           `json:"emojis"`            // A list of emoji corresponding to the stickers in the same order. The list is only for informational purposes, because a sticker is always sent with a fixed emoji from the corresponding Sticker object
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	stickerSet.tdCommon = tempObj.tdCommon
+	stickerSet.ID = tempObj.ID
+	stickerSet.Title = tempObj.Title
+	stickerSet.Name = tempObj.Name
+	stickerSet.ThumbnailOutline = tempObj.ThumbnailOutline
+	stickerSet.IsInstalled = tempObj.IsInstalled
+	stickerSet.IsArchived = tempObj.IsArchived
+	stickerSet.IsOfficial = tempObj.IsOfficial
+	stickerSet.IsAnimated = tempObj.IsAnimated
+	stickerSet.IsMasks = tempObj.IsMasks
+	stickerSet.IsViewed = tempObj.IsViewed
+	stickerSet.Stickers = tempObj.Stickers
+	stickerSet.Emojis = tempObj.Emojis
+
+	var thumbnail Thumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	stickerSet.Thumbnail = &thumbnail
+
+	return nil
+}
+
 // StickerSetInfo Represents short information about a sticker set
 type StickerSetInfo struct {
 	tdCommon
@@ -17132,6 +27427,60 @@ func NewStickerSetInfo(iD JSONInt64, title string, name string, thumbnail *Thumb
 	return &stickerSetInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (stickerSetInfo *StickerSetInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID               JSONInt64          `json:"id"`                // Identifier of the sticker set
+		Title            string             `json:"title"`             // Title of the sticker set
+		Name             string             `json:"name"`              // Name of the sticker set
+		ThumbnailOutline []ClosedVectorPath `json:"thumbnail_outline"` // Sticker set thumbnail's outline represented as a list of closed vector paths; may be empty. The coordinate system origin is in the upper-left corner
+		IsInstalled      bool               `json:"is_installed"`      // True, if the sticker set has been installed by the current user
+		IsArchived       bool               `json:"is_archived"`       // True, if the sticker set has been archived. A sticker set can't be installed and archived simultaneously
+		IsOfficial       bool               `json:"is_official"`       // True, if the sticker set is official
+		IsAnimated       bool               `json:"is_animated"`       // True, is the stickers in the set are animated
+		IsMasks          bool               `json:"is_masks"`          // True, if the stickers in the set are masks
+		IsViewed         bool               `json:"is_viewed"`         // True for already viewed trending sticker sets
+		Size             int32              `json:"size"`              // Total number of stickers in the set
+		Covers           []Sticker          `json:"covers"`            // Up to the first 5 stickers from the set, depending on the context. If the application needs more stickers the full sticker set needs to be requested
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	stickerSetInfo.tdCommon = tempObj.tdCommon
+	stickerSetInfo.ID = tempObj.ID
+	stickerSetInfo.Title = tempObj.Title
+	stickerSetInfo.Name = tempObj.Name
+	stickerSetInfo.ThumbnailOutline = tempObj.ThumbnailOutline
+	stickerSetInfo.IsInstalled = tempObj.IsInstalled
+	stickerSetInfo.IsArchived = tempObj.IsArchived
+	stickerSetInfo.IsOfficial = tempObj.IsOfficial
+	stickerSetInfo.IsAnimated = tempObj.IsAnimated
+	stickerSetInfo.IsMasks = tempObj.IsMasks
+	stickerSetInfo.IsViewed = tempObj.IsViewed
+	stickerSetInfo.Size = tempObj.Size
+	stickerSetInfo.Covers = tempObj.Covers
+
+	var thumbnail Thumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	stickerSetInfo.Thumbnail = &thumbnail
+
+	return nil
+}
+
 // StickerSets Represents a list of sticker sets
 type StickerSets struct {
 	tdCommon
@@ -17158,6 +27507,30 @@ func NewStickerSets(totalCount int32, sets []StickerSetInfo) *StickerSets {
 	return &stickerSetsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (stickerSets *StickerSets) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount int32            `json:"total_count"` // Approximate total number of sticker sets found
+		Sets       []StickerSetInfo `json:"sets"`        // List of sticker sets
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	stickerSets.tdCommon = tempObj.tdCommon
+	stickerSets.TotalCount = tempObj.TotalCount
+	stickerSets.Sets = tempObj.Sets
+
+	return nil
+}
+
 // CallDiscardReasonEmpty The call wasn't discarded, or the reason is unknown
 type CallDiscardReasonEmpty struct {
 	tdCommon
@@ -17176,6 +27549,26 @@ func NewCallDiscardReasonEmpty() *CallDiscardReasonEmpty {
 	}
 
 	return &callDiscardReasonEmptyTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (callDiscardReasonEmpty *CallDiscardReasonEmpty) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callDiscardReasonEmpty.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetCallDiscardReasonEnum return the enum type of this object
@@ -17203,6 +27596,26 @@ func NewCallDiscardReasonMissed() *CallDiscardReasonMissed {
 	return &callDiscardReasonMissedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (callDiscardReasonMissed *CallDiscardReasonMissed) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callDiscardReasonMissed.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetCallDiscardReasonEnum return the enum type of this object
 func (callDiscardReasonMissed *CallDiscardReasonMissed) GetCallDiscardReasonEnum() CallDiscardReasonEnum {
 	return CallDiscardReasonMissedType
@@ -17226,6 +27639,26 @@ func NewCallDiscardReasonDeclined() *CallDiscardReasonDeclined {
 	}
 
 	return &callDiscardReasonDeclinedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (callDiscardReasonDeclined *CallDiscardReasonDeclined) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callDiscardReasonDeclined.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetCallDiscardReasonEnum return the enum type of this object
@@ -17253,6 +27686,26 @@ func NewCallDiscardReasonDisconnected() *CallDiscardReasonDisconnected {
 	return &callDiscardReasonDisconnectedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (callDiscardReasonDisconnected *CallDiscardReasonDisconnected) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callDiscardReasonDisconnected.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetCallDiscardReasonEnum return the enum type of this object
 func (callDiscardReasonDisconnected *CallDiscardReasonDisconnected) GetCallDiscardReasonEnum() CallDiscardReasonEnum {
 	return CallDiscardReasonDisconnectedType
@@ -17276,6 +27729,26 @@ func NewCallDiscardReasonHungUp() *CallDiscardReasonHungUp {
 	}
 
 	return &callDiscardReasonHungUpTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (callDiscardReasonHungUp *CallDiscardReasonHungUp) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callDiscardReasonHungUp.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetCallDiscardReasonEnum return the enum type of this object
@@ -17318,6 +27791,36 @@ func NewCallProtocol(uDPP2p bool, uDPReflector bool, minLayer int32, maxLayer in
 	return &callProtocolTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (callProtocol *CallProtocol) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UDPP2p          bool     `json:"udp_p2p"`          // True, if UDP peer-to-peer connections are supported
+		UDPReflector    bool     `json:"udp_reflector"`    // True, if connection through UDP reflectors is supported
+		MinLayer        int32    `json:"min_layer"`        // The minimum supported API layer; use 65
+		MaxLayer        int32    `json:"max_layer"`        // The maximum supported API layer; use 65
+		LibraryVersions []string `json:"library_versions"` // List of supported tgcalls versions
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callProtocol.tdCommon = tempObj.tdCommon
+	callProtocol.UDPP2p = tempObj.UDPP2p
+	callProtocol.UDPReflector = tempObj.UDPReflector
+	callProtocol.MinLayer = tempObj.MinLayer
+	callProtocol.MaxLayer = tempObj.MaxLayer
+	callProtocol.LibraryVersions = tempObj.LibraryVersions
+
+	return nil
+}
+
 // CallServerTypeTelegramReflector A Telegram call reflector
 type CallServerTypeTelegramReflector struct {
 	tdCommon
@@ -17339,6 +27842,28 @@ func NewCallServerTypeTelegramReflector(peerTag []byte) *CallServerTypeTelegramR
 	}
 
 	return &callServerTypeTelegramReflectorTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (callServerTypeTelegramReflector *CallServerTypeTelegramReflector) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		PeerTag []byte `json:"peer_tag"` // A peer tag to be used with the reflector
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callServerTypeTelegramReflector.tdCommon = tempObj.tdCommon
+	callServerTypeTelegramReflector.PeerTag = tempObj.PeerTag
+
+	return nil
 }
 
 // GetCallServerTypeEnum return the enum type of this object
@@ -17376,6 +27901,34 @@ func NewCallServerTypeWebrtc(username string, password string, supportsTurn bool
 	}
 
 	return &callServerTypeWebrtcTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (callServerTypeWebrtc *CallServerTypeWebrtc) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Username     string `json:"username"`      // Username to be used for authentication
+		Password     string `json:"password"`      // Authentication password
+		SupportsTurn bool   `json:"supports_turn"` // True, if the server supports TURN
+		SupportsStun bool   `json:"supports_stun"` // True, if the server supports STUN
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callServerTypeWebrtc.tdCommon = tempObj.tdCommon
+	callServerTypeWebrtc.Username = tempObj.Username
+	callServerTypeWebrtc.Password = tempObj.Password
+	callServerTypeWebrtc.SupportsTurn = tempObj.SupportsTurn
+	callServerTypeWebrtc.SupportsStun = tempObj.SupportsStun
+
+	return nil
 }
 
 // GetCallServerTypeEnum return the enum type of this object
@@ -17473,6 +28026,28 @@ func NewCallID(iD int32) *CallID {
 	return &callIDTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (callID *CallID) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID int32 `json:"id"` // Call identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callID.tdCommon = tempObj.tdCommon
+	callID.ID = tempObj.ID
+
+	return nil
+}
+
 // GroupCallID Contains the group call identifier
 type GroupCallID struct {
 	tdCommon
@@ -17494,6 +28069,28 @@ func NewGroupCallID(iD int32) *GroupCallID {
 	}
 
 	return &groupCallIDTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (groupCallID *GroupCallID) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID int32 `json:"id"` // Group call identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	groupCallID.tdCommon = tempObj.tdCommon
+	groupCallID.ID = tempObj.ID
+
+	return nil
 }
 
 // CallStatePending The call is pending, waiting to be accepted by a user
@@ -17522,6 +28119,30 @@ func NewCallStatePending(isCreated bool, isReceived bool) *CallStatePending {
 	return &callStatePendingTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (callStatePending *CallStatePending) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		IsCreated  bool `json:"is_created"`  // True, if the call has already been created by the server
+		IsReceived bool `json:"is_received"` // True, if the call has already been received by the other party
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callStatePending.tdCommon = tempObj.tdCommon
+	callStatePending.IsCreated = tempObj.IsCreated
+	callStatePending.IsReceived = tempObj.IsReceived
+
+	return nil
+}
+
 // GetCallStateEnum return the enum type of this object
 func (callStatePending *CallStatePending) GetCallStateEnum() CallStateEnum {
 	return CallStatePendingType
@@ -17545,6 +28166,26 @@ func NewCallStateExchangingKeys() *CallStateExchangingKeys {
 	}
 
 	return &callStateExchangingKeysTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (callStateExchangingKeys *CallStateExchangingKeys) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callStateExchangingKeys.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetCallStateEnum return the enum type of this object
@@ -17590,6 +28231,38 @@ func NewCallStateReady(protocol *CallProtocol, servers []CallServer, config stri
 	return &callStateReadyTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (callStateReady *CallStateReady) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Protocol      *CallProtocol `json:"protocol"`       // Call protocols supported by the peer
+		Servers       []CallServer  `json:"servers"`        // List of available call servers
+		Config        string        `json:"config"`         // A JSON-encoded call config
+		EncryptionKey []byte        `json:"encryption_key"` // Call encryption key
+		Emojis        []string      `json:"emojis"`         // Encryption key emojis fingerprint
+		AllowP2p      bool          `json:"allow_p2p"`      // True, if peer-to-peer connection is allowed by users privacy settings
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callStateReady.tdCommon = tempObj.tdCommon
+	callStateReady.Protocol = tempObj.Protocol
+	callStateReady.Servers = tempObj.Servers
+	callStateReady.Config = tempObj.Config
+	callStateReady.EncryptionKey = tempObj.EncryptionKey
+	callStateReady.Emojis = tempObj.Emojis
+	callStateReady.AllowP2p = tempObj.AllowP2p
+
+	return nil
+}
+
 // GetCallStateEnum return the enum type of this object
 func (callStateReady *CallStateReady) GetCallStateEnum() CallStateEnum {
 	return CallStateReadyType
@@ -17613,6 +28286,26 @@ func NewCallStateHangingUp() *CallStateHangingUp {
 	}
 
 	return &callStateHangingUpTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (callStateHangingUp *CallStateHangingUp) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callStateHangingUp.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetCallStateEnum return the enum type of this object
@@ -17704,6 +28397,28 @@ func NewCallStateError(error *Error) *CallStateError {
 	return &callStateErrorTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (callStateError *CallStateError) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Error *Error `json:"error"` // Error. An error with the code 4005000 will be returned if an outgoing call is missed because of an expired timeout
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callStateError.tdCommon = tempObj.tdCommon
+	callStateError.Error = tempObj.Error
+
+	return nil
+}
+
 // GetCallStateEnum return the enum type of this object
 func (callStateError *CallStateError) GetCallStateEnum() CallStateEnum {
 	return CallStateErrorType
@@ -17727,6 +28442,26 @@ func NewGroupCallVideoQualityThumbnail() *GroupCallVideoQualityThumbnail {
 	}
 
 	return &groupCallVideoQualityThumbnailTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (groupCallVideoQualityThumbnail *GroupCallVideoQualityThumbnail) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	groupCallVideoQualityThumbnail.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetGroupCallVideoQualityEnum return the enum type of this object
@@ -17754,6 +28489,26 @@ func NewGroupCallVideoQualityMedium() *GroupCallVideoQualityMedium {
 	return &groupCallVideoQualityMediumTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (groupCallVideoQualityMedium *GroupCallVideoQualityMedium) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	groupCallVideoQualityMedium.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetGroupCallVideoQualityEnum return the enum type of this object
 func (groupCallVideoQualityMedium *GroupCallVideoQualityMedium) GetGroupCallVideoQualityEnum() GroupCallVideoQualityEnum {
 	return GroupCallVideoQualityMediumType
@@ -17777,6 +28532,26 @@ func NewGroupCallVideoQualityFull() *GroupCallVideoQualityFull {
 	}
 
 	return &groupCallVideoQualityFullTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (groupCallVideoQualityFull *GroupCallVideoQualityFull) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	groupCallVideoQualityFull.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetGroupCallVideoQualityEnum return the enum type of this object
@@ -17912,6 +28687,64 @@ func NewGroupCall(iD int32, title string, scheduledStartDate int32, enabledStart
 	return &groupCallTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (groupCall *GroupCall) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID                           int32                    `json:"id"`                               // Group call identifier
+		Title                        string                   `json:"title"`                            // Group call title
+		ScheduledStartDate           int32                    `json:"scheduled_start_date"`             // Point in time (Unix timestamp) when the group call is supposed to be started by an administrator; 0 if it is already active or was ended
+		EnabledStartNotification     bool                     `json:"enabled_start_notification"`       // True, if the group call is scheduled and the current user will receive a notification when the group call will start
+		IsActive                     bool                     `json:"is_active"`                        // True, if the call is active
+		IsJoined                     bool                     `json:"is_joined"`                        // True, if the call is joined
+		NeedRejoin                   bool                     `json:"need_rejoin"`                      // True, if user was kicked from the call because of network loss and the call needs to be rejoined
+		CanBeManaged                 bool                     `json:"can_be_managed"`                   // True, if the current user can manage the group call
+		ParticipantCount             int32                    `json:"participant_count"`                // Number of participants in the group call
+		LoadedAllParticipants        bool                     `json:"loaded_all_participants"`          // True, if all group call participants are loaded
+		RecentSpeakers               []GroupCallRecentSpeaker `json:"recent_speakers"`                  // At most 3 recently speaking users in the group call
+		IsMyVideoEnabled             bool                     `json:"is_my_video_enabled"`              // True, if the current user's video is enabled
+		IsMyVideoPaused              bool                     `json:"is_my_video_paused"`               // True, if the current user's video is paused
+		CanEnableVideo               bool                     `json:"can_enable_video"`                 // True, if the current user can broadcast video or share screen
+		MuteNewParticipants          bool                     `json:"mute_new_participants"`            // True, if only group call administrators can unmute new participants
+		CanToggleMuteNewParticipants bool                     `json:"can_toggle_mute_new_participants"` // True, if the current user can enable or disable mute_new_participants setting
+		RecordDuration               int32                    `json:"record_duration"`                  // Duration of the ongoing group call recording, in seconds; 0 if none. An updateGroupCall update is not triggered when value of this field changes, but the same recording goes on
+		IsVideoRecorded              bool                     `json:"is_video_recorded"`                // True, if a video file is being recorded for the call
+		Duration                     int32                    `json:"duration"`                         // Call duration, in seconds; for ended calls only
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	groupCall.tdCommon = tempObj.tdCommon
+	groupCall.ID = tempObj.ID
+	groupCall.Title = tempObj.Title
+	groupCall.ScheduledStartDate = tempObj.ScheduledStartDate
+	groupCall.EnabledStartNotification = tempObj.EnabledStartNotification
+	groupCall.IsActive = tempObj.IsActive
+	groupCall.IsJoined = tempObj.IsJoined
+	groupCall.NeedRejoin = tempObj.NeedRejoin
+	groupCall.CanBeManaged = tempObj.CanBeManaged
+	groupCall.ParticipantCount = tempObj.ParticipantCount
+	groupCall.LoadedAllParticipants = tempObj.LoadedAllParticipants
+	groupCall.RecentSpeakers = tempObj.RecentSpeakers
+	groupCall.IsMyVideoEnabled = tempObj.IsMyVideoEnabled
+	groupCall.IsMyVideoPaused = tempObj.IsMyVideoPaused
+	groupCall.CanEnableVideo = tempObj.CanEnableVideo
+	groupCall.MuteNewParticipants = tempObj.MuteNewParticipants
+	groupCall.CanToggleMuteNewParticipants = tempObj.CanToggleMuteNewParticipants
+	groupCall.RecordDuration = tempObj.RecordDuration
+	groupCall.IsVideoRecorded = tempObj.IsVideoRecorded
+	groupCall.Duration = tempObj.Duration
+
+	return nil
+}
+
 // GroupCallVideoSourceGroup Describes a group of video synchronization source identifiers
 type GroupCallVideoSourceGroup struct {
 	tdCommon
@@ -17936,6 +28769,30 @@ func NewGroupCallVideoSourceGroup(semantics string, sourceIDs []int32) *GroupCal
 	}
 
 	return &groupCallVideoSourceGroupTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (groupCallVideoSourceGroup *GroupCallVideoSourceGroup) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Semantics string  `json:"semantics"`  // The semantics of sources, one of "SIM" or "FID"
+		SourceIDs []int32 `json:"source_ids"` // The list of synchronization source identifiers
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	groupCallVideoSourceGroup.tdCommon = tempObj.tdCommon
+	groupCallVideoSourceGroup.Semantics = tempObj.Semantics
+	groupCallVideoSourceGroup.SourceIDs = tempObj.SourceIDs
+
+	return nil
 }
 
 // GroupCallParticipantVideoInfo Contains information about a group call participant's video channel
@@ -17965,6 +28822,32 @@ func NewGroupCallParticipantVideoInfo(sourceGroups []GroupCallVideoSourceGroup, 
 	}
 
 	return &groupCallParticipantVideoInfoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (groupCallParticipantVideoInfo *GroupCallParticipantVideoInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SourceGroups []GroupCallVideoSourceGroup `json:"source_groups"` // List of synchronization source groups of the video
+		EndpointID   string                      `json:"endpoint_id"`   // Video channel endpoint identifier
+		IsPaused     bool                        `json:"is_paused"`     // True if the video is paused. This flag needs to be ignored, if new video frames are received
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	groupCallParticipantVideoInfo.tdCommon = tempObj.tdCommon
+	groupCallParticipantVideoInfo.SourceGroups = tempObj.SourceGroups
+	groupCallParticipantVideoInfo.EndpointID = tempObj.EndpointID
+	groupCallParticipantVideoInfo.IsPaused = tempObj.IsPaused
+
+	return nil
 }
 
 // GroupCallParticipant Represents a group call participant
@@ -18118,6 +29001,26 @@ func NewCallProblemEcho() *CallProblemEcho {
 	return &callProblemEchoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (callProblemEcho *CallProblemEcho) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callProblemEcho.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetCallProblemEnum return the enum type of this object
 func (callProblemEcho *CallProblemEcho) GetCallProblemEnum() CallProblemEnum {
 	return CallProblemEchoType
@@ -18141,6 +29044,26 @@ func NewCallProblemNoise() *CallProblemNoise {
 	}
 
 	return &callProblemNoiseTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (callProblemNoise *CallProblemNoise) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callProblemNoise.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetCallProblemEnum return the enum type of this object
@@ -18168,6 +29091,26 @@ func NewCallProblemInterruptions() *CallProblemInterruptions {
 	return &callProblemInterruptionsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (callProblemInterruptions *CallProblemInterruptions) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callProblemInterruptions.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetCallProblemEnum return the enum type of this object
 func (callProblemInterruptions *CallProblemInterruptions) GetCallProblemEnum() CallProblemEnum {
 	return CallProblemInterruptionsType
@@ -18191,6 +29134,26 @@ func NewCallProblemDistortedSpeech() *CallProblemDistortedSpeech {
 	}
 
 	return &callProblemDistortedSpeechTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (callProblemDistortedSpeech *CallProblemDistortedSpeech) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callProblemDistortedSpeech.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetCallProblemEnum return the enum type of this object
@@ -18218,6 +29181,26 @@ func NewCallProblemSilentLocal() *CallProblemSilentLocal {
 	return &callProblemSilentLocalTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (callProblemSilentLocal *CallProblemSilentLocal) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callProblemSilentLocal.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetCallProblemEnum return the enum type of this object
 func (callProblemSilentLocal *CallProblemSilentLocal) GetCallProblemEnum() CallProblemEnum {
 	return CallProblemSilentLocalType
@@ -18241,6 +29224,26 @@ func NewCallProblemSilentRemote() *CallProblemSilentRemote {
 	}
 
 	return &callProblemSilentRemoteTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (callProblemSilentRemote *CallProblemSilentRemote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callProblemSilentRemote.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetCallProblemEnum return the enum type of this object
@@ -18268,6 +29271,26 @@ func NewCallProblemDropped() *CallProblemDropped {
 	return &callProblemDroppedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (callProblemDropped *CallProblemDropped) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callProblemDropped.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetCallProblemEnum return the enum type of this object
 func (callProblemDropped *CallProblemDropped) GetCallProblemEnum() CallProblemEnum {
 	return CallProblemDroppedType
@@ -18293,6 +29316,26 @@ func NewCallProblemDistortedVideo() *CallProblemDistortedVideo {
 	return &callProblemDistortedVideoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (callProblemDistortedVideo *CallProblemDistortedVideo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callProblemDistortedVideo.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetCallProblemEnum return the enum type of this object
 func (callProblemDistortedVideo *CallProblemDistortedVideo) GetCallProblemEnum() CallProblemEnum {
 	return CallProblemDistortedVideoType
@@ -18316,6 +29359,26 @@ func NewCallProblemPixelatedVideo() *CallProblemPixelatedVideo {
 	}
 
 	return &callProblemPixelatedVideoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (callProblemPixelatedVideo *CallProblemPixelatedVideo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callProblemPixelatedVideo.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetCallProblemEnum return the enum type of this object
@@ -18425,6 +29488,36 @@ func NewPhoneNumberAuthenticationSettings(allowFlashCall bool, allowMissedCall b
 	return &phoneNumberAuthenticationSettingsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (phoneNumberAuthenticationSettings *PhoneNumberAuthenticationSettings) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		AllowFlashCall       bool     `json:"allow_flash_call"`        // Pass true if the authentication code may be sent via a flash call to the specified phone number
+		AllowMissedCall      bool     `json:"allow_missed_call"`       // Pass true if the authentication code may be sent via a missed call to the specified phone number
+		IsCurrentPhoneNumber bool     `json:"is_current_phone_number"` // Pass true if the authenticated phone number is used on the current device
+		AllowSmsRetrieverAPI bool     `json:"allow_sms_retriever_api"` // For official applications only. True, if the application can use Android SMS Retriever API (requires Google Play Services >= 10.2) to automatically receive the authentication code from the SMS. See https://developers.google.com/identity/sms-retriever/ for more details
+		AuthenticationTokens []string `json:"authentication_tokens"`   // List of up to 20 authentication tokens, recently received in updateOption("authentication_token") in previously logged out sessions
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	phoneNumberAuthenticationSettings.tdCommon = tempObj.tdCommon
+	phoneNumberAuthenticationSettings.AllowFlashCall = tempObj.AllowFlashCall
+	phoneNumberAuthenticationSettings.AllowMissedCall = tempObj.AllowMissedCall
+	phoneNumberAuthenticationSettings.IsCurrentPhoneNumber = tempObj.IsCurrentPhoneNumber
+	phoneNumberAuthenticationSettings.AllowSmsRetrieverAPI = tempObj.AllowSmsRetrieverAPI
+	phoneNumberAuthenticationSettings.AuthenticationTokens = tempObj.AuthenticationTokens
+
+	return nil
+}
+
 // Animations Represents a list of animations
 type Animations struct {
 	tdCommon
@@ -18448,6 +29541,28 @@ func NewAnimations(animations []Animation) *Animations {
 	return &animationsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (animations *Animations) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Animations []Animation `json:"animations"` // List of animations
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	animations.tdCommon = tempObj.tdCommon
+	animations.Animations = tempObj.Animations
+
+	return nil
+}
+
 // DiceStickersRegular A regular animated sticker
 type DiceStickersRegular struct {
 	tdCommon
@@ -18469,6 +29584,28 @@ func NewDiceStickersRegular(sticker *Sticker) *DiceStickersRegular {
 	}
 
 	return &diceStickersRegularTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (diceStickersRegular *DiceStickersRegular) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Sticker *Sticker `json:"sticker"` // The animated sticker with the dice animation
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	diceStickersRegular.tdCommon = tempObj.tdCommon
+	diceStickersRegular.Sticker = tempObj.Sticker
+
+	return nil
 }
 
 // GetDiceStickersEnum return the enum type of this object
@@ -18511,6 +29648,36 @@ func NewDiceStickersSlotMachine(background *Sticker, lever *Sticker, leftReel *S
 	return &diceStickersSlotMachineTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (diceStickersSlotMachine *DiceStickersSlotMachine) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Background *Sticker `json:"background"`  // The animated sticker with the slot machine background. The background animation must start playing after all reel animations finish
+		Lever      *Sticker `json:"lever"`       // The animated sticker with the lever animation. The lever animation must play once in the initial dice state
+		LeftReel   *Sticker `json:"left_reel"`   // The animated sticker with the left reel
+		CenterReel *Sticker `json:"center_reel"` // The animated sticker with the center reel
+		RightReel  *Sticker `json:"right_reel"`  // The animated sticker with the right reel
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	diceStickersSlotMachine.tdCommon = tempObj.tdCommon
+	diceStickersSlotMachine.Background = tempObj.Background
+	diceStickersSlotMachine.Lever = tempObj.Lever
+	diceStickersSlotMachine.LeftReel = tempObj.LeftReel
+	diceStickersSlotMachine.CenterReel = tempObj.CenterReel
+	diceStickersSlotMachine.RightReel = tempObj.RightReel
+
+	return nil
+}
+
 // GetDiceStickersEnum return the enum type of this object
 func (diceStickersSlotMachine *DiceStickersSlotMachine) GetDiceStickersEnum() DiceStickersEnum {
 	return DiceStickersSlotMachineType
@@ -18542,6 +29709,30 @@ func NewImportedContacts(userIDs []int64, importerCount []int32) *ImportedContac
 	return &importedContactsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (importedContacts *ImportedContacts) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserIDs       []int64 `json:"user_ids"`       // User identifiers of the imported contacts in the same order as they were specified in the request; 0 if the contact is not yet a registered user
+		ImporterCount []int32 `json:"importer_count"` // The number of users that imported the corresponding contact; 0 for already registered users or if unavailable
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	importedContacts.tdCommon = tempObj.tdCommon
+	importedContacts.UserIDs = tempObj.UserIDs
+	importedContacts.ImporterCount = tempObj.ImporterCount
+
+	return nil
+}
+
 // HttpURL Contains an HTTP URL
 type HttpURL struct {
 	tdCommon
@@ -18563,6 +29754,28 @@ func NewHttpURL(uRL string) *HttpURL {
 	}
 
 	return &httpURLTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (httpURL *HttpURL) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		URL string `json:"url"` // The URL
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	httpURL.tdCommon = tempObj.tdCommon
+	httpURL.URL = tempObj.URL
+
+	return nil
 }
 
 // InputInlineQueryResultAnimation Represents a link to an animated GIF or an animated (i.e., without sound) H.264/MPEG-4 AVC video
@@ -19663,6 +30876,47 @@ func NewInlineQueryResultArticle(iD string, uRL string, hideURL bool, title stri
 	return &inlineQueryResultArticleTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inlineQueryResultArticle *InlineQueryResultArticle) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID          string `json:"id"`          // Unique identifier of the query result
+		URL         string `json:"url"`         // URL of the result, if it exists
+		HideURL     bool   `json:"hide_url"`    // True, if the URL must be not shown
+		Title       string `json:"title"`       // Title of the result
+		Description string `json:"description"` // A short description of the result
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineQueryResultArticle.tdCommon = tempObj.tdCommon
+	inlineQueryResultArticle.ID = tempObj.ID
+	inlineQueryResultArticle.URL = tempObj.URL
+	inlineQueryResultArticle.HideURL = tempObj.HideURL
+	inlineQueryResultArticle.Title = tempObj.Title
+	inlineQueryResultArticle.Description = tempObj.Description
+
+	var thumbnail Thumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inlineQueryResultArticle.Thumbnail = &thumbnail
+
+	return nil
+}
+
 // GetInlineQueryResultEnum return the enum type of this object
 func (inlineQueryResultArticle *InlineQueryResultArticle) GetInlineQueryResultEnum() InlineQueryResultEnum {
 	return InlineQueryResultArticleType
@@ -19695,6 +30949,41 @@ func NewInlineQueryResultContact(iD string, contact *Contact, thumbnail *Thumbna
 	}
 
 	return &inlineQueryResultContactTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inlineQueryResultContact *InlineQueryResultContact) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID      string   `json:"id"`      // Unique identifier of the query result
+		Contact *Contact `json:"contact"` // A user contact
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineQueryResultContact.tdCommon = tempObj.tdCommon
+	inlineQueryResultContact.ID = tempObj.ID
+	inlineQueryResultContact.Contact = tempObj.Contact
+
+	var thumbnail Thumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inlineQueryResultContact.Thumbnail = &thumbnail
+
+	return nil
 }
 
 // GetInlineQueryResultEnum return the enum type of this object
@@ -19734,6 +31023,43 @@ func NewInlineQueryResultLocation(iD string, location *Location, title string, t
 	return &inlineQueryResultLocationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inlineQueryResultLocation *InlineQueryResultLocation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID       string    `json:"id"`       // Unique identifier of the query result
+		Location *Location `json:"location"` // Location result
+		Title    string    `json:"title"`    // Title of the result
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineQueryResultLocation.tdCommon = tempObj.tdCommon
+	inlineQueryResultLocation.ID = tempObj.ID
+	inlineQueryResultLocation.Location = tempObj.Location
+	inlineQueryResultLocation.Title = tempObj.Title
+
+	var thumbnail Thumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inlineQueryResultLocation.Thumbnail = &thumbnail
+
+	return nil
+}
+
 // GetInlineQueryResultEnum return the enum type of this object
 func (inlineQueryResultLocation *InlineQueryResultLocation) GetInlineQueryResultEnum() InlineQueryResultEnum {
 	return InlineQueryResultLocationType
@@ -19768,6 +31094,41 @@ func NewInlineQueryResultVenue(iD string, venue *Venue, thumbnail *Thumbnail) *I
 	return &inlineQueryResultVenueTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inlineQueryResultVenue *InlineQueryResultVenue) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID    string `json:"id"`    // Unique identifier of the query result
+		Venue *Venue `json:"venue"` // Venue result
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineQueryResultVenue.tdCommon = tempObj.tdCommon
+	inlineQueryResultVenue.ID = tempObj.ID
+	inlineQueryResultVenue.Venue = tempObj.Venue
+
+	var thumbnail Thumbnail
+	if objMap["thumbnail"] != nil {
+		err = thumbnail.UnmarshalJSON(*objMap["thumbnail"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inlineQueryResultVenue.Thumbnail = &thumbnail
+
+	return nil
+}
+
 // GetInlineQueryResultEnum return the enum type of this object
 func (inlineQueryResultVenue *InlineQueryResultVenue) GetInlineQueryResultEnum() InlineQueryResultEnum {
 	return InlineQueryResultVenueType
@@ -19797,6 +31158,30 @@ func NewInlineQueryResultGame(iD string, game *Game) *InlineQueryResultGame {
 	}
 
 	return &inlineQueryResultGameTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inlineQueryResultGame *InlineQueryResultGame) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID   string `json:"id"`   // Unique identifier of the query result
+		Game *Game  `json:"game"` // Game result
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineQueryResultGame.tdCommon = tempObj.tdCommon
+	inlineQueryResultGame.ID = tempObj.ID
+	inlineQueryResultGame.Game = tempObj.Game
+
+	return nil
 }
 
 // GetInlineQueryResultEnum return the enum type of this object
@@ -19833,6 +31218,32 @@ func NewInlineQueryResultAnimation(iD string, animation *Animation, title string
 	return &inlineQueryResultAnimationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inlineQueryResultAnimation *InlineQueryResultAnimation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID        string     `json:"id"`        // Unique identifier of the query result
+		Animation *Animation `json:"animation"` // Animation file
+		Title     string     `json:"title"`     // Animation title
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineQueryResultAnimation.tdCommon = tempObj.tdCommon
+	inlineQueryResultAnimation.ID = tempObj.ID
+	inlineQueryResultAnimation.Animation = tempObj.Animation
+	inlineQueryResultAnimation.Title = tempObj.Title
+
+	return nil
+}
+
 // GetInlineQueryResultEnum return the enum type of this object
 func (inlineQueryResultAnimation *InlineQueryResultAnimation) GetInlineQueryResultEnum() InlineQueryResultEnum {
 	return InlineQueryResultAnimationType
@@ -19862,6 +31273,30 @@ func NewInlineQueryResultAudio(iD string, audio *Audio) *InlineQueryResultAudio 
 	}
 
 	return &inlineQueryResultAudioTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inlineQueryResultAudio *InlineQueryResultAudio) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID    string `json:"id"`    // Unique identifier of the query result
+		Audio *Audio `json:"audio"` // Audio file
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineQueryResultAudio.tdCommon = tempObj.tdCommon
+	inlineQueryResultAudio.ID = tempObj.ID
+	inlineQueryResultAudio.Audio = tempObj.Audio
+
+	return nil
 }
 
 // GetInlineQueryResultEnum return the enum type of this object
@@ -19901,6 +31336,34 @@ func NewInlineQueryResultDocument(iD string, document *Document, title string, d
 	return &inlineQueryResultDocumentTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inlineQueryResultDocument *InlineQueryResultDocument) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID          string    `json:"id"`          // Unique identifier of the query result
+		Document    *Document `json:"document"`    // Document
+		Title       string    `json:"title"`       // Document title
+		Description string    `json:"description"` // Document description
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineQueryResultDocument.tdCommon = tempObj.tdCommon
+	inlineQueryResultDocument.ID = tempObj.ID
+	inlineQueryResultDocument.Document = tempObj.Document
+	inlineQueryResultDocument.Title = tempObj.Title
+	inlineQueryResultDocument.Description = tempObj.Description
+
+	return nil
+}
+
 // GetInlineQueryResultEnum return the enum type of this object
 func (inlineQueryResultDocument *InlineQueryResultDocument) GetInlineQueryResultEnum() InlineQueryResultEnum {
 	return InlineQueryResultDocumentType
@@ -19938,6 +31401,34 @@ func NewInlineQueryResultPhoto(iD string, photo *Photo, title string, descriptio
 	return &inlineQueryResultPhotoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inlineQueryResultPhoto *InlineQueryResultPhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID          string `json:"id"`          // Unique identifier of the query result
+		Photo       *Photo `json:"photo"`       // Photo
+		Title       string `json:"title"`       // Title of the result, if known
+		Description string `json:"description"` // A short description of the result, if known
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineQueryResultPhoto.tdCommon = tempObj.tdCommon
+	inlineQueryResultPhoto.ID = tempObj.ID
+	inlineQueryResultPhoto.Photo = tempObj.Photo
+	inlineQueryResultPhoto.Title = tempObj.Title
+	inlineQueryResultPhoto.Description = tempObj.Description
+
+	return nil
+}
+
 // GetInlineQueryResultEnum return the enum type of this object
 func (inlineQueryResultPhoto *InlineQueryResultPhoto) GetInlineQueryResultEnum() InlineQueryResultEnum {
 	return InlineQueryResultPhotoType
@@ -19967,6 +31458,30 @@ func NewInlineQueryResultSticker(iD string, sticker *Sticker) *InlineQueryResult
 	}
 
 	return &inlineQueryResultStickerTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inlineQueryResultSticker *InlineQueryResultSticker) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID      string   `json:"id"`      // Unique identifier of the query result
+		Sticker *Sticker `json:"sticker"` // Sticker
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineQueryResultSticker.tdCommon = tempObj.tdCommon
+	inlineQueryResultSticker.ID = tempObj.ID
+	inlineQueryResultSticker.Sticker = tempObj.Sticker
+
+	return nil
 }
 
 // GetInlineQueryResultEnum return the enum type of this object
@@ -20006,6 +31521,34 @@ func NewInlineQueryResultVideo(iD string, video *Video, title string, descriptio
 	return &inlineQueryResultVideoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inlineQueryResultVideo *InlineQueryResultVideo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID          string `json:"id"`          // Unique identifier of the query result
+		Video       *Video `json:"video"`       // Video
+		Title       string `json:"title"`       // Title of the video
+		Description string `json:"description"` // Description of the video
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineQueryResultVideo.tdCommon = tempObj.tdCommon
+	inlineQueryResultVideo.ID = tempObj.ID
+	inlineQueryResultVideo.Video = tempObj.Video
+	inlineQueryResultVideo.Title = tempObj.Title
+	inlineQueryResultVideo.Description = tempObj.Description
+
+	return nil
+}
+
 // GetInlineQueryResultEnum return the enum type of this object
 func (inlineQueryResultVideo *InlineQueryResultVideo) GetInlineQueryResultEnum() InlineQueryResultEnum {
 	return InlineQueryResultVideoType
@@ -20038,6 +31581,32 @@ func NewInlineQueryResultVoiceNote(iD string, voiceNote *VoiceNote, title string
 	}
 
 	return &inlineQueryResultVoiceNoteTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (inlineQueryResultVoiceNote *InlineQueryResultVoiceNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID        string     `json:"id"`         // Unique identifier of the query result
+		VoiceNote *VoiceNote `json:"voice_note"` // Voice note
+		Title     string     `json:"title"`      // Title of the voice note
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineQueryResultVoiceNote.tdCommon = tempObj.tdCommon
+	inlineQueryResultVoiceNote.ID = tempObj.ID
+	inlineQueryResultVoiceNote.VoiceNote = tempObj.VoiceNote
+	inlineQueryResultVoiceNote.Title = tempObj.Title
+
+	return nil
 }
 
 // GetInlineQueryResultEnum return the enum type of this object
@@ -20080,6 +31649,37 @@ func NewInlineQueryResults(inlineQueryID JSONInt64, nextOffset string, results [
 	return &inlineQueryResultsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inlineQueryResults *InlineQueryResults) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		InlineQueryID     JSONInt64 `json:"inline_query_id"`     // Unique identifier of the inline query
+		NextOffset        string    `json:"next_offset"`         // The offset for the next request. If empty, there are no more results
+		SwitchPmText      string    `json:"switch_pm_text"`      // If non-empty, this text must be shown on the button, which opens a private chat with the bot and sends the bot a start message with the switch_pm_parameter
+		SwitchPmParameter string    `json:"switch_pm_parameter"` // Parameter for the bot start message
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inlineQueryResults.tdCommon = tempObj.tdCommon
+	inlineQueryResults.InlineQueryID = tempObj.InlineQueryID
+	inlineQueryResults.NextOffset = tempObj.NextOffset
+	inlineQueryResults.SwitchPmText = tempObj.SwitchPmText
+	inlineQueryResults.SwitchPmParameter = tempObj.SwitchPmParameter
+
+	fieldResults, _ := unmarshalInlineQueryResultSlice(objMap["results"])
+	inlineQueryResults.Results = fieldResults
+
+	return nil
+}
+
 // CallbackQueryPayloadData The payload for a general callback button
 type CallbackQueryPayloadData struct {
 	tdCommon
@@ -20101,6 +31701,28 @@ func NewCallbackQueryPayloadData(data []byte) *CallbackQueryPayloadData {
 	}
 
 	return &callbackQueryPayloadDataTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (callbackQueryPayloadData *CallbackQueryPayloadData) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Data []byte `json:"data"` // Data that was attached to the callback button
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callbackQueryPayloadData.tdCommon = tempObj.tdCommon
+	callbackQueryPayloadData.Data = tempObj.Data
+
+	return nil
 }
 
 // GetCallbackQueryPayloadEnum return the enum type of this object
@@ -20134,6 +31756,30 @@ func NewCallbackQueryPayloadDataWithPassword(password string, data []byte) *Call
 	return &callbackQueryPayloadDataWithPasswordTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (callbackQueryPayloadDataWithPassword *CallbackQueryPayloadDataWithPassword) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Password string `json:"password"` // The password for the current user
+		Data     []byte `json:"data"`     // Data that was attached to the callback button
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callbackQueryPayloadDataWithPassword.tdCommon = tempObj.tdCommon
+	callbackQueryPayloadDataWithPassword.Password = tempObj.Password
+	callbackQueryPayloadDataWithPassword.Data = tempObj.Data
+
+	return nil
+}
+
 // GetCallbackQueryPayloadEnum return the enum type of this object
 func (callbackQueryPayloadDataWithPassword *CallbackQueryPayloadDataWithPassword) GetCallbackQueryPayloadEnum() CallbackQueryPayloadEnum {
 	return CallbackQueryPayloadDataWithPasswordType
@@ -20160,6 +31806,28 @@ func NewCallbackQueryPayloadGame(gameShortName string) *CallbackQueryPayloadGame
 	}
 
 	return &callbackQueryPayloadGameTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (callbackQueryPayloadGame *CallbackQueryPayloadGame) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		GameShortName string `json:"game_short_name"` // A short name of the game that was attached to the callback button
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callbackQueryPayloadGame.tdCommon = tempObj.tdCommon
+	callbackQueryPayloadGame.GameShortName = tempObj.GameShortName
+
+	return nil
 }
 
 // GetCallbackQueryPayloadEnum return the enum type of this object
@@ -20196,6 +31864,32 @@ func NewCallbackQueryAnswer(text string, showAlert bool, uRL string) *CallbackQu
 	return &callbackQueryAnswerTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (callbackQueryAnswer *CallbackQueryAnswer) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Text      string `json:"text"`       // Text of the answer
+		ShowAlert bool   `json:"show_alert"` // True, if an alert must be shown to the user instead of a toast notification
+		URL       string `json:"url"`        // URL to be opened
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	callbackQueryAnswer.tdCommon = tempObj.tdCommon
+	callbackQueryAnswer.Text = tempObj.Text
+	callbackQueryAnswer.ShowAlert = tempObj.ShowAlert
+	callbackQueryAnswer.URL = tempObj.URL
+
+	return nil
+}
+
 // CustomRequestResult Contains the result of a custom request
 type CustomRequestResult struct {
 	tdCommon
@@ -20217,6 +31911,28 @@ func NewCustomRequestResult(result string) *CustomRequestResult {
 	}
 
 	return &customRequestResultTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (customRequestResult *CustomRequestResult) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Result string `json:"result"` // A JSON-serialized result
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	customRequestResult.tdCommon = tempObj.tdCommon
+	customRequestResult.Result = tempObj.Result
+
+	return nil
 }
 
 // GameHighScore Contains one row of the game high score table
@@ -20248,6 +31964,32 @@ func NewGameHighScore(position int32, userID int64, score int32) *GameHighScore 
 	return &gameHighScoreTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (gameHighScore *GameHighScore) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Position int32 `json:"position"` // Position in the high score table
+		UserID   int64 `json:"user_id"`  // User identifier
+		Score    int32 `json:"score"`    // User score
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	gameHighScore.tdCommon = tempObj.tdCommon
+	gameHighScore.Position = tempObj.Position
+	gameHighScore.UserID = tempObj.UserID
+	gameHighScore.Score = tempObj.Score
+
+	return nil
+}
+
 // GameHighScores Contains a list of game high scores
 type GameHighScores struct {
 	tdCommon
@@ -20269,6 +32011,28 @@ func NewGameHighScores(scores []GameHighScore) *GameHighScores {
 	}
 
 	return &gameHighScoresTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (gameHighScores *GameHighScores) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Scores []GameHighScore `json:"scores"` // A list of game high scores
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	gameHighScores.tdCommon = tempObj.tdCommon
+	gameHighScores.Scores = tempObj.Scores
+
+	return nil
 }
 
 // ChatEventMessageEdited A message was edited
@@ -20295,6 +32059,46 @@ func NewChatEventMessageEdited(oldMessage *Message, newMessage *Message) *ChatEv
 	}
 
 	return &chatEventMessageEditedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatEventMessageEdited *ChatEventMessageEdited) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventMessageEdited.tdCommon = tempObj.tdCommon
+
+	var oldMessage Message
+	if objMap["old_message"] != nil {
+		err = oldMessage.UnmarshalJSON(*objMap["old_message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	chatEventMessageEdited.OldMessage = &oldMessage
+
+	var newMessage Message
+	if objMap["new_message"] != nil {
+		err = newMessage.UnmarshalJSON(*objMap["new_message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	chatEventMessageEdited.NewMessage = &newMessage
+
+	return nil
 }
 
 // GetChatEventActionEnum return the enum type of this object
@@ -20325,6 +32129,36 @@ func NewChatEventMessageDeleted(message *Message) *ChatEventMessageDeleted {
 	return &chatEventMessageDeletedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventMessageDeleted *ChatEventMessageDeleted) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventMessageDeleted.tdCommon = tempObj.tdCommon
+
+	var message Message
+	if objMap["message"] != nil {
+		err = message.UnmarshalJSON(*objMap["message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	chatEventMessageDeleted.Message = &message
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventMessageDeleted *ChatEventMessageDeleted) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventMessageDeletedType
@@ -20351,6 +32185,36 @@ func NewChatEventPollStopped(message *Message) *ChatEventPollStopped {
 	}
 
 	return &chatEventPollStoppedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatEventPollStopped *ChatEventPollStopped) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventPollStopped.tdCommon = tempObj.tdCommon
+
+	var message Message
+	if objMap["message"] != nil {
+		err = message.UnmarshalJSON(*objMap["message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	chatEventPollStopped.Message = &message
+
+	return nil
 }
 
 // GetChatEventActionEnum return the enum type of this object
@@ -20381,6 +32245,36 @@ func NewChatEventMessagePinned(message *Message) *ChatEventMessagePinned {
 	return &chatEventMessagePinnedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventMessagePinned *ChatEventMessagePinned) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventMessagePinned.tdCommon = tempObj.tdCommon
+
+	var message Message
+	if objMap["message"] != nil {
+		err = message.UnmarshalJSON(*objMap["message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	chatEventMessagePinned.Message = &message
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventMessagePinned *ChatEventMessagePinned) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventMessagePinnedType
@@ -20409,6 +32303,36 @@ func NewChatEventMessageUnpinned(message *Message) *ChatEventMessageUnpinned {
 	return &chatEventMessageUnpinnedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventMessageUnpinned *ChatEventMessageUnpinned) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventMessageUnpinned.tdCommon = tempObj.tdCommon
+
+	var message Message
+	if objMap["message"] != nil {
+		err = message.UnmarshalJSON(*objMap["message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	chatEventMessageUnpinned.Message = &message
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventMessageUnpinned *ChatEventMessageUnpinned) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventMessageUnpinnedType
@@ -20432,6 +32356,26 @@ func NewChatEventMemberJoined() *ChatEventMemberJoined {
 	}
 
 	return &chatEventMemberJoinedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatEventMemberJoined *ChatEventMemberJoined) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventMemberJoined.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatEventActionEnum return the enum type of this object
@@ -20460,6 +32404,28 @@ func NewChatEventMemberJoinedByInviteLink(inviteLink *ChatInviteLink) *ChatEvent
 	}
 
 	return &chatEventMemberJoinedByInviteLinkTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatEventMemberJoinedByInviteLink *ChatEventMemberJoinedByInviteLink) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		InviteLink *ChatInviteLink `json:"invite_link"` // Invite link used to join the chat
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventMemberJoinedByInviteLink.tdCommon = tempObj.tdCommon
+	chatEventMemberJoinedByInviteLink.InviteLink = tempObj.InviteLink
+
+	return nil
 }
 
 // GetChatEventActionEnum return the enum type of this object
@@ -20493,6 +32459,30 @@ func NewChatEventMemberJoinedByRequest(approverUserID int64, inviteLink *ChatInv
 	return &chatEventMemberJoinedByRequestTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventMemberJoinedByRequest *ChatEventMemberJoinedByRequest) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ApproverUserID int64           `json:"approver_user_id"` // User identifier of the chat administrator, approved user join request
+		InviteLink     *ChatInviteLink `json:"invite_link"`      // Invite link used to join the chat; may be null
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventMemberJoinedByRequest.tdCommon = tempObj.tdCommon
+	chatEventMemberJoinedByRequest.ApproverUserID = tempObj.ApproverUserID
+	chatEventMemberJoinedByRequest.InviteLink = tempObj.InviteLink
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventMemberJoinedByRequest *ChatEventMemberJoinedByRequest) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventMemberJoinedByRequestType
@@ -20516,6 +32506,26 @@ func NewChatEventMemberLeft() *ChatEventMemberLeft {
 	}
 
 	return &chatEventMemberLeftTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatEventMemberLeft *ChatEventMemberLeft) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventMemberLeft.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatEventActionEnum return the enum type of this object
@@ -20732,6 +32742,30 @@ func NewChatEventTitleChanged(oldTitle string, newTitle string) *ChatEventTitleC
 	return &chatEventTitleChangedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventTitleChanged *ChatEventTitleChanged) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		OldTitle string `json:"old_title"` // Previous chat title
+		NewTitle string `json:"new_title"` // New chat title
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventTitleChanged.tdCommon = tempObj.tdCommon
+	chatEventTitleChanged.OldTitle = tempObj.OldTitle
+	chatEventTitleChanged.NewTitle = tempObj.NewTitle
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventTitleChanged *ChatEventTitleChanged) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventTitleChangedType
@@ -20761,6 +32795,30 @@ func NewChatEventPermissionsChanged(oldPermissions *ChatPermissions, newPermissi
 	}
 
 	return &chatEventPermissionsChangedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatEventPermissionsChanged *ChatEventPermissionsChanged) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		OldPermissions *ChatPermissions `json:"old_permissions"` // Previous chat permissions
+		NewPermissions *ChatPermissions `json:"new_permissions"` // New chat permissions
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventPermissionsChanged.tdCommon = tempObj.tdCommon
+	chatEventPermissionsChanged.OldPermissions = tempObj.OldPermissions
+	chatEventPermissionsChanged.NewPermissions = tempObj.NewPermissions
+
+	return nil
 }
 
 // GetChatEventActionEnum return the enum type of this object
@@ -20794,6 +32852,30 @@ func NewChatEventDescriptionChanged(oldDescription string, newDescription string
 	return &chatEventDescriptionChangedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventDescriptionChanged *ChatEventDescriptionChanged) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		OldDescription string `json:"old_description"` // Previous chat description
+		NewDescription string `json:"new_description"` // New chat description
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventDescriptionChanged.tdCommon = tempObj.tdCommon
+	chatEventDescriptionChanged.OldDescription = tempObj.OldDescription
+	chatEventDescriptionChanged.NewDescription = tempObj.NewDescription
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventDescriptionChanged *ChatEventDescriptionChanged) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventDescriptionChangedType
@@ -20823,6 +32905,30 @@ func NewChatEventUsernameChanged(oldUsername string, newUsername string) *ChatEv
 	}
 
 	return &chatEventUsernameChangedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatEventUsernameChanged *ChatEventUsernameChanged) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		OldUsername string `json:"old_username"` // Previous chat username
+		NewUsername string `json:"new_username"` // New chat username
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventUsernameChanged.tdCommon = tempObj.tdCommon
+	chatEventUsernameChanged.OldUsername = tempObj.OldUsername
+	chatEventUsernameChanged.NewUsername = tempObj.NewUsername
+
+	return nil
 }
 
 // GetChatEventActionEnum return the enum type of this object
@@ -20856,6 +32962,30 @@ func NewChatEventPhotoChanged(oldPhoto *ChatPhoto, newPhoto *ChatPhoto) *ChatEve
 	return &chatEventPhotoChangedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventPhotoChanged *ChatEventPhotoChanged) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		OldPhoto *ChatPhoto `json:"old_photo"` // Previous chat photo value; may be null
+		NewPhoto *ChatPhoto `json:"new_photo"` // New chat photo value; may be null
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventPhotoChanged.tdCommon = tempObj.tdCommon
+	chatEventPhotoChanged.OldPhoto = tempObj.OldPhoto
+	chatEventPhotoChanged.NewPhoto = tempObj.NewPhoto
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventPhotoChanged *ChatEventPhotoChanged) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventPhotoChangedType
@@ -20882,6 +33012,28 @@ func NewChatEventInvitesToggled(canInviteUsers bool) *ChatEventInvitesToggled {
 	}
 
 	return &chatEventInvitesToggledTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatEventInvitesToggled *ChatEventInvitesToggled) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		CanInviteUsers bool `json:"can_invite_users"` // New value of can_invite_users permission
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventInvitesToggled.tdCommon = tempObj.tdCommon
+	chatEventInvitesToggled.CanInviteUsers = tempObj.CanInviteUsers
+
+	return nil
 }
 
 // GetChatEventActionEnum return the enum type of this object
@@ -20915,6 +33067,30 @@ func NewChatEventLinkedChatChanged(oldLinkedChatID int64, newLinkedChatID int64)
 	return &chatEventLinkedChatChangedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventLinkedChatChanged *ChatEventLinkedChatChanged) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		OldLinkedChatID int64 `json:"old_linked_chat_id"` // Previous supergroup linked chat identifier
+		NewLinkedChatID int64 `json:"new_linked_chat_id"` // New supergroup linked chat identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventLinkedChatChanged.tdCommon = tempObj.tdCommon
+	chatEventLinkedChatChanged.OldLinkedChatID = tempObj.OldLinkedChatID
+	chatEventLinkedChatChanged.NewLinkedChatID = tempObj.NewLinkedChatID
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventLinkedChatChanged *ChatEventLinkedChatChanged) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventLinkedChatChangedType
@@ -20944,6 +33120,30 @@ func NewChatEventSlowModeDelayChanged(oldSlowModeDelay int32, newSlowModeDelay i
 	}
 
 	return &chatEventSlowModeDelayChangedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatEventSlowModeDelayChanged *ChatEventSlowModeDelayChanged) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		OldSlowModeDelay int32 `json:"old_slow_mode_delay"` // Previous value of slow_mode_delay, in seconds
+		NewSlowModeDelay int32 `json:"new_slow_mode_delay"` // New value of slow_mode_delay, in seconds
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventSlowModeDelayChanged.tdCommon = tempObj.tdCommon
+	chatEventSlowModeDelayChanged.OldSlowModeDelay = tempObj.OldSlowModeDelay
+	chatEventSlowModeDelayChanged.NewSlowModeDelay = tempObj.NewSlowModeDelay
+
+	return nil
 }
 
 // GetChatEventActionEnum return the enum type of this object
@@ -20977,6 +33177,30 @@ func NewChatEventMessageTTLChanged(oldMessageTTL int32, newMessageTTL int32) *Ch
 	return &chatEventMessageTTLChangedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventMessageTTLChanged *ChatEventMessageTTLChanged) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		OldMessageTTL int32 `json:"old_message_ttl"` // Previous value of message_ttl
+		NewMessageTTL int32 `json:"new_message_ttl"` // New value of message_ttl
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventMessageTTLChanged.tdCommon = tempObj.tdCommon
+	chatEventMessageTTLChanged.OldMessageTTL = tempObj.OldMessageTTL
+	chatEventMessageTTLChanged.NewMessageTTL = tempObj.NewMessageTTL
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventMessageTTLChanged *ChatEventMessageTTLChanged) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventMessageTTLChangedType
@@ -21005,6 +33229,28 @@ func NewChatEventSignMessagesToggled(signMessages bool) *ChatEventSignMessagesTo
 	return &chatEventSignMessagesToggledTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventSignMessagesToggled *ChatEventSignMessagesToggled) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SignMessages bool `json:"sign_messages"` // New value of sign_messages
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventSignMessagesToggled.tdCommon = tempObj.tdCommon
+	chatEventSignMessagesToggled.SignMessages = tempObj.SignMessages
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventSignMessagesToggled *ChatEventSignMessagesToggled) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventSignMessagesToggledType
@@ -21031,6 +33277,28 @@ func NewChatEventHasProtectedContentToggled(hasProtectedContent bool) *ChatEvent
 	}
 
 	return &chatEventHasProtectedContentToggledTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatEventHasProtectedContentToggled *ChatEventHasProtectedContentToggled) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		HasProtectedContent bool `json:"has_protected_content"` // New value of has_protected_content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventHasProtectedContentToggled.tdCommon = tempObj.tdCommon
+	chatEventHasProtectedContentToggled.HasProtectedContent = tempObj.HasProtectedContent
+
+	return nil
 }
 
 // GetChatEventActionEnum return the enum type of this object
@@ -21064,6 +33332,30 @@ func NewChatEventStickerSetChanged(oldStickerSetID JSONInt64, newStickerSetID JS
 	return &chatEventStickerSetChangedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventStickerSetChanged *ChatEventStickerSetChanged) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		OldStickerSetID JSONInt64 `json:"old_sticker_set_id"` // Previous identifier of the chat sticker set; 0 if none
+		NewStickerSetID JSONInt64 `json:"new_sticker_set_id"` // New identifier of the chat sticker set; 0 if none
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventStickerSetChanged.tdCommon = tempObj.tdCommon
+	chatEventStickerSetChanged.OldStickerSetID = tempObj.OldStickerSetID
+	chatEventStickerSetChanged.NewStickerSetID = tempObj.NewStickerSetID
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventStickerSetChanged *ChatEventStickerSetChanged) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventStickerSetChangedType
@@ -21095,6 +33387,30 @@ func NewChatEventLocationChanged(oldLocation *ChatLocation, newLocation *ChatLoc
 	return &chatEventLocationChangedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventLocationChanged *ChatEventLocationChanged) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		OldLocation *ChatLocation `json:"old_location"` // Previous location; may be null
+		NewLocation *ChatLocation `json:"new_location"` // New location; may be null
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventLocationChanged.tdCommon = tempObj.tdCommon
+	chatEventLocationChanged.OldLocation = tempObj.OldLocation
+	chatEventLocationChanged.NewLocation = tempObj.NewLocation
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventLocationChanged *ChatEventLocationChanged) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventLocationChangedType
@@ -21121,6 +33437,28 @@ func NewChatEventIsAllHistoryAvailableToggled(isAllHistoryAvailable bool) *ChatE
 	}
 
 	return &chatEventIsAllHistoryAvailableToggledTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatEventIsAllHistoryAvailableToggled *ChatEventIsAllHistoryAvailableToggled) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		IsAllHistoryAvailable bool `json:"is_all_history_available"` // New value of is_all_history_available
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventIsAllHistoryAvailableToggled.tdCommon = tempObj.tdCommon
+	chatEventIsAllHistoryAvailableToggled.IsAllHistoryAvailable = tempObj.IsAllHistoryAvailable
+
+	return nil
 }
 
 // GetChatEventActionEnum return the enum type of this object
@@ -21154,6 +33492,30 @@ func NewChatEventInviteLinkEdited(oldInviteLink *ChatInviteLink, newInviteLink *
 	return &chatEventInviteLinkEditedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventInviteLinkEdited *ChatEventInviteLinkEdited) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		OldInviteLink *ChatInviteLink `json:"old_invite_link"` // Previous information about the invite link
+		NewInviteLink *ChatInviteLink `json:"new_invite_link"` // New information about the invite link
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventInviteLinkEdited.tdCommon = tempObj.tdCommon
+	chatEventInviteLinkEdited.OldInviteLink = tempObj.OldInviteLink
+	chatEventInviteLinkEdited.NewInviteLink = tempObj.NewInviteLink
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventInviteLinkEdited *ChatEventInviteLinkEdited) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventInviteLinkEditedType
@@ -21180,6 +33542,28 @@ func NewChatEventInviteLinkRevoked(inviteLink *ChatInviteLink) *ChatEventInviteL
 	}
 
 	return &chatEventInviteLinkRevokedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatEventInviteLinkRevoked *ChatEventInviteLinkRevoked) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		InviteLink *ChatInviteLink `json:"invite_link"` // The invite link
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventInviteLinkRevoked.tdCommon = tempObj.tdCommon
+	chatEventInviteLinkRevoked.InviteLink = tempObj.InviteLink
+
+	return nil
 }
 
 // GetChatEventActionEnum return the enum type of this object
@@ -21210,6 +33594,28 @@ func NewChatEventInviteLinkDeleted(inviteLink *ChatInviteLink) *ChatEventInviteL
 	return &chatEventInviteLinkDeletedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventInviteLinkDeleted *ChatEventInviteLinkDeleted) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		InviteLink *ChatInviteLink `json:"invite_link"` // The invite link
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventInviteLinkDeleted.tdCommon = tempObj.tdCommon
+	chatEventInviteLinkDeleted.InviteLink = tempObj.InviteLink
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventInviteLinkDeleted *ChatEventInviteLinkDeleted) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventInviteLinkDeletedType
@@ -21238,6 +33644,28 @@ func NewChatEventVideoChatCreated(groupCallID int32) *ChatEventVideoChatCreated 
 	return &chatEventVideoChatCreatedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventVideoChatCreated *ChatEventVideoChatCreated) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		GroupCallID int32 `json:"group_call_id"` // Identifier of the video chat. The video chat can be received through the method getGroupCall
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventVideoChatCreated.tdCommon = tempObj.tdCommon
+	chatEventVideoChatCreated.GroupCallID = tempObj.GroupCallID
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventVideoChatCreated *ChatEventVideoChatCreated) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventVideoChatCreatedType
@@ -21264,6 +33692,28 @@ func NewChatEventVideoChatEnded(groupCallID int32) *ChatEventVideoChatEnded {
 	}
 
 	return &chatEventVideoChatEndedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatEventVideoChatEnded *ChatEventVideoChatEnded) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		GroupCallID int32 `json:"group_call_id"` // Identifier of the video chat. The video chat can be received through the method getGroupCall
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventVideoChatEnded.tdCommon = tempObj.tdCommon
+	chatEventVideoChatEnded.GroupCallID = tempObj.GroupCallID
+
+	return nil
 }
 
 // GetChatEventActionEnum return the enum type of this object
@@ -21406,6 +33856,28 @@ func NewChatEventVideoChatMuteNewParticipantsToggled(muteNewParticipants bool) *
 	return &chatEventVideoChatMuteNewParticipantsToggledTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventVideoChatMuteNewParticipantsToggled *ChatEventVideoChatMuteNewParticipantsToggled) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		MuteNewParticipants bool `json:"mute_new_participants"` // New value of the mute_new_participants setting
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventVideoChatMuteNewParticipantsToggled.tdCommon = tempObj.tdCommon
+	chatEventVideoChatMuteNewParticipantsToggled.MuteNewParticipants = tempObj.MuteNewParticipants
+
+	return nil
+}
+
 // GetChatEventActionEnum return the enum type of this object
 func (chatEventVideoChatMuteNewParticipantsToggled *ChatEventVideoChatMuteNewParticipantsToggled) GetChatEventActionEnum() ChatEventActionEnum {
 	return ChatEventVideoChatMuteNewParticipantsToggledType
@@ -21497,6 +33969,28 @@ func NewChatEvents(events []ChatEvent) *ChatEvents {
 	return &chatEventsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEvents *ChatEvents) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Events []ChatEvent `json:"events"` // List of events
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEvents.tdCommon = tempObj.tdCommon
+	chatEvents.Events = tempObj.Events
+
+	return nil
+}
+
 // ChatEventLogFilters Represents a set of filters used to obtain a chat event log
 type ChatEventLogFilters struct {
 	tdCommon
@@ -21553,6 +34047,50 @@ func NewChatEventLogFilters(messageEdits bool, messageDeletions bool, messagePin
 	return &chatEventLogFiltersTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatEventLogFilters *ChatEventLogFilters) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		MessageEdits       bool `json:"message_edits"`       // True, if message edits need to be returned
+		MessageDeletions   bool `json:"message_deletions"`   // True, if message deletions need to be returned
+		MessagePins        bool `json:"message_pins"`        // True, if pin/unpin events need to be returned
+		MemberJoins        bool `json:"member_joins"`        // True, if members joining events need to be returned
+		MemberLeaves       bool `json:"member_leaves"`       // True, if members leaving events need to be returned
+		MemberInvites      bool `json:"member_invites"`      // True, if invited member events need to be returned
+		MemberPromotions   bool `json:"member_promotions"`   // True, if member promotion/demotion events need to be returned
+		MemberRestrictions bool `json:"member_restrictions"` // True, if member restricted/unrestricted/banned/unbanned events need to be returned
+		InfoChanges        bool `json:"info_changes"`        // True, if changes in chat information need to be returned
+		SettingChanges     bool `json:"setting_changes"`     // True, if changes in chat settings need to be returned
+		InviteLinkChanges  bool `json:"invite_link_changes"` // True, if changes to invite links need to be returned
+		VideoChatChanges   bool `json:"video_chat_changes"`  // True, if video chat actions need to be returned
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatEventLogFilters.tdCommon = tempObj.tdCommon
+	chatEventLogFilters.MessageEdits = tempObj.MessageEdits
+	chatEventLogFilters.MessageDeletions = tempObj.MessageDeletions
+	chatEventLogFilters.MessagePins = tempObj.MessagePins
+	chatEventLogFilters.MemberJoins = tempObj.MemberJoins
+	chatEventLogFilters.MemberLeaves = tempObj.MemberLeaves
+	chatEventLogFilters.MemberInvites = tempObj.MemberInvites
+	chatEventLogFilters.MemberPromotions = tempObj.MemberPromotions
+	chatEventLogFilters.MemberRestrictions = tempObj.MemberRestrictions
+	chatEventLogFilters.InfoChanges = tempObj.InfoChanges
+	chatEventLogFilters.SettingChanges = tempObj.SettingChanges
+	chatEventLogFilters.InviteLinkChanges = tempObj.InviteLinkChanges
+	chatEventLogFilters.VideoChatChanges = tempObj.VideoChatChanges
+
+	return nil
+}
+
 // LanguagePackStringValueOrdinary An ordinary language pack string
 type LanguagePackStringValueOrdinary struct {
 	tdCommon
@@ -21574,6 +34112,28 @@ func NewLanguagePackStringValueOrdinary(value string) *LanguagePackStringValueOr
 	}
 
 	return &languagePackStringValueOrdinaryTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (languagePackStringValueOrdinary *LanguagePackStringValueOrdinary) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Value string `json:"value"` // String value
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	languagePackStringValueOrdinary.tdCommon = tempObj.tdCommon
+	languagePackStringValueOrdinary.Value = tempObj.Value
+
+	return nil
 }
 
 // GetLanguagePackStringValueEnum return the enum type of this object
@@ -21619,6 +34179,38 @@ func NewLanguagePackStringValuePluralized(zeroValue string, oneValue string, two
 	return &languagePackStringValuePluralizedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (languagePackStringValuePluralized *LanguagePackStringValuePluralized) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ZeroValue  string `json:"zero_value"`  // Value for zero objects
+		OneValue   string `json:"one_value"`   // Value for one object
+		TwoValue   string `json:"two_value"`   // Value for two objects
+		FewValue   string `json:"few_value"`   // Value for few objects
+		ManyValue  string `json:"many_value"`  // Value for many objects
+		OtherValue string `json:"other_value"` // Default value
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	languagePackStringValuePluralized.tdCommon = tempObj.tdCommon
+	languagePackStringValuePluralized.ZeroValue = tempObj.ZeroValue
+	languagePackStringValuePluralized.OneValue = tempObj.OneValue
+	languagePackStringValuePluralized.TwoValue = tempObj.TwoValue
+	languagePackStringValuePluralized.FewValue = tempObj.FewValue
+	languagePackStringValuePluralized.ManyValue = tempObj.ManyValue
+	languagePackStringValuePluralized.OtherValue = tempObj.OtherValue
+
+	return nil
+}
+
 // GetLanguagePackStringValueEnum return the enum type of this object
 func (languagePackStringValuePluralized *LanguagePackStringValuePluralized) GetLanguagePackStringValueEnum() LanguagePackStringValueEnum {
 	return LanguagePackStringValuePluralizedType
@@ -21642,6 +34234,26 @@ func NewLanguagePackStringValueDeleted() *LanguagePackStringValueDeleted {
 	}
 
 	return &languagePackStringValueDeletedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (languagePackStringValueDeleted *LanguagePackStringValueDeleted) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	languagePackStringValueDeleted.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetLanguagePackStringValueEnum return the enum type of this object
@@ -21724,6 +34336,28 @@ func NewLanguagePackStrings(strings []LanguagePackString) *LanguagePackStrings {
 	return &languagePackStringsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (languagePackStrings *LanguagePackStrings) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Strings []LanguagePackString `json:"strings"` // A list of language pack strings
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	languagePackStrings.tdCommon = tempObj.tdCommon
+	languagePackStrings.Strings = tempObj.Strings
+
+	return nil
+}
+
 // LanguagePackInfo Contains information about a language pack
 type LanguagePackInfo struct {
 	tdCommon
@@ -21783,6 +34417,52 @@ func NewLanguagePackInfo(iD string, baseLanguagePackID string, name string, nati
 	return &languagePackInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (languagePackInfo *LanguagePackInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID                    string `json:"id"`                      // Unique language pack identifier
+		BaseLanguagePackID    string `json:"base_language_pack_id"`   // Identifier of a base language pack; may be empty. If a string is missed in the language pack, then it must be fetched from base language pack. Unsupported in custom language packs
+		Name                  string `json:"name"`                    // Language name
+		NativeName            string `json:"native_name"`             // Name of the language in that language
+		PluralCode            string `json:"plural_code"`             // A language code to be used to apply plural forms. See https://www.unicode.org/cldr/charts/latest/supplemental/language_plural_rules.html for more info
+		IsOfficial            bool   `json:"is_official"`             // True, if the language pack is official
+		IsRtl                 bool   `json:"is_rtl"`                  // True, if the language pack strings are RTL
+		IsBeta                bool   `json:"is_beta"`                 // True, if the language pack is a beta language pack
+		IsInstalled           bool   `json:"is_installed"`            // True, if the language pack is installed by the current user
+		TotalStringCount      int32  `json:"total_string_count"`      // Total number of non-deleted strings from the language pack
+		TranslatedStringCount int32  `json:"translated_string_count"` // Total number of translated strings from the language pack
+		LocalStringCount      int32  `json:"local_string_count"`      // Total number of non-deleted strings from the language pack available locally
+		TranslationURL        string `json:"translation_url"`         // Link to language translation interface; empty for custom local language packs
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	languagePackInfo.tdCommon = tempObj.tdCommon
+	languagePackInfo.ID = tempObj.ID
+	languagePackInfo.BaseLanguagePackID = tempObj.BaseLanguagePackID
+	languagePackInfo.Name = tempObj.Name
+	languagePackInfo.NativeName = tempObj.NativeName
+	languagePackInfo.PluralCode = tempObj.PluralCode
+	languagePackInfo.IsOfficial = tempObj.IsOfficial
+	languagePackInfo.IsRtl = tempObj.IsRtl
+	languagePackInfo.IsBeta = tempObj.IsBeta
+	languagePackInfo.IsInstalled = tempObj.IsInstalled
+	languagePackInfo.TotalStringCount = tempObj.TotalStringCount
+	languagePackInfo.TranslatedStringCount = tempObj.TranslatedStringCount
+	languagePackInfo.LocalStringCount = tempObj.LocalStringCount
+	languagePackInfo.TranslationURL = tempObj.TranslationURL
+
+	return nil
+}
+
 // LocalizationTargetInfo Contains information about the current localization target
 type LocalizationTargetInfo struct {
 	tdCommon
@@ -21804,6 +34484,28 @@ func NewLocalizationTargetInfo(languagePacks []LanguagePackInfo) *LocalizationTa
 	}
 
 	return &localizationTargetInfoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (localizationTargetInfo *LocalizationTargetInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		LanguagePacks []LanguagePackInfo `json:"language_packs"` // List of available language packs for this application
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	localizationTargetInfo.tdCommon = tempObj.tdCommon
+	localizationTargetInfo.LanguagePacks = tempObj.LanguagePacks
+
+	return nil
 }
 
 // DeviceTokenFirebaseCloudMessaging A token for Firebase Cloud Messaging
@@ -21830,6 +34532,30 @@ func NewDeviceTokenFirebaseCloudMessaging(token string, encrypt bool) *DeviceTok
 	}
 
 	return &deviceTokenFirebaseCloudMessagingTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (deviceTokenFirebaseCloudMessaging *DeviceTokenFirebaseCloudMessaging) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Token   string `json:"token"`   // Device registration token; may be empty to deregister a device
+		Encrypt bool   `json:"encrypt"` // True, if push notifications must be additionally encrypted
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	deviceTokenFirebaseCloudMessaging.tdCommon = tempObj.tdCommon
+	deviceTokenFirebaseCloudMessaging.Token = tempObj.Token
+	deviceTokenFirebaseCloudMessaging.Encrypt = tempObj.Encrypt
+
+	return nil
 }
 
 // GetDeviceTokenEnum return the enum type of this object
@@ -21861,6 +34587,30 @@ func NewDeviceTokenApplePush(deviceToken string, isAppSandbox bool) *DeviceToken
 	}
 
 	return &deviceTokenApplePushTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (deviceTokenApplePush *DeviceTokenApplePush) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		DeviceToken  string `json:"device_token"`   // Device token; may be empty to deregister a device
+		IsAppSandbox bool   `json:"is_app_sandbox"` // True, if App Sandbox is enabled
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	deviceTokenApplePush.tdCommon = tempObj.tdCommon
+	deviceTokenApplePush.DeviceToken = tempObj.DeviceToken
+	deviceTokenApplePush.IsAppSandbox = tempObj.IsAppSandbox
+
+	return nil
 }
 
 // GetDeviceTokenEnum return the enum type of this object
@@ -21897,6 +34647,32 @@ func NewDeviceTokenApplePushVoIP(deviceToken string, isAppSandbox bool, encrypt 
 	return &deviceTokenApplePushVoIPTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (deviceTokenApplePushVoIP *DeviceTokenApplePushVoIP) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		DeviceToken  string `json:"device_token"`   // Device token; may be empty to deregister a device
+		IsAppSandbox bool   `json:"is_app_sandbox"` // True, if App Sandbox is enabled
+		Encrypt      bool   `json:"encrypt"`        // True, if push notifications must be additionally encrypted
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	deviceTokenApplePushVoIP.tdCommon = tempObj.tdCommon
+	deviceTokenApplePushVoIP.DeviceToken = tempObj.DeviceToken
+	deviceTokenApplePushVoIP.IsAppSandbox = tempObj.IsAppSandbox
+	deviceTokenApplePushVoIP.Encrypt = tempObj.Encrypt
+
+	return nil
+}
+
 // GetDeviceTokenEnum return the enum type of this object
 func (deviceTokenApplePushVoIP *DeviceTokenApplePushVoIP) GetDeviceTokenEnum() DeviceTokenEnum {
 	return DeviceTokenApplePushVoIPType
@@ -21923,6 +34699,28 @@ func NewDeviceTokenWindowsPush(accessToken string) *DeviceTokenWindowsPush {
 	}
 
 	return &deviceTokenWindowsPushTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (deviceTokenWindowsPush *DeviceTokenWindowsPush) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		AccessToken string `json:"access_token"` // The access token that will be used to send notifications; may be empty to deregister a device
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	deviceTokenWindowsPush.tdCommon = tempObj.tdCommon
+	deviceTokenWindowsPush.AccessToken = tempObj.AccessToken
+
+	return nil
 }
 
 // GetDeviceTokenEnum return the enum type of this object
@@ -21953,6 +34751,28 @@ func NewDeviceTokenMicrosoftPush(channelURI string) *DeviceTokenMicrosoftPush {
 	return &deviceTokenMicrosoftPushTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (deviceTokenMicrosoftPush *DeviceTokenMicrosoftPush) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChannelURI string `json:"channel_uri"` // Push notification channel URI; may be empty to deregister a device
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	deviceTokenMicrosoftPush.tdCommon = tempObj.tdCommon
+	deviceTokenMicrosoftPush.ChannelURI = tempObj.ChannelURI
+
+	return nil
+}
+
 // GetDeviceTokenEnum return the enum type of this object
 func (deviceTokenMicrosoftPush *DeviceTokenMicrosoftPush) GetDeviceTokenEnum() DeviceTokenEnum {
 	return DeviceTokenMicrosoftPushType
@@ -21979,6 +34799,28 @@ func NewDeviceTokenMicrosoftPushVoIP(channelURI string) *DeviceTokenMicrosoftPus
 	}
 
 	return &deviceTokenMicrosoftPushVoIPTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (deviceTokenMicrosoftPushVoIP *DeviceTokenMicrosoftPushVoIP) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChannelURI string `json:"channel_uri"` // Push notification channel URI; may be empty to deregister a device
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	deviceTokenMicrosoftPushVoIP.tdCommon = tempObj.tdCommon
+	deviceTokenMicrosoftPushVoIP.ChannelURI = tempObj.ChannelURI
+
+	return nil
 }
 
 // GetDeviceTokenEnum return the enum type of this object
@@ -22015,6 +34857,32 @@ func NewDeviceTokenWebPush(endpoint string, p256dhBase64url string, authBase64ur
 	return &deviceTokenWebPushTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (deviceTokenWebPush *DeviceTokenWebPush) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Endpoint        string `json:"endpoint"`         // Absolute URL exposed by the push service where the application server can send push messages; may be empty to deregister a device
+		P256dhBase64url string `json:"p256dh_base64url"` // Base64url-encoded P-256 elliptic curve Diffie-Hellman public key
+		AuthBase64url   string `json:"auth_base64url"`   // Base64url-encoded authentication secret
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	deviceTokenWebPush.tdCommon = tempObj.tdCommon
+	deviceTokenWebPush.Endpoint = tempObj.Endpoint
+	deviceTokenWebPush.P256dhBase64url = tempObj.P256dhBase64url
+	deviceTokenWebPush.AuthBase64url = tempObj.AuthBase64url
+
+	return nil
+}
+
 // GetDeviceTokenEnum return the enum type of this object
 func (deviceTokenWebPush *DeviceTokenWebPush) GetDeviceTokenEnum() DeviceTokenEnum {
 	return DeviceTokenWebPushType
@@ -22041,6 +34909,28 @@ func NewDeviceTokenSimplePush(endpoint string) *DeviceTokenSimplePush {
 	}
 
 	return &deviceTokenSimplePushTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (deviceTokenSimplePush *DeviceTokenSimplePush) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Endpoint string `json:"endpoint"` // Absolute URL exposed by the push service where the application server can send push messages; may be empty to deregister a device
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	deviceTokenSimplePush.tdCommon = tempObj.tdCommon
+	deviceTokenSimplePush.Endpoint = tempObj.Endpoint
+
+	return nil
 }
 
 // GetDeviceTokenEnum return the enum type of this object
@@ -22071,6 +34961,28 @@ func NewDeviceTokenUbuntuPush(token string) *DeviceTokenUbuntuPush {
 	return &deviceTokenUbuntuPushTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (deviceTokenUbuntuPush *DeviceTokenUbuntuPush) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Token string `json:"token"` // Token; may be empty to deregister a device
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	deviceTokenUbuntuPush.tdCommon = tempObj.tdCommon
+	deviceTokenUbuntuPush.Token = tempObj.Token
+
+	return nil
+}
+
 // GetDeviceTokenEnum return the enum type of this object
 func (deviceTokenUbuntuPush *DeviceTokenUbuntuPush) GetDeviceTokenEnum() DeviceTokenEnum {
 	return DeviceTokenUbuntuPushType
@@ -22097,6 +35009,28 @@ func NewDeviceTokenBlackBerryPush(token string) *DeviceTokenBlackBerryPush {
 	}
 
 	return &deviceTokenBlackBerryPushTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (deviceTokenBlackBerryPush *DeviceTokenBlackBerryPush) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Token string `json:"token"` // Token; may be empty to deregister a device
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	deviceTokenBlackBerryPush.tdCommon = tempObj.tdCommon
+	deviceTokenBlackBerryPush.Token = tempObj.Token
+
+	return nil
 }
 
 // GetDeviceTokenEnum return the enum type of this object
@@ -22127,6 +35061,28 @@ func NewDeviceTokenTizenPush(regID string) *DeviceTokenTizenPush {
 	return &deviceTokenTizenPushTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (deviceTokenTizenPush *DeviceTokenTizenPush) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		RegID string `json:"reg_id"` // Push service registration identifier; may be empty to deregister a device
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	deviceTokenTizenPush.tdCommon = tempObj.tdCommon
+	deviceTokenTizenPush.RegID = tempObj.RegID
+
+	return nil
+}
+
 // GetDeviceTokenEnum return the enum type of this object
 func (deviceTokenTizenPush *DeviceTokenTizenPush) GetDeviceTokenEnum() DeviceTokenEnum {
 	return DeviceTokenTizenPushType
@@ -22155,6 +35111,28 @@ func NewPushReceiverID(iD JSONInt64) *PushReceiverID {
 	return &pushReceiverIDTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushReceiverID *PushReceiverID) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID JSONInt64 `json:"id"` // The globally unique identifier of push notification subscription
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushReceiverID.tdCommon = tempObj.tdCommon
+	pushReceiverID.ID = tempObj.ID
+
+	return nil
+}
+
 // BackgroundFillSolid Describes a solid fill of a background
 type BackgroundFillSolid struct {
 	tdCommon
@@ -22176,6 +35154,28 @@ func NewBackgroundFillSolid(color int32) *BackgroundFillSolid {
 	}
 
 	return &backgroundFillSolidTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (backgroundFillSolid *BackgroundFillSolid) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Color int32 `json:"color"` // A color of the background in the RGB24 format
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	backgroundFillSolid.tdCommon = tempObj.tdCommon
+	backgroundFillSolid.Color = tempObj.Color
+
+	return nil
 }
 
 // GetBackgroundFillEnum return the enum type of this object
@@ -22212,6 +35212,32 @@ func NewBackgroundFillGradient(topColor int32, bottomColor int32, rotationAngle 
 	return &backgroundFillGradientTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (backgroundFillGradient *BackgroundFillGradient) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TopColor      int32 `json:"top_color"`      // A top color of the background in the RGB24 format
+		BottomColor   int32 `json:"bottom_color"`   // A bottom color of the background in the RGB24 format
+		RotationAngle int32 `json:"rotation_angle"` // Clockwise rotation angle of the gradient, in degrees; 0-359. Must be always divisible by 45
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	backgroundFillGradient.tdCommon = tempObj.tdCommon
+	backgroundFillGradient.TopColor = tempObj.TopColor
+	backgroundFillGradient.BottomColor = tempObj.BottomColor
+	backgroundFillGradient.RotationAngle = tempObj.RotationAngle
+
+	return nil
+}
+
 // GetBackgroundFillEnum return the enum type of this object
 func (backgroundFillGradient *BackgroundFillGradient) GetBackgroundFillEnum() BackgroundFillEnum {
 	return BackgroundFillGradientType
@@ -22238,6 +35264,28 @@ func NewBackgroundFillFreeformGradient(colors []int32) *BackgroundFillFreeformGr
 	}
 
 	return &backgroundFillFreeformGradientTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (backgroundFillFreeformGradient *BackgroundFillFreeformGradient) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Colors []int32 `json:"colors"` // A list of 3 or 4 colors of the freeform gradients in the RGB24 format
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	backgroundFillFreeformGradient.tdCommon = tempObj.tdCommon
+	backgroundFillFreeformGradient.Colors = tempObj.Colors
+
+	return nil
 }
 
 // GetBackgroundFillEnum return the enum type of this object
@@ -22269,6 +35317,30 @@ func NewBackgroundTypeWallpaper(isBlurred bool, isMoving bool) *BackgroundTypeWa
 	}
 
 	return &backgroundTypeWallpaperTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (backgroundTypeWallpaper *BackgroundTypeWallpaper) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		IsBlurred bool `json:"is_blurred"` // True, if the wallpaper must be downscaled to fit in 450x450 square and then box-blurred with radius 12
+		IsMoving  bool `json:"is_moving"`  // True, if the background needs to be slightly moved when device is tilted
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	backgroundTypeWallpaper.tdCommon = tempObj.tdCommon
+	backgroundTypeWallpaper.IsBlurred = tempObj.IsBlurred
+	backgroundTypeWallpaper.IsMoving = tempObj.IsMoving
+
+	return nil
 }
 
 // GetBackgroundTypeEnum return the enum type of this object
@@ -22488,6 +35560,28 @@ func NewBackgrounds(backgrounds []Background) *Backgrounds {
 	return &backgroundsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (backgrounds *Backgrounds) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Backgrounds []Background `json:"backgrounds"` // A list of backgrounds
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	backgrounds.tdCommon = tempObj.tdCommon
+	backgrounds.Backgrounds = tempObj.Backgrounds
+
+	return nil
+}
+
 // InputBackgroundLocal A background from a local file
 type InputBackgroundLocal struct {
 	tdCommon
@@ -22562,6 +35656,28 @@ func NewInputBackgroundRemote(backgroundID JSONInt64) *InputBackgroundRemote {
 	return &inputBackgroundRemoteTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (inputBackgroundRemote *InputBackgroundRemote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		BackgroundID JSONInt64 `json:"background_id"` // The background identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	inputBackgroundRemote.tdCommon = tempObj.tdCommon
+	inputBackgroundRemote.BackgroundID = tempObj.BackgroundID
+
+	return nil
+}
+
 // GetInputBackgroundEnum return the enum type of this object
 func (inputBackgroundRemote *InputBackgroundRemote) GetInputBackgroundEnum() InputBackgroundEnum {
 	return InputBackgroundRemoteType
@@ -22611,10 +35727,9 @@ func (themeSettings *ThemeSettings) UnmarshalJSON(b []byte) error {
 	}
 	tempObj := struct {
 		tdCommon
-		AccentColor                int32       `json:"accent_color"`                  // Theme accent color in ARGB format
-		Background                 *Background `json:"background"`                    // The background to be used in chats; may be null
-		AnimateOutgoingMessageFill bool        `json:"animate_outgoing_message_fill"` // If true, the freeform gradient fill needs to be animated on every sent message
-		OutgoingMessageAccentColor int32       `json:"outgoing_message_accent_color"` // Accent color of outgoing messages in ARGB format
+		AccentColor                int32 `json:"accent_color"`                  // Theme accent color in ARGB format
+		AnimateOutgoingMessageFill bool  `json:"animate_outgoing_message_fill"` // If true, the freeform gradient fill needs to be animated on every sent message
+		OutgoingMessageAccentColor int32 `json:"outgoing_message_accent_color"` // Accent color of outgoing messages in ARGB format
 	}{}
 	err = json.Unmarshal(b, &tempObj)
 	if err != nil {
@@ -22623,12 +35738,21 @@ func (themeSettings *ThemeSettings) UnmarshalJSON(b []byte) error {
 
 	themeSettings.tdCommon = tempObj.tdCommon
 	themeSettings.AccentColor = tempObj.AccentColor
-	themeSettings.Background = tempObj.Background
 	themeSettings.AnimateOutgoingMessageFill = tempObj.AnimateOutgoingMessageFill
 	themeSettings.OutgoingMessageAccentColor = tempObj.OutgoingMessageAccentColor
 
 	fieldOutgoingMessageFill, _ := unmarshalBackgroundFill(objMap["outgoing_message_fill"])
 	themeSettings.OutgoingMessageFill = fieldOutgoingMessageFill
+
+	var background Background
+	if objMap["background"] != nil {
+		err = background.UnmarshalJSON(*objMap["background"])
+		if err != nil {
+			return err
+		}
+	}
+
+	themeSettings.Background = &background
 
 	return nil
 }
@@ -22662,6 +35786,49 @@ func NewChatTheme(name string, lightSettings *ThemeSettings, darkSettings *Theme
 	return &chatThemeTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatTheme *ChatTheme) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Name string `json:"name"` // Theme name
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatTheme.tdCommon = tempObj.tdCommon
+	chatTheme.Name = tempObj.Name
+
+	var lightSettings ThemeSettings
+	if objMap["light_settings"] != nil {
+		err = lightSettings.UnmarshalJSON(*objMap["light_settings"])
+		if err != nil {
+			return err
+		}
+	}
+
+	chatTheme.LightSettings = &lightSettings
+
+	var darkSettings ThemeSettings
+	if objMap["dark_settings"] != nil {
+		err = darkSettings.UnmarshalJSON(*objMap["dark_settings"])
+		if err != nil {
+			return err
+		}
+	}
+
+	chatTheme.DarkSettings = &darkSettings
+
+	return nil
+}
+
 // Hashtags Contains a list of hashtags
 type Hashtags struct {
 	tdCommon
@@ -22685,6 +35852,28 @@ func NewHashtags(hashtags []string) *Hashtags {
 	return &hashtagsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (hashtags *Hashtags) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Hashtags []string `json:"hashtags"` // A list of hashtags
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	hashtags.tdCommon = tempObj.tdCommon
+	hashtags.Hashtags = tempObj.Hashtags
+
+	return nil
+}
+
 // CanTransferOwnershipResultOk The session can be used
 type CanTransferOwnershipResultOk struct {
 	tdCommon
@@ -22703,6 +35892,26 @@ func NewCanTransferOwnershipResultOk() *CanTransferOwnershipResultOk {
 	}
 
 	return &canTransferOwnershipResultOkTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (canTransferOwnershipResultOk *CanTransferOwnershipResultOk) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	canTransferOwnershipResultOk.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetCanTransferOwnershipResultEnum return the enum type of this object
@@ -22728,6 +35937,26 @@ func NewCanTransferOwnershipResultPasswordNeeded() *CanTransferOwnershipResultPa
 	}
 
 	return &canTransferOwnershipResultPasswordNeededTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (canTransferOwnershipResultPasswordNeeded *CanTransferOwnershipResultPasswordNeeded) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	canTransferOwnershipResultPasswordNeeded.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetCanTransferOwnershipResultEnum return the enum type of this object
@@ -22758,6 +35987,28 @@ func NewCanTransferOwnershipResultPasswordTooFresh(retryAfter int32) *CanTransfe
 	return &canTransferOwnershipResultPasswordTooFreshTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (canTransferOwnershipResultPasswordTooFresh *CanTransferOwnershipResultPasswordTooFresh) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		RetryAfter int32 `json:"retry_after"` // Time left before the session can be used to transfer ownership of a chat, in seconds
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	canTransferOwnershipResultPasswordTooFresh.tdCommon = tempObj.tdCommon
+	canTransferOwnershipResultPasswordTooFresh.RetryAfter = tempObj.RetryAfter
+
+	return nil
+}
+
 // GetCanTransferOwnershipResultEnum return the enum type of this object
 func (canTransferOwnershipResultPasswordTooFresh *CanTransferOwnershipResultPasswordTooFresh) GetCanTransferOwnershipResultEnum() CanTransferOwnershipResultEnum {
 	return CanTransferOwnershipResultPasswordTooFreshType
@@ -22786,6 +36037,28 @@ func NewCanTransferOwnershipResultSessionTooFresh(retryAfter int32) *CanTransfer
 	return &canTransferOwnershipResultSessionTooFreshTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (canTransferOwnershipResultSessionTooFresh *CanTransferOwnershipResultSessionTooFresh) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		RetryAfter int32 `json:"retry_after"` // Time left before the session can be used to transfer ownership of a chat, in seconds
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	canTransferOwnershipResultSessionTooFresh.tdCommon = tempObj.tdCommon
+	canTransferOwnershipResultSessionTooFresh.RetryAfter = tempObj.RetryAfter
+
+	return nil
+}
+
 // GetCanTransferOwnershipResultEnum return the enum type of this object
 func (canTransferOwnershipResultSessionTooFresh *CanTransferOwnershipResultSessionTooFresh) GetCanTransferOwnershipResultEnum() CanTransferOwnershipResultEnum {
 	return CanTransferOwnershipResultSessionTooFreshType
@@ -22809,6 +36082,26 @@ func NewCheckChatUsernameResultOk() *CheckChatUsernameResultOk {
 	}
 
 	return &checkChatUsernameResultOkTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (checkChatUsernameResultOk *CheckChatUsernameResultOk) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	checkChatUsernameResultOk.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetCheckChatUsernameResultEnum return the enum type of this object
@@ -22836,6 +36129,26 @@ func NewCheckChatUsernameResultUsernameInvalid() *CheckChatUsernameResultUsernam
 	return &checkChatUsernameResultUsernameInvalidTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (checkChatUsernameResultUsernameInvalid *CheckChatUsernameResultUsernameInvalid) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	checkChatUsernameResultUsernameInvalid.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetCheckChatUsernameResultEnum return the enum type of this object
 func (checkChatUsernameResultUsernameInvalid *CheckChatUsernameResultUsernameInvalid) GetCheckChatUsernameResultEnum() CheckChatUsernameResultEnum {
 	return CheckChatUsernameResultUsernameInvalidType
@@ -22859,6 +36172,26 @@ func NewCheckChatUsernameResultUsernameOccupied() *CheckChatUsernameResultUserna
 	}
 
 	return &checkChatUsernameResultUsernameOccupiedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (checkChatUsernameResultUsernameOccupied *CheckChatUsernameResultUsernameOccupied) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	checkChatUsernameResultUsernameOccupied.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetCheckChatUsernameResultEnum return the enum type of this object
@@ -22886,6 +36219,26 @@ func NewCheckChatUsernameResultPublicChatsTooMuch() *CheckChatUsernameResultPubl
 	return &checkChatUsernameResultPublicChatsTooMuchTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (checkChatUsernameResultPublicChatsTooMuch *CheckChatUsernameResultPublicChatsTooMuch) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	checkChatUsernameResultPublicChatsTooMuch.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetCheckChatUsernameResultEnum return the enum type of this object
 func (checkChatUsernameResultPublicChatsTooMuch *CheckChatUsernameResultPublicChatsTooMuch) GetCheckChatUsernameResultEnum() CheckChatUsernameResultEnum {
 	return CheckChatUsernameResultPublicChatsTooMuchType
@@ -22909,6 +36262,26 @@ func NewCheckChatUsernameResultPublicGroupsUnavailable() *CheckChatUsernameResul
 	}
 
 	return &checkChatUsernameResultPublicGroupsUnavailableTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (checkChatUsernameResultPublicGroupsUnavailable *CheckChatUsernameResultPublicGroupsUnavailable) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	checkChatUsernameResultPublicGroupsUnavailable.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetCheckChatUsernameResultEnum return the enum type of this object
@@ -22936,6 +36309,26 @@ func NewCheckStickerSetNameResultOk() *CheckStickerSetNameResultOk {
 	return &checkStickerSetNameResultOkTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (checkStickerSetNameResultOk *CheckStickerSetNameResultOk) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	checkStickerSetNameResultOk.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetCheckStickerSetNameResultEnum return the enum type of this object
 func (checkStickerSetNameResultOk *CheckStickerSetNameResultOk) GetCheckStickerSetNameResultEnum() CheckStickerSetNameResultEnum {
 	return CheckStickerSetNameResultOkType
@@ -22959,6 +36352,26 @@ func NewCheckStickerSetNameResultNameInvalid() *CheckStickerSetNameResultNameInv
 	}
 
 	return &checkStickerSetNameResultNameInvalidTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (checkStickerSetNameResultNameInvalid *CheckStickerSetNameResultNameInvalid) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	checkStickerSetNameResultNameInvalid.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetCheckStickerSetNameResultEnum return the enum type of this object
@@ -22986,6 +36399,26 @@ func NewCheckStickerSetNameResultNameOccupied() *CheckStickerSetNameResultNameOc
 	return &checkStickerSetNameResultNameOccupiedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (checkStickerSetNameResultNameOccupied *CheckStickerSetNameResultNameOccupied) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	checkStickerSetNameResultNameOccupied.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetCheckStickerSetNameResultEnum return the enum type of this object
 func (checkStickerSetNameResultNameOccupied *CheckStickerSetNameResultNameOccupied) GetCheckStickerSetNameResultEnum() CheckStickerSetNameResultEnum {
 	return CheckStickerSetNameResultNameOccupiedType
@@ -23009,6 +36442,26 @@ func NewResetPasswordResultOk() *ResetPasswordResultOk {
 	}
 
 	return &resetPasswordResultOkTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (resetPasswordResultOk *ResetPasswordResultOk) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	resetPasswordResultOk.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetResetPasswordResultEnum return the enum type of this object
@@ -23039,6 +36492,28 @@ func NewResetPasswordResultPending(pendingResetDate int32) *ResetPasswordResultP
 	return &resetPasswordResultPendingTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (resetPasswordResultPending *ResetPasswordResultPending) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		PendingResetDate int32 `json:"pending_reset_date"` // Point in time (Unix timestamp) after which the password can be reset immediately using resetPassword
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	resetPasswordResultPending.tdCommon = tempObj.tdCommon
+	resetPasswordResultPending.PendingResetDate = tempObj.PendingResetDate
+
+	return nil
+}
+
 // GetResetPasswordResultEnum return the enum type of this object
 func (resetPasswordResultPending *ResetPasswordResultPending) GetResetPasswordResultEnum() ResetPasswordResultEnum {
 	return ResetPasswordResultPendingType
@@ -23065,6 +36540,28 @@ func NewResetPasswordResultDeclined(retryDate int32) *ResetPasswordResultDecline
 	}
 
 	return &resetPasswordResultDeclinedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (resetPasswordResultDeclined *ResetPasswordResultDeclined) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		RetryDate int32 `json:"retry_date"` // Point in time (Unix timestamp) when the password reset can be retried
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	resetPasswordResultDeclined.tdCommon = tempObj.tdCommon
+	resetPasswordResultDeclined.RetryDate = tempObj.RetryDate
+
+	return nil
 }
 
 // GetResetPasswordResultEnum return the enum type of this object
@@ -23095,6 +36592,28 @@ func NewMessageFileTypePrivate(name string) *MessageFileTypePrivate {
 	return &messageFileTypePrivateTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageFileTypePrivate *MessageFileTypePrivate) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Name string `json:"name"` // Name of the other party; may be empty if unrecognized
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageFileTypePrivate.tdCommon = tempObj.tdCommon
+	messageFileTypePrivate.Name = tempObj.Name
+
+	return nil
+}
+
 // GetMessageFileTypeEnum return the enum type of this object
 func (messageFileTypePrivate *MessageFileTypePrivate) GetMessageFileTypeEnum() MessageFileTypeEnum {
 	return MessageFileTypePrivateType
@@ -23123,6 +36642,28 @@ func NewMessageFileTypeGroup(title string) *MessageFileTypeGroup {
 	return &messageFileTypeGroupTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageFileTypeGroup *MessageFileTypeGroup) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Title string `json:"title"` // Title of the group chat; may be empty if unrecognized
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageFileTypeGroup.tdCommon = tempObj.tdCommon
+	messageFileTypeGroup.Title = tempObj.Title
+
+	return nil
+}
+
 // GetMessageFileTypeEnum return the enum type of this object
 func (messageFileTypeGroup *MessageFileTypeGroup) GetMessageFileTypeEnum() MessageFileTypeEnum {
 	return MessageFileTypeGroupType
@@ -23146,6 +36687,26 @@ func NewMessageFileTypeUnknown() *MessageFileTypeUnknown {
 	}
 
 	return &messageFileTypeUnknownTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageFileTypeUnknown *MessageFileTypeUnknown) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageFileTypeUnknown.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetMessageFileTypeEnum return the enum type of this object
@@ -23174,6 +36735,28 @@ func NewPushMessageContentHidden(isPinned bool) *PushMessageContentHidden {
 	}
 
 	return &pushMessageContentHiddenTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentHidden *PushMessageContentHidden) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		IsPinned bool `json:"is_pinned"` // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentHidden.tdCommon = tempObj.tdCommon
+	pushMessageContentHidden.IsPinned = tempObj.IsPinned
+
+	return nil
 }
 
 // GetPushMessageContentEnum return the enum type of this object
@@ -23210,6 +36793,32 @@ func NewPushMessageContentAnimation(animation *Animation, caption string, isPinn
 	return &pushMessageContentAnimationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentAnimation *PushMessageContentAnimation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Animation *Animation `json:"animation"` // Message content; may be null
+		Caption   string     `json:"caption"`   // Animation caption
+		IsPinned  bool       `json:"is_pinned"` // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentAnimation.tdCommon = tempObj.tdCommon
+	pushMessageContentAnimation.Animation = tempObj.Animation
+	pushMessageContentAnimation.Caption = tempObj.Caption
+	pushMessageContentAnimation.IsPinned = tempObj.IsPinned
+
+	return nil
+}
+
 // GetPushMessageContentEnum return the enum type of this object
 func (pushMessageContentAnimation *PushMessageContentAnimation) GetPushMessageContentEnum() PushMessageContentEnum {
 	return PushMessageContentAnimationType
@@ -23239,6 +36848,30 @@ func NewPushMessageContentAudio(audio *Audio, isPinned bool) *PushMessageContent
 	}
 
 	return &pushMessageContentAudioTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentAudio *PushMessageContentAudio) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Audio    *Audio `json:"audio"`     // Message content; may be null
+		IsPinned bool   `json:"is_pinned"` // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentAudio.tdCommon = tempObj.tdCommon
+	pushMessageContentAudio.Audio = tempObj.Audio
+	pushMessageContentAudio.IsPinned = tempObj.IsPinned
+
+	return nil
 }
 
 // GetPushMessageContentEnum return the enum type of this object
@@ -23272,6 +36905,30 @@ func NewPushMessageContentContact(name string, isPinned bool) *PushMessageConten
 	return &pushMessageContentContactTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentContact *PushMessageContentContact) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Name     string `json:"name"`      // Contact's name
+		IsPinned bool   `json:"is_pinned"` // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentContact.tdCommon = tempObj.tdCommon
+	pushMessageContentContact.Name = tempObj.Name
+	pushMessageContentContact.IsPinned = tempObj.IsPinned
+
+	return nil
+}
+
 // GetPushMessageContentEnum return the enum type of this object
 func (pushMessageContentContact *PushMessageContentContact) GetPushMessageContentEnum() PushMessageContentEnum {
 	return PushMessageContentContactType
@@ -23295,6 +36952,26 @@ func NewPushMessageContentContactRegistered() *PushMessageContentContactRegister
 	}
 
 	return &pushMessageContentContactRegisteredTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentContactRegistered *PushMessageContentContactRegistered) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentContactRegistered.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPushMessageContentEnum return the enum type of this object
@@ -23328,6 +37005,30 @@ func NewPushMessageContentDocument(document *Document, isPinned bool) *PushMessa
 	return &pushMessageContentDocumentTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentDocument *PushMessageContentDocument) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Document *Document `json:"document"`  // Message content; may be null
+		IsPinned bool      `json:"is_pinned"` // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentDocument.tdCommon = tempObj.tdCommon
+	pushMessageContentDocument.Document = tempObj.Document
+	pushMessageContentDocument.IsPinned = tempObj.IsPinned
+
+	return nil
+}
+
 // GetPushMessageContentEnum return the enum type of this object
 func (pushMessageContentDocument *PushMessageContentDocument) GetPushMessageContentEnum() PushMessageContentEnum {
 	return PushMessageContentDocumentType
@@ -23357,6 +37058,30 @@ func NewPushMessageContentGame(title string, isPinned bool) *PushMessageContentG
 	}
 
 	return &pushMessageContentGameTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentGame *PushMessageContentGame) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Title    string `json:"title"`     // Game title, empty for pinned game message
+		IsPinned bool   `json:"is_pinned"` // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentGame.tdCommon = tempObj.tdCommon
+	pushMessageContentGame.Title = tempObj.Title
+	pushMessageContentGame.IsPinned = tempObj.IsPinned
+
+	return nil
 }
 
 // GetPushMessageContentEnum return the enum type of this object
@@ -23393,6 +37118,32 @@ func NewPushMessageContentGameScore(title string, score int32, isPinned bool) *P
 	return &pushMessageContentGameScoreTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentGameScore *PushMessageContentGameScore) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Title    string `json:"title"`     // Game title, empty for pinned message
+		Score    int32  `json:"score"`     // New score, 0 for pinned message
+		IsPinned bool   `json:"is_pinned"` // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentGameScore.tdCommon = tempObj.tdCommon
+	pushMessageContentGameScore.Title = tempObj.Title
+	pushMessageContentGameScore.Score = tempObj.Score
+	pushMessageContentGameScore.IsPinned = tempObj.IsPinned
+
+	return nil
+}
+
 // GetPushMessageContentEnum return the enum type of this object
 func (pushMessageContentGameScore *PushMessageContentGameScore) GetPushMessageContentEnum() PushMessageContentEnum {
 	return PushMessageContentGameScoreType
@@ -23424,6 +37175,30 @@ func NewPushMessageContentInvoice(price string, isPinned bool) *PushMessageConte
 	return &pushMessageContentInvoiceTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentInvoice *PushMessageContentInvoice) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Price    string `json:"price"`     // Product price
+		IsPinned bool   `json:"is_pinned"` // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentInvoice.tdCommon = tempObj.tdCommon
+	pushMessageContentInvoice.Price = tempObj.Price
+	pushMessageContentInvoice.IsPinned = tempObj.IsPinned
+
+	return nil
+}
+
 // GetPushMessageContentEnum return the enum type of this object
 func (pushMessageContentInvoice *PushMessageContentInvoice) GetPushMessageContentEnum() PushMessageContentEnum {
 	return PushMessageContentInvoiceType
@@ -23453,6 +37228,30 @@ func NewPushMessageContentLocation(isLive bool, isPinned bool) *PushMessageConte
 	}
 
 	return &pushMessageContentLocationTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentLocation *PushMessageContentLocation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		IsLive   bool `json:"is_live"`   // True, if the location is live
+		IsPinned bool `json:"is_pinned"` // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentLocation.tdCommon = tempObj.tdCommon
+	pushMessageContentLocation.IsLive = tempObj.IsLive
+	pushMessageContentLocation.IsPinned = tempObj.IsPinned
+
+	return nil
 }
 
 // GetPushMessageContentEnum return the enum type of this object
@@ -23492,6 +37291,34 @@ func NewPushMessageContentPhoto(photo *Photo, caption string, isSecret bool, isP
 	return &pushMessageContentPhotoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentPhoto *PushMessageContentPhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Photo    *Photo `json:"photo"`     // Message content; may be null
+		Caption  string `json:"caption"`   // Photo caption
+		IsSecret bool   `json:"is_secret"` // True, if the photo is secret
+		IsPinned bool   `json:"is_pinned"` // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentPhoto.tdCommon = tempObj.tdCommon
+	pushMessageContentPhoto.Photo = tempObj.Photo
+	pushMessageContentPhoto.Caption = tempObj.Caption
+	pushMessageContentPhoto.IsSecret = tempObj.IsSecret
+	pushMessageContentPhoto.IsPinned = tempObj.IsPinned
+
+	return nil
+}
+
 // GetPushMessageContentEnum return the enum type of this object
 func (pushMessageContentPhoto *PushMessageContentPhoto) GetPushMessageContentEnum() PushMessageContentEnum {
 	return PushMessageContentPhotoType
@@ -23526,6 +37353,32 @@ func NewPushMessageContentPoll(question string, isRegular bool, isPinned bool) *
 	return &pushMessageContentPollTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentPoll *PushMessageContentPoll) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Question  string `json:"question"`   // Poll question
+		IsRegular bool   `json:"is_regular"` // True, if the poll is regular and not in quiz mode
+		IsPinned  bool   `json:"is_pinned"`  // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentPoll.tdCommon = tempObj.tdCommon
+	pushMessageContentPoll.Question = tempObj.Question
+	pushMessageContentPoll.IsRegular = tempObj.IsRegular
+	pushMessageContentPoll.IsPinned = tempObj.IsPinned
+
+	return nil
+}
+
 // GetPushMessageContentEnum return the enum type of this object
 func (pushMessageContentPoll *PushMessageContentPoll) GetPushMessageContentEnum() PushMessageContentEnum {
 	return PushMessageContentPollType
@@ -23549,6 +37402,26 @@ func NewPushMessageContentScreenshotTaken() *PushMessageContentScreenshotTaken {
 	}
 
 	return &pushMessageContentScreenshotTakenTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentScreenshotTaken *PushMessageContentScreenshotTaken) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentScreenshotTaken.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPushMessageContentEnum return the enum type of this object
@@ -23585,6 +37458,32 @@ func NewPushMessageContentSticker(sticker *Sticker, emoji string, isPinned bool)
 	return &pushMessageContentStickerTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentSticker *PushMessageContentSticker) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Sticker  *Sticker `json:"sticker"`   // Message content; may be null
+		Emoji    string   `json:"emoji"`     // Emoji corresponding to the sticker; may be empty
+		IsPinned bool     `json:"is_pinned"` // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentSticker.tdCommon = tempObj.tdCommon
+	pushMessageContentSticker.Sticker = tempObj.Sticker
+	pushMessageContentSticker.Emoji = tempObj.Emoji
+	pushMessageContentSticker.IsPinned = tempObj.IsPinned
+
+	return nil
+}
+
 // GetPushMessageContentEnum return the enum type of this object
 func (pushMessageContentSticker *PushMessageContentSticker) GetPushMessageContentEnum() PushMessageContentEnum {
 	return PushMessageContentStickerType
@@ -23614,6 +37513,30 @@ func NewPushMessageContentText(text string, isPinned bool) *PushMessageContentTe
 	}
 
 	return &pushMessageContentTextTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentText *PushMessageContentText) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Text     string `json:"text"`      // Message text
+		IsPinned bool   `json:"is_pinned"` // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentText.tdCommon = tempObj.tdCommon
+	pushMessageContentText.Text = tempObj.Text
+	pushMessageContentText.IsPinned = tempObj.IsPinned
+
+	return nil
 }
 
 // GetPushMessageContentEnum return the enum type of this object
@@ -23653,6 +37576,34 @@ func NewPushMessageContentVideo(video *Video, caption string, isSecret bool, isP
 	return &pushMessageContentVideoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentVideo *PushMessageContentVideo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Video    *Video `json:"video"`     // Message content; may be null
+		Caption  string `json:"caption"`   // Video caption
+		IsSecret bool   `json:"is_secret"` // True, if the video is secret
+		IsPinned bool   `json:"is_pinned"` // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentVideo.tdCommon = tempObj.tdCommon
+	pushMessageContentVideo.Video = tempObj.Video
+	pushMessageContentVideo.Caption = tempObj.Caption
+	pushMessageContentVideo.IsSecret = tempObj.IsSecret
+	pushMessageContentVideo.IsPinned = tempObj.IsPinned
+
+	return nil
+}
+
 // GetPushMessageContentEnum return the enum type of this object
 func (pushMessageContentVideo *PushMessageContentVideo) GetPushMessageContentEnum() PushMessageContentEnum {
 	return PushMessageContentVideoType
@@ -23682,6 +37633,30 @@ func NewPushMessageContentVideoNote(videoNote *VideoNote, isPinned bool) *PushMe
 	}
 
 	return &pushMessageContentVideoNoteTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentVideoNote *PushMessageContentVideoNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		VideoNote *VideoNote `json:"video_note"` // Message content; may be null
+		IsPinned  bool       `json:"is_pinned"`  // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentVideoNote.tdCommon = tempObj.tdCommon
+	pushMessageContentVideoNote.VideoNote = tempObj.VideoNote
+	pushMessageContentVideoNote.IsPinned = tempObj.IsPinned
+
+	return nil
 }
 
 // GetPushMessageContentEnum return the enum type of this object
@@ -23715,6 +37690,30 @@ func NewPushMessageContentVoiceNote(voiceNote *VoiceNote, isPinned bool) *PushMe
 	return &pushMessageContentVoiceNoteTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentVoiceNote *PushMessageContentVoiceNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		VoiceNote *VoiceNote `json:"voice_note"` // Message content; may be null
+		IsPinned  bool       `json:"is_pinned"`  // True, if the message is a pinned message with the specified content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentVoiceNote.tdCommon = tempObj.tdCommon
+	pushMessageContentVoiceNote.VoiceNote = tempObj.VoiceNote
+	pushMessageContentVoiceNote.IsPinned = tempObj.IsPinned
+
+	return nil
+}
+
 // GetPushMessageContentEnum return the enum type of this object
 func (pushMessageContentVoiceNote *PushMessageContentVoiceNote) GetPushMessageContentEnum() PushMessageContentEnum {
 	return PushMessageContentVoiceNoteType
@@ -23738,6 +37737,26 @@ func NewPushMessageContentBasicGroupChatCreate() *PushMessageContentBasicGroupCh
 	}
 
 	return &pushMessageContentBasicGroupChatCreateTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentBasicGroupChatCreate *PushMessageContentBasicGroupChatCreate) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentBasicGroupChatCreate.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPushMessageContentEnum return the enum type of this object
@@ -23774,6 +37793,32 @@ func NewPushMessageContentChatAddMembers(memberName string, isCurrentUser bool, 
 	return &pushMessageContentChatAddMembersTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentChatAddMembers *PushMessageContentChatAddMembers) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		MemberName    string `json:"member_name"`     // Name of the added member
+		IsCurrentUser bool   `json:"is_current_user"` // True, if the current user was added to the group
+		IsReturned    bool   `json:"is_returned"`     // True, if the user has returned to the group themselves
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentChatAddMembers.tdCommon = tempObj.tdCommon
+	pushMessageContentChatAddMembers.MemberName = tempObj.MemberName
+	pushMessageContentChatAddMembers.IsCurrentUser = tempObj.IsCurrentUser
+	pushMessageContentChatAddMembers.IsReturned = tempObj.IsReturned
+
+	return nil
+}
+
 // GetPushMessageContentEnum return the enum type of this object
 func (pushMessageContentChatAddMembers *PushMessageContentChatAddMembers) GetPushMessageContentEnum() PushMessageContentEnum {
 	return PushMessageContentChatAddMembersType
@@ -23797,6 +37842,26 @@ func NewPushMessageContentChatChangePhoto() *PushMessageContentChatChangePhoto {
 	}
 
 	return &pushMessageContentChatChangePhotoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentChatChangePhoto *PushMessageContentChatChangePhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentChatChangePhoto.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPushMessageContentEnum return the enum type of this object
@@ -23827,6 +37892,28 @@ func NewPushMessageContentChatChangeTitle(title string) *PushMessageContentChatC
 	return &pushMessageContentChatChangeTitleTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentChatChangeTitle *PushMessageContentChatChangeTitle) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Title string `json:"title"` // New chat title
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentChatChangeTitle.tdCommon = tempObj.tdCommon
+	pushMessageContentChatChangeTitle.Title = tempObj.Title
+
+	return nil
+}
+
 // GetPushMessageContentEnum return the enum type of this object
 func (pushMessageContentChatChangeTitle *PushMessageContentChatChangeTitle) GetPushMessageContentEnum() PushMessageContentEnum {
 	return PushMessageContentChatChangeTitleType
@@ -23853,6 +37940,28 @@ func NewPushMessageContentChatSetTheme(themeName string) *PushMessageContentChat
 	}
 
 	return &pushMessageContentChatSetThemeTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentChatSetTheme *PushMessageContentChatSetTheme) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ThemeName string `json:"theme_name"` // If non-empty, name of a new theme, set for the chat. Otherwise chat theme was reset to the default one
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentChatSetTheme.tdCommon = tempObj.tdCommon
+	pushMessageContentChatSetTheme.ThemeName = tempObj.ThemeName
+
+	return nil
 }
 
 // GetPushMessageContentEnum return the enum type of this object
@@ -23889,6 +37998,32 @@ func NewPushMessageContentChatDeleteMember(memberName string, isCurrentUser bool
 	return &pushMessageContentChatDeleteMemberTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentChatDeleteMember *PushMessageContentChatDeleteMember) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		MemberName    string `json:"member_name"`     // Name of the deleted member
+		IsCurrentUser bool   `json:"is_current_user"` // True, if the current user was deleted from the group
+		IsLeft        bool   `json:"is_left"`         // True, if the user has left the group themselves
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentChatDeleteMember.tdCommon = tempObj.tdCommon
+	pushMessageContentChatDeleteMember.MemberName = tempObj.MemberName
+	pushMessageContentChatDeleteMember.IsCurrentUser = tempObj.IsCurrentUser
+	pushMessageContentChatDeleteMember.IsLeft = tempObj.IsLeft
+
+	return nil
+}
+
 // GetPushMessageContentEnum return the enum type of this object
 func (pushMessageContentChatDeleteMember *PushMessageContentChatDeleteMember) GetPushMessageContentEnum() PushMessageContentEnum {
 	return PushMessageContentChatDeleteMemberType
@@ -23914,6 +38049,26 @@ func NewPushMessageContentChatJoinByLink() *PushMessageContentChatJoinByLink {
 	return &pushMessageContentChatJoinByLinkTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentChatJoinByLink *PushMessageContentChatJoinByLink) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentChatJoinByLink.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetPushMessageContentEnum return the enum type of this object
 func (pushMessageContentChatJoinByLink *PushMessageContentChatJoinByLink) GetPushMessageContentEnum() PushMessageContentEnum {
 	return PushMessageContentChatJoinByLinkType
@@ -23937,6 +38092,26 @@ func NewPushMessageContentChatJoinByRequest() *PushMessageContentChatJoinByReque
 	}
 
 	return &pushMessageContentChatJoinByRequestTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentChatJoinByRequest *PushMessageContentChatJoinByRequest) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentChatJoinByRequest.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetPushMessageContentEnum return the enum type of this object
@@ -23965,6 +38140,28 @@ func NewPushMessageContentMessageForwards(totalCount int32) *PushMessageContentM
 	}
 
 	return &pushMessageContentMessageForwardsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentMessageForwards *PushMessageContentMessageForwards) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount int32 `json:"total_count"` // Number of forwarded messages
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentMessageForwards.tdCommon = tempObj.tdCommon
+	pushMessageContentMessageForwards.TotalCount = tempObj.TotalCount
+
+	return nil
 }
 
 // GetPushMessageContentEnum return the enum type of this object
@@ -24007,6 +38204,36 @@ func NewPushMessageContentMediaAlbum(totalCount int32, hasPhotos bool, hasVideos
 	return &pushMessageContentMediaAlbumTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (pushMessageContentMediaAlbum *PushMessageContentMediaAlbum) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TotalCount   int32 `json:"total_count"`   // Number of messages in the album
+		HasPhotos    bool  `json:"has_photos"`    // True, if the album has at least one photo
+		HasVideos    bool  `json:"has_videos"`    // True, if the album has at least one video
+		HasAudios    bool  `json:"has_audios"`    // True, if the album has at least one audio file
+		HasDocuments bool  `json:"has_documents"` // True, if the album has at least one document
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	pushMessageContentMediaAlbum.tdCommon = tempObj.tdCommon
+	pushMessageContentMediaAlbum.TotalCount = tempObj.TotalCount
+	pushMessageContentMediaAlbum.HasPhotos = tempObj.HasPhotos
+	pushMessageContentMediaAlbum.HasVideos = tempObj.HasVideos
+	pushMessageContentMediaAlbum.HasAudios = tempObj.HasAudios
+	pushMessageContentMediaAlbum.HasDocuments = tempObj.HasDocuments
+
+	return nil
+}
+
 // GetPushMessageContentEnum return the enum type of this object
 func (pushMessageContentMediaAlbum *PushMessageContentMediaAlbum) GetPushMessageContentEnum() PushMessageContentEnum {
 	return PushMessageContentMediaAlbumType
@@ -24035,6 +38262,36 @@ func NewNotificationTypeNewMessage(message *Message) *NotificationTypeNewMessage
 	return &notificationTypeNewMessageTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (notificationTypeNewMessage *NotificationTypeNewMessage) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	notificationTypeNewMessage.tdCommon = tempObj.tdCommon
+
+	var message Message
+	if objMap["message"] != nil {
+		err = message.UnmarshalJSON(*objMap["message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	notificationTypeNewMessage.Message = &message
+
+	return nil
+}
+
 // GetNotificationTypeEnum return the enum type of this object
 func (notificationTypeNewMessage *NotificationTypeNewMessage) GetNotificationTypeEnum() NotificationTypeEnum {
 	return NotificationTypeNewMessageType
@@ -24058,6 +38315,26 @@ func NewNotificationTypeNewSecretChat() *NotificationTypeNewSecretChat {
 	}
 
 	return &notificationTypeNewSecretChatTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (notificationTypeNewSecretChat *NotificationTypeNewSecretChat) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	notificationTypeNewSecretChat.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetNotificationTypeEnum return the enum type of this object
@@ -24086,6 +38363,28 @@ func NewNotificationTypeNewCall(callID int32) *NotificationTypeNewCall {
 	}
 
 	return &notificationTypeNewCallTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (notificationTypeNewCall *NotificationTypeNewCall) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		CallID int32 `json:"call_id"` // Call identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	notificationTypeNewCall.tdCommon = tempObj.tdCommon
+	notificationTypeNewCall.CallID = tempObj.CallID
+
+	return nil
 }
 
 // GetNotificationTypeEnum return the enum type of this object
@@ -24186,6 +38485,26 @@ func NewNotificationGroupTypeMessages() *NotificationGroupTypeMessages {
 	return &notificationGroupTypeMessagesTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (notificationGroupTypeMessages *NotificationGroupTypeMessages) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	notificationGroupTypeMessages.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetNotificationGroupTypeEnum return the enum type of this object
 func (notificationGroupTypeMessages *NotificationGroupTypeMessages) GetNotificationGroupTypeEnum() NotificationGroupTypeEnum {
 	return NotificationGroupTypeMessagesType
@@ -24209,6 +38528,26 @@ func NewNotificationGroupTypeMentions() *NotificationGroupTypeMentions {
 	}
 
 	return &notificationGroupTypeMentionsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (notificationGroupTypeMentions *NotificationGroupTypeMentions) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	notificationGroupTypeMentions.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetNotificationGroupTypeEnum return the enum type of this object
@@ -24236,6 +38575,26 @@ func NewNotificationGroupTypeSecretChat() *NotificationGroupTypeSecretChat {
 	return &notificationGroupTypeSecretChatTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (notificationGroupTypeSecretChat *NotificationGroupTypeSecretChat) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	notificationGroupTypeSecretChat.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetNotificationGroupTypeEnum return the enum type of this object
 func (notificationGroupTypeSecretChat *NotificationGroupTypeSecretChat) GetNotificationGroupTypeEnum() NotificationGroupTypeEnum {
 	return NotificationGroupTypeSecretChatType
@@ -24259,6 +38618,26 @@ func NewNotificationGroupTypeCalls() *NotificationGroupTypeCalls {
 	}
 
 	return &notificationGroupTypeCallsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (notificationGroupTypeCalls *NotificationGroupTypeCalls) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	notificationGroupTypeCalls.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetNotificationGroupTypeEnum return the enum type of this object
@@ -24417,6 +38796,28 @@ func NewOptionValueBoolean(value bool) *OptionValueBoolean {
 	return &optionValueBooleanTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (optionValueBoolean *OptionValueBoolean) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Value bool `json:"value"` // The value of the option
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	optionValueBoolean.tdCommon = tempObj.tdCommon
+	optionValueBoolean.Value = tempObj.Value
+
+	return nil
+}
+
 // GetOptionValueEnum return the enum type of this object
 func (optionValueBoolean *OptionValueBoolean) GetOptionValueEnum() OptionValueEnum {
 	return OptionValueBooleanType
@@ -24440,6 +38841,26 @@ func NewOptionValueEmpty() *OptionValueEmpty {
 	}
 
 	return &optionValueEmptyTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (optionValueEmpty *OptionValueEmpty) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	optionValueEmpty.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetOptionValueEnum return the enum type of this object
@@ -24470,6 +38891,28 @@ func NewOptionValueInteger(value JSONInt64) *OptionValueInteger {
 	return &optionValueIntegerTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (optionValueInteger *OptionValueInteger) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Value JSONInt64 `json:"value"` // The value of the option
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	optionValueInteger.tdCommon = tempObj.tdCommon
+	optionValueInteger.Value = tempObj.Value
+
+	return nil
+}
+
 // GetOptionValueEnum return the enum type of this object
 func (optionValueInteger *OptionValueInteger) GetOptionValueEnum() OptionValueEnum {
 	return OptionValueIntegerType
@@ -24496,6 +38939,28 @@ func NewOptionValueString(value string) *OptionValueString {
 	}
 
 	return &optionValueStringTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (optionValueString *OptionValueString) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Value string `json:"value"` // The value of the option
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	optionValueString.tdCommon = tempObj.tdCommon
+	optionValueString.Value = tempObj.Value
+
+	return nil
 }
 
 // GetOptionValueEnum return the enum type of this object
@@ -24575,6 +39040,26 @@ func NewJsonValueNull() *JsonValueNull {
 	return &jsonValueNullTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (jsonValueNull *JsonValueNull) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	jsonValueNull.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetJsonValueEnum return the enum type of this object
 func (jsonValueNull *JsonValueNull) GetJsonValueEnum() JsonValueEnum {
 	return JsonValueNullType
@@ -24601,6 +39086,28 @@ func NewJsonValueBoolean(value bool) *JsonValueBoolean {
 	}
 
 	return &jsonValueBooleanTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (jsonValueBoolean *JsonValueBoolean) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Value bool `json:"value"` // The value
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	jsonValueBoolean.tdCommon = tempObj.tdCommon
+	jsonValueBoolean.Value = tempObj.Value
+
+	return nil
 }
 
 // GetJsonValueEnum return the enum type of this object
@@ -24631,6 +39138,28 @@ func NewJsonValueNumber(value float64) *JsonValueNumber {
 	return &jsonValueNumberTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (jsonValueNumber *JsonValueNumber) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Value float64 `json:"value"` // The value
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	jsonValueNumber.tdCommon = tempObj.tdCommon
+	jsonValueNumber.Value = tempObj.Value
+
+	return nil
+}
+
 // GetJsonValueEnum return the enum type of this object
 func (jsonValueNumber *JsonValueNumber) GetJsonValueEnum() JsonValueEnum {
 	return JsonValueNumberType
@@ -24657,6 +39186,28 @@ func NewJsonValueString(value string) *JsonValueString {
 	}
 
 	return &jsonValueStringTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (jsonValueString *JsonValueString) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Value string `json:"value"` // The value
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	jsonValueString.tdCommon = tempObj.tdCommon
+	jsonValueString.Value = tempObj.Value
+
+	return nil
 }
 
 // GetJsonValueEnum return the enum type of this object
@@ -24687,6 +39238,29 @@ func NewJsonValueArray(values []JsonValue) *JsonValueArray {
 	return &jsonValueArrayTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (jsonValueArray *JsonValueArray) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	jsonValueArray.tdCommon = tempObj.tdCommon
+
+	fieldValues, _ := unmarshalJsonValueSlice(objMap["values"])
+	jsonValueArray.Values = fieldValues
+
+	return nil
+}
+
 // GetJsonValueEnum return the enum type of this object
 func (jsonValueArray *JsonValueArray) GetJsonValueEnum() JsonValueEnum {
 	return JsonValueArrayType
@@ -24715,6 +39289,28 @@ func NewJsonValueObject(members []JsonObjectMember) *JsonValueObject {
 	return &jsonValueObjectTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (jsonValueObject *JsonValueObject) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Members []JsonObjectMember `json:"members"` // The list of object members
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	jsonValueObject.tdCommon = tempObj.tdCommon
+	jsonValueObject.Members = tempObj.Members
+
+	return nil
+}
+
 // GetJsonValueEnum return the enum type of this object
 func (jsonValueObject *JsonValueObject) GetJsonValueEnum() JsonValueEnum {
 	return JsonValueObjectType
@@ -24740,6 +39336,26 @@ func NewUserPrivacySettingRuleAllowAll() *UserPrivacySettingRuleAllowAll {
 	return &userPrivacySettingRuleAllowAllTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingRuleAllowAll *UserPrivacySettingRuleAllowAll) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingRuleAllowAll.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetUserPrivacySettingRuleEnum return the enum type of this object
 func (userPrivacySettingRuleAllowAll *UserPrivacySettingRuleAllowAll) GetUserPrivacySettingRuleEnum() UserPrivacySettingRuleEnum {
 	return UserPrivacySettingRuleAllowAllType
@@ -24763,6 +39379,26 @@ func NewUserPrivacySettingRuleAllowContacts() *UserPrivacySettingRuleAllowContac
 	}
 
 	return &userPrivacySettingRuleAllowContactsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingRuleAllowContacts *UserPrivacySettingRuleAllowContacts) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingRuleAllowContacts.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetUserPrivacySettingRuleEnum return the enum type of this object
@@ -24793,6 +39429,28 @@ func NewUserPrivacySettingRuleAllowUsers(userIDs []int64) *UserPrivacySettingRul
 	return &userPrivacySettingRuleAllowUsersTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingRuleAllowUsers *UserPrivacySettingRuleAllowUsers) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserIDs []int64 `json:"user_ids"` // The user identifiers, total number of users in all rules must not exceed 1000
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingRuleAllowUsers.tdCommon = tempObj.tdCommon
+	userPrivacySettingRuleAllowUsers.UserIDs = tempObj.UserIDs
+
+	return nil
+}
+
 // GetUserPrivacySettingRuleEnum return the enum type of this object
 func (userPrivacySettingRuleAllowUsers *UserPrivacySettingRuleAllowUsers) GetUserPrivacySettingRuleEnum() UserPrivacySettingRuleEnum {
 	return UserPrivacySettingRuleAllowUsersType
@@ -24821,6 +39479,28 @@ func NewUserPrivacySettingRuleAllowChatMembers(chatIDs []int64) *UserPrivacySett
 	return &userPrivacySettingRuleAllowChatMembersTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingRuleAllowChatMembers *UserPrivacySettingRuleAllowChatMembers) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatIDs []int64 `json:"chat_ids"` // The chat identifiers, total number of chats in all rules must not exceed 20
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingRuleAllowChatMembers.tdCommon = tempObj.tdCommon
+	userPrivacySettingRuleAllowChatMembers.ChatIDs = tempObj.ChatIDs
+
+	return nil
+}
+
 // GetUserPrivacySettingRuleEnum return the enum type of this object
 func (userPrivacySettingRuleAllowChatMembers *UserPrivacySettingRuleAllowChatMembers) GetUserPrivacySettingRuleEnum() UserPrivacySettingRuleEnum {
 	return UserPrivacySettingRuleAllowChatMembersType
@@ -24846,6 +39526,26 @@ func NewUserPrivacySettingRuleRestrictAll() *UserPrivacySettingRuleRestrictAll {
 	return &userPrivacySettingRuleRestrictAllTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingRuleRestrictAll *UserPrivacySettingRuleRestrictAll) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingRuleRestrictAll.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetUserPrivacySettingRuleEnum return the enum type of this object
 func (userPrivacySettingRuleRestrictAll *UserPrivacySettingRuleRestrictAll) GetUserPrivacySettingRuleEnum() UserPrivacySettingRuleEnum {
 	return UserPrivacySettingRuleRestrictAllType
@@ -24869,6 +39569,26 @@ func NewUserPrivacySettingRuleRestrictContacts() *UserPrivacySettingRuleRestrict
 	}
 
 	return &userPrivacySettingRuleRestrictContactsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingRuleRestrictContacts *UserPrivacySettingRuleRestrictContacts) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingRuleRestrictContacts.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetUserPrivacySettingRuleEnum return the enum type of this object
@@ -24899,6 +39619,28 @@ func NewUserPrivacySettingRuleRestrictUsers(userIDs []int64) *UserPrivacySetting
 	return &userPrivacySettingRuleRestrictUsersTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingRuleRestrictUsers *UserPrivacySettingRuleRestrictUsers) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserIDs []int64 `json:"user_ids"` // The user identifiers, total number of users in all rules must not exceed 1000
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingRuleRestrictUsers.tdCommon = tempObj.tdCommon
+	userPrivacySettingRuleRestrictUsers.UserIDs = tempObj.UserIDs
+
+	return nil
+}
+
 // GetUserPrivacySettingRuleEnum return the enum type of this object
 func (userPrivacySettingRuleRestrictUsers *UserPrivacySettingRuleRestrictUsers) GetUserPrivacySettingRuleEnum() UserPrivacySettingRuleEnum {
 	return UserPrivacySettingRuleRestrictUsersType
@@ -24925,6 +39667,28 @@ func NewUserPrivacySettingRuleRestrictChatMembers(chatIDs []int64) *UserPrivacyS
 	}
 
 	return &userPrivacySettingRuleRestrictChatMembersTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingRuleRestrictChatMembers *UserPrivacySettingRuleRestrictChatMembers) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatIDs []int64 `json:"chat_ids"` // The chat identifiers, total number of chats in all rules must not exceed 20
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingRuleRestrictChatMembers.tdCommon = tempObj.tdCommon
+	userPrivacySettingRuleRestrictChatMembers.ChatIDs = tempObj.ChatIDs
+
+	return nil
 }
 
 // GetUserPrivacySettingRuleEnum return the enum type of this object
@@ -24955,6 +39719,29 @@ func NewUserPrivacySettingRules(rules []UserPrivacySettingRule) *UserPrivacySett
 	return &userPrivacySettingRulesTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingRules *UserPrivacySettingRules) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingRules.tdCommon = tempObj.tdCommon
+
+	fieldRules, _ := unmarshalUserPrivacySettingRuleSlice(objMap["rules"])
+	userPrivacySettingRules.Rules = fieldRules
+
+	return nil
+}
+
 // UserPrivacySettingShowStatus A privacy setting for managing whether the user's online status is visible
 type UserPrivacySettingShowStatus struct {
 	tdCommon
@@ -24973,6 +39760,26 @@ func NewUserPrivacySettingShowStatus() *UserPrivacySettingShowStatus {
 	}
 
 	return &userPrivacySettingShowStatusTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingShowStatus *UserPrivacySettingShowStatus) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingShowStatus.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetUserPrivacySettingEnum return the enum type of this object
@@ -25000,6 +39807,26 @@ func NewUserPrivacySettingShowProfilePhoto() *UserPrivacySettingShowProfilePhoto
 	return &userPrivacySettingShowProfilePhotoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingShowProfilePhoto *UserPrivacySettingShowProfilePhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingShowProfilePhoto.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetUserPrivacySettingEnum return the enum type of this object
 func (userPrivacySettingShowProfilePhoto *UserPrivacySettingShowProfilePhoto) GetUserPrivacySettingEnum() UserPrivacySettingEnum {
 	return UserPrivacySettingShowProfilePhotoType
@@ -25023,6 +39850,26 @@ func NewUserPrivacySettingShowLinkInForwardedMessages() *UserPrivacySettingShowL
 	}
 
 	return &userPrivacySettingShowLinkInForwardedMessagesTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingShowLinkInForwardedMessages *UserPrivacySettingShowLinkInForwardedMessages) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingShowLinkInForwardedMessages.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetUserPrivacySettingEnum return the enum type of this object
@@ -25050,6 +39897,26 @@ func NewUserPrivacySettingShowPhoneNumber() *UserPrivacySettingShowPhoneNumber {
 	return &userPrivacySettingShowPhoneNumberTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingShowPhoneNumber *UserPrivacySettingShowPhoneNumber) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingShowPhoneNumber.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetUserPrivacySettingEnum return the enum type of this object
 func (userPrivacySettingShowPhoneNumber *UserPrivacySettingShowPhoneNumber) GetUserPrivacySettingEnum() UserPrivacySettingEnum {
 	return UserPrivacySettingShowPhoneNumberType
@@ -25073,6 +39940,26 @@ func NewUserPrivacySettingAllowChatInvites() *UserPrivacySettingAllowChatInvites
 	}
 
 	return &userPrivacySettingAllowChatInvitesTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingAllowChatInvites *UserPrivacySettingAllowChatInvites) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingAllowChatInvites.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetUserPrivacySettingEnum return the enum type of this object
@@ -25100,6 +39987,26 @@ func NewUserPrivacySettingAllowCalls() *UserPrivacySettingAllowCalls {
 	return &userPrivacySettingAllowCallsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingAllowCalls *UserPrivacySettingAllowCalls) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingAllowCalls.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetUserPrivacySettingEnum return the enum type of this object
 func (userPrivacySettingAllowCalls *UserPrivacySettingAllowCalls) GetUserPrivacySettingEnum() UserPrivacySettingEnum {
 	return UserPrivacySettingAllowCallsType
@@ -25125,6 +40032,26 @@ func NewUserPrivacySettingAllowPeerToPeerCalls() *UserPrivacySettingAllowPeerToP
 	return &userPrivacySettingAllowPeerToPeerCallsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingAllowPeerToPeerCalls *UserPrivacySettingAllowPeerToPeerCalls) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingAllowPeerToPeerCalls.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetUserPrivacySettingEnum return the enum type of this object
 func (userPrivacySettingAllowPeerToPeerCalls *UserPrivacySettingAllowPeerToPeerCalls) GetUserPrivacySettingEnum() UserPrivacySettingEnum {
 	return UserPrivacySettingAllowPeerToPeerCallsType
@@ -25148,6 +40075,26 @@ func NewUserPrivacySettingAllowFindingByPhoneNumber() *UserPrivacySettingAllowFi
 	}
 
 	return &userPrivacySettingAllowFindingByPhoneNumberTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (userPrivacySettingAllowFindingByPhoneNumber *UserPrivacySettingAllowFindingByPhoneNumber) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	userPrivacySettingAllowFindingByPhoneNumber.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetUserPrivacySettingEnum return the enum type of this object
@@ -25176,6 +40123,28 @@ func NewAccountTTL(days int32) *AccountTTL {
 	}
 
 	return &accountTTLTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (accountTTL *AccountTTL) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Days int32 `json:"days"` // Number of days of inactivity before the account will be flagged for deletion; 30-366 days
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	accountTTL.tdCommon = tempObj.tdCommon
+	accountTTL.Days = tempObj.Days
+
+	return nil
 }
 
 // Session Contains information about one session in a Telegram application used by the current user. Sessions must be shown to the user in the returned order
@@ -25249,6 +40218,60 @@ func NewSession(iD JSONInt64, isCurrent bool, isPasswordPending bool, canAcceptS
 	return &sessionTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (session *Session) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID                    JSONInt64 `json:"id"`                      // Session identifier
+		IsCurrent             bool      `json:"is_current"`              // True, if this session is the current session
+		IsPasswordPending     bool      `json:"is_password_pending"`     // True, if a password is needed to complete authorization of the session
+		CanAcceptSecretChats  bool      `json:"can_accept_secret_chats"` // True, if incoming secret chats can be accepted by the session
+		CanAcceptCalls        bool      `json:"can_accept_calls"`        // True, if incoming calls can be accepted by the session
+		APIID                 int32     `json:"api_id"`                  // Telegram API identifier, as provided by the application
+		ApplicationName       string    `json:"application_name"`        // Name of the application, as provided by the application
+		ApplicationVersion    string    `json:"application_version"`     // The version of the application, as provided by the application
+		IsOfficialApplication bool      `json:"is_official_application"` // True, if the application is an official application or uses the api_id of an official application
+		DeviceModel           string    `json:"device_model"`            // Model of the device the application has been run or is running on, as provided by the application
+		Platform              string    `json:"platform"`                // Operating system the application has been run or is running on, as provided by the application
+		SystemVersion         string    `json:"system_version"`          // Version of the operating system the application has been run or is running on, as provided by the application
+		LogInDate             int32     `json:"log_in_date"`             // Point in time (Unix timestamp) when the user has logged in
+		LastActiveDate        int32     `json:"last_active_date"`        // Point in time (Unix timestamp) when the session was last used
+		IP                    string    `json:"ip"`                      // IP address from which the session was created, in human-readable format
+		Country               string    `json:"country"`                 // A two-letter country code for the country from which the session was created, based on the IP address
+		Region                string    `json:"region"`                  // Region code from which the session was created, based on the IP address
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	session.tdCommon = tempObj.tdCommon
+	session.ID = tempObj.ID
+	session.IsCurrent = tempObj.IsCurrent
+	session.IsPasswordPending = tempObj.IsPasswordPending
+	session.CanAcceptSecretChats = tempObj.CanAcceptSecretChats
+	session.CanAcceptCalls = tempObj.CanAcceptCalls
+	session.APIID = tempObj.APIID
+	session.ApplicationName = tempObj.ApplicationName
+	session.ApplicationVersion = tempObj.ApplicationVersion
+	session.IsOfficialApplication = tempObj.IsOfficialApplication
+	session.DeviceModel = tempObj.DeviceModel
+	session.Platform = tempObj.Platform
+	session.SystemVersion = tempObj.SystemVersion
+	session.LogInDate = tempObj.LogInDate
+	session.LastActiveDate = tempObj.LastActiveDate
+	session.IP = tempObj.IP
+	session.Country = tempObj.Country
+	session.Region = tempObj.Region
+
+	return nil
+}
+
 // Sessions Contains a list of sessions
 type Sessions struct {
 	tdCommon
@@ -25273,6 +40296,30 @@ func NewSessions(sessions []Session, inactiveSessionTTLDays int32) *Sessions {
 	}
 
 	return &sessionsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (sessions *Sessions) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Sessions               []Session `json:"sessions"`                  // List of sessions
+		InactiveSessionTTLDays int32     `json:"inactive_session_ttl_days"` // Number of days of inactivity before sessions will automatically be terminated; 1-366 days
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	sessions.tdCommon = tempObj.tdCommon
+	sessions.Sessions = tempObj.Sessions
+	sessions.InactiveSessionTTLDays = tempObj.InactiveSessionTTLDays
+
+	return nil
 }
 
 // ConnectedWebsite Contains information about one website the current user is logged in with Telegram
@@ -25322,6 +40369,44 @@ func NewConnectedWebsite(iD JSONInt64, domainName string, botUserID int64, brows
 	return &connectedWebsiteTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (connectedWebsite *ConnectedWebsite) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID             JSONInt64 `json:"id"`               // Website identifier
+		DomainName     string    `json:"domain_name"`      // The domain name of the website
+		BotUserID      int64     `json:"bot_user_id"`      // User identifier of a bot linked with the website
+		Browser        string    `json:"browser"`          // The version of a browser used to log in
+		Platform       string    `json:"platform"`         // Operating system the browser is running on
+		LogInDate      int32     `json:"log_in_date"`      // Point in time (Unix timestamp) when the user was logged in
+		LastActiveDate int32     `json:"last_active_date"` // Point in time (Unix timestamp) when obtained authorization was last used
+		IP             string    `json:"ip"`               // IP address from which the user was logged in, in human-readable format
+		Location       string    `json:"location"`         // Human-readable description of a country and a region, from which the user was logged in, based on the IP address
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	connectedWebsite.tdCommon = tempObj.tdCommon
+	connectedWebsite.ID = tempObj.ID
+	connectedWebsite.DomainName = tempObj.DomainName
+	connectedWebsite.BotUserID = tempObj.BotUserID
+	connectedWebsite.Browser = tempObj.Browser
+	connectedWebsite.Platform = tempObj.Platform
+	connectedWebsite.LogInDate = tempObj.LogInDate
+	connectedWebsite.LastActiveDate = tempObj.LastActiveDate
+	connectedWebsite.IP = tempObj.IP
+	connectedWebsite.Location = tempObj.Location
+
+	return nil
+}
+
 // ConnectedWebsites Contains a list of websites the current user is logged in with Telegram
 type ConnectedWebsites struct {
 	tdCommon
@@ -25345,6 +40430,28 @@ func NewConnectedWebsites(websites []ConnectedWebsite) *ConnectedWebsites {
 	return &connectedWebsitesTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (connectedWebsites *ConnectedWebsites) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Websites []ConnectedWebsite `json:"websites"` // List of connected websites
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	connectedWebsites.tdCommon = tempObj.tdCommon
+	connectedWebsites.Websites = tempObj.Websites
+
+	return nil
+}
+
 // ChatReportReasonSpam The chat contains spam messages
 type ChatReportReasonSpam struct {
 	tdCommon
@@ -25363,6 +40470,26 @@ func NewChatReportReasonSpam() *ChatReportReasonSpam {
 	}
 
 	return &chatReportReasonSpamTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatReportReasonSpam *ChatReportReasonSpam) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatReportReasonSpam.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatReportReasonEnum return the enum type of this object
@@ -25390,6 +40517,26 @@ func NewChatReportReasonViolence() *ChatReportReasonViolence {
 	return &chatReportReasonViolenceTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatReportReasonViolence *ChatReportReasonViolence) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatReportReasonViolence.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetChatReportReasonEnum return the enum type of this object
 func (chatReportReasonViolence *ChatReportReasonViolence) GetChatReportReasonEnum() ChatReportReasonEnum {
 	return ChatReportReasonViolenceType
@@ -25413,6 +40560,26 @@ func NewChatReportReasonPornography() *ChatReportReasonPornography {
 	}
 
 	return &chatReportReasonPornographyTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatReportReasonPornography *ChatReportReasonPornography) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatReportReasonPornography.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatReportReasonEnum return the enum type of this object
@@ -25440,6 +40607,26 @@ func NewChatReportReasonChildAbuse() *ChatReportReasonChildAbuse {
 	return &chatReportReasonChildAbuseTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatReportReasonChildAbuse *ChatReportReasonChildAbuse) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatReportReasonChildAbuse.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetChatReportReasonEnum return the enum type of this object
 func (chatReportReasonChildAbuse *ChatReportReasonChildAbuse) GetChatReportReasonEnum() ChatReportReasonEnum {
 	return ChatReportReasonChildAbuseType
@@ -25463,6 +40650,26 @@ func NewChatReportReasonCopyright() *ChatReportReasonCopyright {
 	}
 
 	return &chatReportReasonCopyrightTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatReportReasonCopyright *ChatReportReasonCopyright) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatReportReasonCopyright.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatReportReasonEnum return the enum type of this object
@@ -25490,6 +40697,26 @@ func NewChatReportReasonUnrelatedLocation() *ChatReportReasonUnrelatedLocation {
 	return &chatReportReasonUnrelatedLocationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatReportReasonUnrelatedLocation *ChatReportReasonUnrelatedLocation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatReportReasonUnrelatedLocation.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetChatReportReasonEnum return the enum type of this object
 func (chatReportReasonUnrelatedLocation *ChatReportReasonUnrelatedLocation) GetChatReportReasonEnum() ChatReportReasonEnum {
 	return ChatReportReasonUnrelatedLocationType
@@ -25513,6 +40740,26 @@ func NewChatReportReasonFake() *ChatReportReasonFake {
 	}
 
 	return &chatReportReasonFakeTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatReportReasonFake *ChatReportReasonFake) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatReportReasonFake.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetChatReportReasonEnum return the enum type of this object
@@ -25540,6 +40787,26 @@ func NewChatReportReasonCustom() *ChatReportReasonCustom {
 	return &chatReportReasonCustomTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatReportReasonCustom *ChatReportReasonCustom) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatReportReasonCustom.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetChatReportReasonEnum return the enum type of this object
 func (chatReportReasonCustom *ChatReportReasonCustom) GetChatReportReasonEnum() ChatReportReasonEnum {
 	return ChatReportReasonCustomType
@@ -25563,6 +40830,26 @@ func NewInternalLinkTypeActiveSessions() *InternalLinkTypeActiveSessions {
 	}
 
 	return &internalLinkTypeActiveSessionsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeActiveSessions *InternalLinkTypeActiveSessions) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeActiveSessions.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetInternalLinkTypeEnum return the enum type of this object
@@ -25593,6 +40880,28 @@ func NewInternalLinkTypeAuthenticationCode(code string) *InternalLinkTypeAuthent
 	return &internalLinkTypeAuthenticationCodeTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeAuthenticationCode *InternalLinkTypeAuthenticationCode) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Code string `json:"code"` // The authentication code
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeAuthenticationCode.tdCommon = tempObj.tdCommon
+	internalLinkTypeAuthenticationCode.Code = tempObj.Code
+
+	return nil
+}
+
 // GetInternalLinkTypeEnum return the enum type of this object
 func (internalLinkTypeAuthenticationCode *InternalLinkTypeAuthenticationCode) GetInternalLinkTypeEnum() InternalLinkTypeEnum {
 	return InternalLinkTypeAuthenticationCodeType
@@ -25619,6 +40928,28 @@ func NewInternalLinkTypeBackground(backgroundName string) *InternalLinkTypeBackg
 	}
 
 	return &internalLinkTypeBackgroundTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeBackground *InternalLinkTypeBackground) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		BackgroundName string `json:"background_name"` // Name of the background
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeBackground.tdCommon = tempObj.tdCommon
+	internalLinkTypeBackground.BackgroundName = tempObj.BackgroundName
+
+	return nil
 }
 
 // GetInternalLinkTypeEnum return the enum type of this object
@@ -25652,6 +40983,30 @@ func NewInternalLinkTypeBotStart(botUsername string, startParameter string) *Int
 	return &internalLinkTypeBotStartTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeBotStart *InternalLinkTypeBotStart) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		BotUsername    string `json:"bot_username"`    // Username of the bot
+		StartParameter string `json:"start_parameter"` // The parameter to be passed to sendBotStartMessage
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeBotStart.tdCommon = tempObj.tdCommon
+	internalLinkTypeBotStart.BotUsername = tempObj.BotUsername
+	internalLinkTypeBotStart.StartParameter = tempObj.StartParameter
+
+	return nil
+}
+
 // GetInternalLinkTypeEnum return the enum type of this object
 func (internalLinkTypeBotStart *InternalLinkTypeBotStart) GetInternalLinkTypeEnum() InternalLinkTypeEnum {
 	return InternalLinkTypeBotStartType
@@ -25683,6 +41038,30 @@ func NewInternalLinkTypeBotStartInGroup(botUsername string, startParameter strin
 	return &internalLinkTypeBotStartInGroupTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeBotStartInGroup *InternalLinkTypeBotStartInGroup) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		BotUsername    string `json:"bot_username"`    // Username of the bot
+		StartParameter string `json:"start_parameter"` // The parameter to be passed to sendBotStartMessage
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeBotStartInGroup.tdCommon = tempObj.tdCommon
+	internalLinkTypeBotStartInGroup.BotUsername = tempObj.BotUsername
+	internalLinkTypeBotStartInGroup.StartParameter = tempObj.StartParameter
+
+	return nil
+}
+
 // GetInternalLinkTypeEnum return the enum type of this object
 func (internalLinkTypeBotStartInGroup *InternalLinkTypeBotStartInGroup) GetInternalLinkTypeEnum() InternalLinkTypeEnum {
 	return InternalLinkTypeBotStartInGroupType
@@ -25706,6 +41085,26 @@ func NewInternalLinkTypeChangePhoneNumber() *InternalLinkTypeChangePhoneNumber {
 	}
 
 	return &internalLinkTypeChangePhoneNumberTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeChangePhoneNumber *InternalLinkTypeChangePhoneNumber) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeChangePhoneNumber.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetInternalLinkTypeEnum return the enum type of this object
@@ -25736,6 +41135,28 @@ func NewInternalLinkTypeChatInvite(inviteLink string) *InternalLinkTypeChatInvit
 	return &internalLinkTypeChatInviteTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeChatInvite *InternalLinkTypeChatInvite) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		InviteLink string `json:"invite_link"` // Internal representation of the invite link
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeChatInvite.tdCommon = tempObj.tdCommon
+	internalLinkTypeChatInvite.InviteLink = tempObj.InviteLink
+
+	return nil
+}
+
 // GetInternalLinkTypeEnum return the enum type of this object
 func (internalLinkTypeChatInvite *InternalLinkTypeChatInvite) GetInternalLinkTypeEnum() InternalLinkTypeEnum {
 	return InternalLinkTypeChatInviteType
@@ -25759,6 +41180,26 @@ func NewInternalLinkTypeFilterSettings() *InternalLinkTypeFilterSettings {
 	}
 
 	return &internalLinkTypeFilterSettingsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeFilterSettings *InternalLinkTypeFilterSettings) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeFilterSettings.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetInternalLinkTypeEnum return the enum type of this object
@@ -25792,6 +41233,30 @@ func NewInternalLinkTypeGame(botUsername string, gameShortName string) *Internal
 	return &internalLinkTypeGameTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeGame *InternalLinkTypeGame) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		BotUsername   string `json:"bot_username"`    // Username of the bot that owns the game
+		GameShortName string `json:"game_short_name"` // Short name of the game
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeGame.tdCommon = tempObj.tdCommon
+	internalLinkTypeGame.BotUsername = tempObj.BotUsername
+	internalLinkTypeGame.GameShortName = tempObj.GameShortName
+
+	return nil
+}
+
 // GetInternalLinkTypeEnum return the enum type of this object
 func (internalLinkTypeGame *InternalLinkTypeGame) GetInternalLinkTypeEnum() InternalLinkTypeEnum {
 	return InternalLinkTypeGameType
@@ -25820,6 +41285,28 @@ func NewInternalLinkTypeLanguagePack(languagePackID string) *InternalLinkTypeLan
 	return &internalLinkTypeLanguagePackTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeLanguagePack *InternalLinkTypeLanguagePack) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		LanguagePackID string `json:"language_pack_id"` // Language pack identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeLanguagePack.tdCommon = tempObj.tdCommon
+	internalLinkTypeLanguagePack.LanguagePackID = tempObj.LanguagePackID
+
+	return nil
+}
+
 // GetInternalLinkTypeEnum return the enum type of this object
 func (internalLinkTypeLanguagePack *InternalLinkTypeLanguagePack) GetInternalLinkTypeEnum() InternalLinkTypeEnum {
 	return InternalLinkTypeLanguagePackType
@@ -25846,6 +41333,28 @@ func NewInternalLinkTypeMessage(uRL string) *InternalLinkTypeMessage {
 	}
 
 	return &internalLinkTypeMessageTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeMessage *InternalLinkTypeMessage) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		URL string `json:"url"` // URL to be passed to getMessageLinkInfo
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeMessage.tdCommon = tempObj.tdCommon
+	internalLinkTypeMessage.URL = tempObj.URL
+
+	return nil
 }
 
 // GetInternalLinkTypeEnum return the enum type of this object
@@ -25877,6 +41386,30 @@ func NewInternalLinkTypeMessageDraft(text *FormattedText, containsLink bool) *In
 	}
 
 	return &internalLinkTypeMessageDraftTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeMessageDraft *InternalLinkTypeMessageDraft) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Text         *FormattedText `json:"text"`          // Message draft text
+		ContainsLink bool           `json:"contains_link"` // True, if the first line of the text contains a link. If true, the input field needs to be focused and the text after the link must be selected
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeMessageDraft.tdCommon = tempObj.tdCommon
+	internalLinkTypeMessageDraft.Text = tempObj.Text
+	internalLinkTypeMessageDraft.ContainsLink = tempObj.ContainsLink
+
+	return nil
 }
 
 // GetInternalLinkTypeEnum return the enum type of this object
@@ -25919,6 +41452,36 @@ func NewInternalLinkTypePassportDataRequest(botUserID int64, scope string, publi
 	return &internalLinkTypePassportDataRequestTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypePassportDataRequest *InternalLinkTypePassportDataRequest) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		BotUserID   int64  `json:"bot_user_id"`  // User identifier of the service's bot
+		Scope       string `json:"scope"`        // Telegram Passport element types requested by the service
+		PublicKey   string `json:"public_key"`   // Service's public key
+		Nonce       string `json:"nonce"`        // Unique request identifier provided by the service
+		CallbackURL string `json:"callback_url"` // An HTTP URL to open once the request is finished or canceled with the parameter tg_passport=success or tg_passport=cancel respectively. If empty, then the link tgbot{bot_user_id}://passport/success or tgbot{bot_user_id}://passport/cancel needs to be opened instead
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypePassportDataRequest.tdCommon = tempObj.tdCommon
+	internalLinkTypePassportDataRequest.BotUserID = tempObj.BotUserID
+	internalLinkTypePassportDataRequest.Scope = tempObj.Scope
+	internalLinkTypePassportDataRequest.PublicKey = tempObj.PublicKey
+	internalLinkTypePassportDataRequest.Nonce = tempObj.Nonce
+	internalLinkTypePassportDataRequest.CallbackURL = tempObj.CallbackURL
+
+	return nil
+}
+
 // GetInternalLinkTypeEnum return the enum type of this object
 func (internalLinkTypePassportDataRequest *InternalLinkTypePassportDataRequest) GetInternalLinkTypeEnum() InternalLinkTypeEnum {
 	return InternalLinkTypePassportDataRequestType
@@ -25948,6 +41511,30 @@ func NewInternalLinkTypePhoneNumberConfirmation(hash string, phoneNumber string)
 	}
 
 	return &internalLinkTypePhoneNumberConfirmationTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypePhoneNumberConfirmation *InternalLinkTypePhoneNumberConfirmation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Hash        string `json:"hash"`         // Hash value from the link
+		PhoneNumber string `json:"phone_number"` // Phone number value from the link
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypePhoneNumberConfirmation.tdCommon = tempObj.tdCommon
+	internalLinkTypePhoneNumberConfirmation.Hash = tempObj.Hash
+	internalLinkTypePhoneNumberConfirmation.PhoneNumber = tempObj.PhoneNumber
+
+	return nil
 }
 
 // GetInternalLinkTypeEnum return the enum type of this object
@@ -26040,6 +41627,28 @@ func NewInternalLinkTypePublicChat(chatUsername string) *InternalLinkTypePublicC
 	return &internalLinkTypePublicChatTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypePublicChat *InternalLinkTypePublicChat) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatUsername string `json:"chat_username"` // Username of the chat
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypePublicChat.tdCommon = tempObj.tdCommon
+	internalLinkTypePublicChat.ChatUsername = tempObj.ChatUsername
+
+	return nil
+}
+
 // GetInternalLinkTypeEnum return the enum type of this object
 func (internalLinkTypePublicChat *InternalLinkTypePublicChat) GetInternalLinkTypeEnum() InternalLinkTypeEnum {
 	return InternalLinkTypePublicChatType
@@ -26065,6 +41674,26 @@ func NewInternalLinkTypeQrCodeAuthentication() *InternalLinkTypeQrCodeAuthentica
 	return &internalLinkTypeQrCodeAuthenticationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeQrCodeAuthentication *InternalLinkTypeQrCodeAuthentication) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeQrCodeAuthentication.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetInternalLinkTypeEnum return the enum type of this object
 func (internalLinkTypeQrCodeAuthentication *InternalLinkTypeQrCodeAuthentication) GetInternalLinkTypeEnum() InternalLinkTypeEnum {
 	return InternalLinkTypeQrCodeAuthenticationType
@@ -26088,6 +41717,26 @@ func NewInternalLinkTypeSettings() *InternalLinkTypeSettings {
 	}
 
 	return &internalLinkTypeSettingsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeSettings *InternalLinkTypeSettings) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeSettings.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetInternalLinkTypeEnum return the enum type of this object
@@ -26118,6 +41767,28 @@ func NewInternalLinkTypeStickerSet(stickerSetName string) *InternalLinkTypeStick
 	return &internalLinkTypeStickerSetTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeStickerSet *InternalLinkTypeStickerSet) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		StickerSetName string `json:"sticker_set_name"` // Name of the sticker set
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeStickerSet.tdCommon = tempObj.tdCommon
+	internalLinkTypeStickerSet.StickerSetName = tempObj.StickerSetName
+
+	return nil
+}
+
 // GetInternalLinkTypeEnum return the enum type of this object
 func (internalLinkTypeStickerSet *InternalLinkTypeStickerSet) GetInternalLinkTypeEnum() InternalLinkTypeEnum {
 	return InternalLinkTypeStickerSetType
@@ -26146,6 +41817,28 @@ func NewInternalLinkTypeTheme(themeName string) *InternalLinkTypeTheme {
 	return &internalLinkTypeThemeTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeTheme *InternalLinkTypeTheme) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ThemeName string `json:"theme_name"` // Name of the theme
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeTheme.tdCommon = tempObj.tdCommon
+	internalLinkTypeTheme.ThemeName = tempObj.ThemeName
+
+	return nil
+}
+
 // GetInternalLinkTypeEnum return the enum type of this object
 func (internalLinkTypeTheme *InternalLinkTypeTheme) GetInternalLinkTypeEnum() InternalLinkTypeEnum {
 	return InternalLinkTypeThemeType
@@ -26169,6 +41862,26 @@ func NewInternalLinkTypeThemeSettings() *InternalLinkTypeThemeSettings {
 	}
 
 	return &internalLinkTypeThemeSettingsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeThemeSettings *InternalLinkTypeThemeSettings) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeThemeSettings.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetInternalLinkTypeEnum return the enum type of this object
@@ -26199,6 +41912,28 @@ func NewInternalLinkTypeUnknownDeepLink(link string) *InternalLinkTypeUnknownDee
 	return &internalLinkTypeUnknownDeepLinkTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeUnknownDeepLink *InternalLinkTypeUnknownDeepLink) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Link string `json:"link"` // Link to be passed to getDeepLinkInfo
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeUnknownDeepLink.tdCommon = tempObj.tdCommon
+	internalLinkTypeUnknownDeepLink.Link = tempObj.Link
+
+	return nil
+}
+
 // GetInternalLinkTypeEnum return the enum type of this object
 func (internalLinkTypeUnknownDeepLink *InternalLinkTypeUnknownDeepLink) GetInternalLinkTypeEnum() InternalLinkTypeEnum {
 	return InternalLinkTypeUnknownDeepLinkType
@@ -26222,6 +41957,26 @@ func NewInternalLinkTypeUnsupportedProxy() *InternalLinkTypeUnsupportedProxy {
 	}
 
 	return &internalLinkTypeUnsupportedProxyTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeUnsupportedProxy *InternalLinkTypeUnsupportedProxy) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeUnsupportedProxy.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetInternalLinkTypeEnum return the enum type of this object
@@ -26258,6 +42013,32 @@ func NewInternalLinkTypeVideoChat(chatUsername string, inviteHash string, isLive
 	return &internalLinkTypeVideoChatTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (internalLinkTypeVideoChat *InternalLinkTypeVideoChat) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatUsername string `json:"chat_username"`  // Username of the chat with the video chat
+		InviteHash   string `json:"invite_hash"`    // If non-empty, invite hash to be used to join the video chat without being muted by administrators
+		IsLiveStream bool   `json:"is_live_stream"` // True, if the video chat is expected to be a live stream in a channel or a broadcast group
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	internalLinkTypeVideoChat.tdCommon = tempObj.tdCommon
+	internalLinkTypeVideoChat.ChatUsername = tempObj.ChatUsername
+	internalLinkTypeVideoChat.InviteHash = tempObj.InviteHash
+	internalLinkTypeVideoChat.IsLiveStream = tempObj.IsLiveStream
+
+	return nil
+}
+
 // GetInternalLinkTypeEnum return the enum type of this object
 func (internalLinkTypeVideoChat *InternalLinkTypeVideoChat) GetInternalLinkTypeEnum() InternalLinkTypeEnum {
 	return InternalLinkTypeVideoChatType
@@ -26287,6 +42068,30 @@ func NewMessageLink(link string, isPublic bool) *MessageLink {
 	}
 
 	return &messageLinkTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (messageLink *MessageLink) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Link     string `json:"link"`      // Message link
+		IsPublic bool   `json:"is_public"` // True, if the link will work for non-members of the chat
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageLink.tdCommon = tempObj.tdCommon
+	messageLink.Link = tempObj.Link
+	messageLink.IsPublic = tempObj.IsPublic
+
+	return nil
 }
 
 // MessageLinkInfo Contains information about a link to a message in a chat
@@ -26327,6 +42132,46 @@ func NewMessageLinkInfo(isPublic bool, chatID int64, message *Message, mediaTime
 	return &messageLinkInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (messageLinkInfo *MessageLinkInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		IsPublic       bool  `json:"is_public"`       // True, if the link is a public link for a message in a chat
+		ChatID         int64 `json:"chat_id"`         // If found, identifier of the chat to which the message belongs, 0 otherwise
+		MediaTimestamp int32 `json:"media_timestamp"` // Timestamp from which the video/audio/video note/voice note playing must start, in seconds; 0 if not specified. The media can be in the message content or in its web page preview
+		ForAlbum       bool  `json:"for_album"`       // True, if the whole media album to which the message belongs is linked
+		ForComment     bool  `json:"for_comment"`     // True, if the message is linked as a channel post comment or from a message thread
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	messageLinkInfo.tdCommon = tempObj.tdCommon
+	messageLinkInfo.IsPublic = tempObj.IsPublic
+	messageLinkInfo.ChatID = tempObj.ChatID
+	messageLinkInfo.MediaTimestamp = tempObj.MediaTimestamp
+	messageLinkInfo.ForAlbum = tempObj.ForAlbum
+	messageLinkInfo.ForComment = tempObj.ForComment
+
+	var message Message
+	if objMap["message"] != nil {
+		err = message.UnmarshalJSON(*objMap["message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	messageLinkInfo.Message = &message
+
+	return nil
+}
+
 // FilePart Contains a part of a file
 type FilePart struct {
 	tdCommon
@@ -26350,6 +42195,28 @@ func NewFilePart(data []byte) *FilePart {
 	return &filePartTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (filePart *FilePart) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Data []byte `json:"data"` // File bytes
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	filePart.tdCommon = tempObj.tdCommon
+	filePart.Data = tempObj.Data
+
+	return nil
+}
+
 // FileTypeNone The data is not a file
 type FileTypeNone struct {
 	tdCommon
@@ -26368,6 +42235,26 @@ func NewFileTypeNone() *FileTypeNone {
 	}
 
 	return &fileTypeNoneTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (fileTypeNone *FileTypeNone) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypeNone.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetFileTypeEnum return the enum type of this object
@@ -26395,6 +42282,26 @@ func NewFileTypeAnimation() *FileTypeAnimation {
 	return &fileTypeAnimationTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (fileTypeAnimation *FileTypeAnimation) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypeAnimation.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetFileTypeEnum return the enum type of this object
 func (fileTypeAnimation *FileTypeAnimation) GetFileTypeEnum() FileTypeEnum {
 	return FileTypeAnimationType
@@ -26418,6 +42325,26 @@ func NewFileTypeAudio() *FileTypeAudio {
 	}
 
 	return &fileTypeAudioTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (fileTypeAudio *FileTypeAudio) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypeAudio.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetFileTypeEnum return the enum type of this object
@@ -26445,6 +42372,26 @@ func NewFileTypeDocument() *FileTypeDocument {
 	return &fileTypeDocumentTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (fileTypeDocument *FileTypeDocument) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypeDocument.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetFileTypeEnum return the enum type of this object
 func (fileTypeDocument *FileTypeDocument) GetFileTypeEnum() FileTypeEnum {
 	return FileTypeDocumentType
@@ -26468,6 +42415,26 @@ func NewFileTypePhoto() *FileTypePhoto {
 	}
 
 	return &fileTypePhotoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (fileTypePhoto *FileTypePhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypePhoto.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetFileTypeEnum return the enum type of this object
@@ -26495,6 +42462,26 @@ func NewFileTypeProfilePhoto() *FileTypeProfilePhoto {
 	return &fileTypeProfilePhotoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (fileTypeProfilePhoto *FileTypeProfilePhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypeProfilePhoto.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetFileTypeEnum return the enum type of this object
 func (fileTypeProfilePhoto *FileTypeProfilePhoto) GetFileTypeEnum() FileTypeEnum {
 	return FileTypeProfilePhotoType
@@ -26518,6 +42505,26 @@ func NewFileTypeSecret() *FileTypeSecret {
 	}
 
 	return &fileTypeSecretTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (fileTypeSecret *FileTypeSecret) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypeSecret.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetFileTypeEnum return the enum type of this object
@@ -26545,6 +42552,26 @@ func NewFileTypeSecretThumbnail() *FileTypeSecretThumbnail {
 	return &fileTypeSecretThumbnailTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (fileTypeSecretThumbnail *FileTypeSecretThumbnail) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypeSecretThumbnail.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetFileTypeEnum return the enum type of this object
 func (fileTypeSecretThumbnail *FileTypeSecretThumbnail) GetFileTypeEnum() FileTypeEnum {
 	return FileTypeSecretThumbnailType
@@ -26568,6 +42595,26 @@ func NewFileTypeSecure() *FileTypeSecure {
 	}
 
 	return &fileTypeSecureTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (fileTypeSecure *FileTypeSecure) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypeSecure.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetFileTypeEnum return the enum type of this object
@@ -26595,6 +42642,26 @@ func NewFileTypeSticker() *FileTypeSticker {
 	return &fileTypeStickerTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (fileTypeSticker *FileTypeSticker) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypeSticker.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetFileTypeEnum return the enum type of this object
 func (fileTypeSticker *FileTypeSticker) GetFileTypeEnum() FileTypeEnum {
 	return FileTypeStickerType
@@ -26618,6 +42685,26 @@ func NewFileTypeThumbnail() *FileTypeThumbnail {
 	}
 
 	return &fileTypeThumbnailTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (fileTypeThumbnail *FileTypeThumbnail) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypeThumbnail.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetFileTypeEnum return the enum type of this object
@@ -26645,6 +42732,26 @@ func NewFileTypeUnknown() *FileTypeUnknown {
 	return &fileTypeUnknownTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (fileTypeUnknown *FileTypeUnknown) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypeUnknown.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetFileTypeEnum return the enum type of this object
 func (fileTypeUnknown *FileTypeUnknown) GetFileTypeEnum() FileTypeEnum {
 	return FileTypeUnknownType
@@ -26668,6 +42775,26 @@ func NewFileTypeVideo() *FileTypeVideo {
 	}
 
 	return &fileTypeVideoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (fileTypeVideo *FileTypeVideo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypeVideo.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetFileTypeEnum return the enum type of this object
@@ -26695,6 +42822,26 @@ func NewFileTypeVideoNote() *FileTypeVideoNote {
 	return &fileTypeVideoNoteTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (fileTypeVideoNote *FileTypeVideoNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypeVideoNote.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetFileTypeEnum return the enum type of this object
 func (fileTypeVideoNote *FileTypeVideoNote) GetFileTypeEnum() FileTypeEnum {
 	return FileTypeVideoNoteType
@@ -26720,6 +42867,26 @@ func NewFileTypeVoiceNote() *FileTypeVoiceNote {
 	return &fileTypeVoiceNoteTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (fileTypeVoiceNote *FileTypeVoiceNote) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypeVoiceNote.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetFileTypeEnum return the enum type of this object
 func (fileTypeVoiceNote *FileTypeVoiceNote) GetFileTypeEnum() FileTypeEnum {
 	return FileTypeVoiceNoteType
@@ -26743,6 +42910,26 @@ func NewFileTypeWallpaper() *FileTypeWallpaper {
 	}
 
 	return &fileTypeWallpaperTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (fileTypeWallpaper *FileTypeWallpaper) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	fileTypeWallpaper.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetFileTypeEnum return the enum type of this object
@@ -26838,6 +43025,34 @@ func NewStorageStatisticsByChat(chatID int64, size int64, count int32, byFileTyp
 	return &storageStatisticsByChatTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (storageStatisticsByChat *StorageStatisticsByChat) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID     int64                         `json:"chat_id"`      // Chat identifier; 0 if none
+		Size       int64                         `json:"size"`         // Total size of the files in the chat, in bytes
+		Count      int32                         `json:"count"`        // Total number of files in the chat
+		ByFileType []StorageStatisticsByFileType `json:"by_file_type"` // Statistics split by file types
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	storageStatisticsByChat.tdCommon = tempObj.tdCommon
+	storageStatisticsByChat.ChatID = tempObj.ChatID
+	storageStatisticsByChat.Size = tempObj.Size
+	storageStatisticsByChat.Count = tempObj.Count
+	storageStatisticsByChat.ByFileType = tempObj.ByFileType
+
+	return nil
+}
+
 // StorageStatistics Contains the exact storage usage statistics split by chats and file type
 type StorageStatistics struct {
 	tdCommon
@@ -26865,6 +43080,32 @@ func NewStorageStatistics(size int64, count int32, byChat []StorageStatisticsByC
 	}
 
 	return &storageStatisticsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (storageStatistics *StorageStatistics) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Size   int64                     `json:"size"`    // Total size of files, in bytes
+		Count  int32                     `json:"count"`   // Total number of files
+		ByChat []StorageStatisticsByChat `json:"by_chat"` // Statistics split by chats
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	storageStatistics.tdCommon = tempObj.tdCommon
+	storageStatistics.Size = tempObj.Size
+	storageStatistics.Count = tempObj.Count
+	storageStatistics.ByChat = tempObj.ByChat
+
+	return nil
 }
 
 // StorageStatisticsFast Contains approximate storage usage statistics, excluding files of unknown file type
@@ -26902,6 +43143,36 @@ func NewStorageStatisticsFast(filesSize int64, fileCount int32, databaseSize int
 	return &storageStatisticsFastTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (storageStatisticsFast *StorageStatisticsFast) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		FilesSize                int64 `json:"files_size"`                  // Approximate total size of files, in bytes
+		FileCount                int32 `json:"file_count"`                  // Approximate number of files
+		DatabaseSize             int64 `json:"database_size"`               // Size of the database
+		LanguagePackDatabaseSize int64 `json:"language_pack_database_size"` // Size of the language pack database
+		LogSize                  int64 `json:"log_size"`                    // Size of the TDLib internal log
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	storageStatisticsFast.tdCommon = tempObj.tdCommon
+	storageStatisticsFast.FilesSize = tempObj.FilesSize
+	storageStatisticsFast.FileCount = tempObj.FileCount
+	storageStatisticsFast.DatabaseSize = tempObj.DatabaseSize
+	storageStatisticsFast.LanguagePackDatabaseSize = tempObj.LanguagePackDatabaseSize
+	storageStatisticsFast.LogSize = tempObj.LogSize
+
+	return nil
+}
+
 // DatabaseStatistics Contains database statistics
 type DatabaseStatistics struct {
 	tdCommon
@@ -26925,6 +43196,28 @@ func NewDatabaseStatistics(statistics string) *DatabaseStatistics {
 	return &databaseStatisticsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (databaseStatistics *DatabaseStatistics) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Statistics string `json:"statistics"` // Database statistics in an unspecified human-readable format
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	databaseStatistics.tdCommon = tempObj.tdCommon
+	databaseStatistics.Statistics = tempObj.Statistics
+
+	return nil
+}
+
 // NetworkTypeNone The network is not available
 type NetworkTypeNone struct {
 	tdCommon
@@ -26943,6 +43236,26 @@ func NewNetworkTypeNone() *NetworkTypeNone {
 	}
 
 	return &networkTypeNoneTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (networkTypeNone *NetworkTypeNone) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	networkTypeNone.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetNetworkTypeEnum return the enum type of this object
@@ -26970,6 +43283,26 @@ func NewNetworkTypeMobile() *NetworkTypeMobile {
 	return &networkTypeMobileTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (networkTypeMobile *NetworkTypeMobile) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	networkTypeMobile.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetNetworkTypeEnum return the enum type of this object
 func (networkTypeMobile *NetworkTypeMobile) GetNetworkTypeEnum() NetworkTypeEnum {
 	return NetworkTypeMobileType
@@ -26993,6 +43326,26 @@ func NewNetworkTypeMobileRoaming() *NetworkTypeMobileRoaming {
 	}
 
 	return &networkTypeMobileRoamingTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (networkTypeMobileRoaming *NetworkTypeMobileRoaming) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	networkTypeMobileRoaming.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetNetworkTypeEnum return the enum type of this object
@@ -27020,6 +43373,26 @@ func NewNetworkTypeWiFi() *NetworkTypeWiFi {
 	return &networkTypeWiFiTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (networkTypeWiFi *NetworkTypeWiFi) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	networkTypeWiFi.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetNetworkTypeEnum return the enum type of this object
 func (networkTypeWiFi *NetworkTypeWiFi) GetNetworkTypeEnum() NetworkTypeEnum {
 	return NetworkTypeWiFiType
@@ -27043,6 +43416,26 @@ func NewNetworkTypeOther() *NetworkTypeOther {
 	}
 
 	return &networkTypeOtherTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (networkTypeOther *NetworkTypeOther) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	networkTypeOther.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetNetworkTypeEnum return the enum type of this object
@@ -27209,6 +43602,32 @@ func NewNetworkStatistics(sinceDate int32, entries []NetworkStatisticsEntry) *Ne
 	return &networkStatisticsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (networkStatistics *NetworkStatistics) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SinceDate int32 `json:"since_date"` // Point in time (Unix timestamp) from which the statistics are collected
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	networkStatistics.tdCommon = tempObj.tdCommon
+	networkStatistics.SinceDate = tempObj.SinceDate
+
+	fieldEntries, _ := unmarshalNetworkStatisticsEntrySlice(objMap["entries"])
+	networkStatistics.Entries = fieldEntries
+
+	return nil
+}
+
 // AutoDownloadSettings Contains auto-download settings
 type AutoDownloadSettings struct {
 	tdCommon
@@ -27253,6 +43672,42 @@ func NewAutoDownloadSettings(isAutoDownloadEnabled bool, maxPhotoFileSize int32,
 	return &autoDownloadSettingsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (autoDownloadSettings *AutoDownloadSettings) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		IsAutoDownloadEnabled bool  `json:"is_auto_download_enabled"` // True, if the auto-download is enabled
+		MaxPhotoFileSize      int32 `json:"max_photo_file_size"`      // The maximum size of a photo file to be auto-downloaded, in bytes
+		MaxVideoFileSize      int32 `json:"max_video_file_size"`      // The maximum size of a video file to be auto-downloaded, in bytes
+		MaxOtherFileSize      int32 `json:"max_other_file_size"`      // The maximum size of other file types to be auto-downloaded, in bytes
+		VideoUploadBitrate    int32 `json:"video_upload_bitrate"`     // The maximum suggested bitrate for uploaded videos, in kbit/s
+		PreloadLargeVideos    bool  `json:"preload_large_videos"`     // True, if the beginning of video files needs to be preloaded for instant playback
+		PreloadNextAudio      bool  `json:"preload_next_audio"`       // True, if the next audio track needs to be preloaded while the user is listening to an audio file
+		UseLessDataForCalls   bool  `json:"use_less_data_for_calls"`  // True, if "use less data for calls" option needs to be enabled
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	autoDownloadSettings.tdCommon = tempObj.tdCommon
+	autoDownloadSettings.IsAutoDownloadEnabled = tempObj.IsAutoDownloadEnabled
+	autoDownloadSettings.MaxPhotoFileSize = tempObj.MaxPhotoFileSize
+	autoDownloadSettings.MaxVideoFileSize = tempObj.MaxVideoFileSize
+	autoDownloadSettings.MaxOtherFileSize = tempObj.MaxOtherFileSize
+	autoDownloadSettings.VideoUploadBitrate = tempObj.VideoUploadBitrate
+	autoDownloadSettings.PreloadLargeVideos = tempObj.PreloadLargeVideos
+	autoDownloadSettings.PreloadNextAudio = tempObj.PreloadNextAudio
+	autoDownloadSettings.UseLessDataForCalls = tempObj.UseLessDataForCalls
+
+	return nil
+}
+
 // AutoDownloadSettingsPresets Contains auto-download settings presets for the current user
 type AutoDownloadSettingsPresets struct {
 	tdCommon
@@ -27282,6 +43737,32 @@ func NewAutoDownloadSettingsPresets(low *AutoDownloadSettings, medium *AutoDownl
 	return &autoDownloadSettingsPresetsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (autoDownloadSettingsPresets *AutoDownloadSettingsPresets) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Low    *AutoDownloadSettings `json:"low"`    // Preset with lowest settings; supposed to be used by default when roaming
+		Medium *AutoDownloadSettings `json:"medium"` // Preset with medium settings; supposed to be used by default when using mobile data
+		High   *AutoDownloadSettings `json:"high"`   // Preset with highest settings; supposed to be used by default when connected on Wi-Fi
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	autoDownloadSettingsPresets.tdCommon = tempObj.tdCommon
+	autoDownloadSettingsPresets.Low = tempObj.Low
+	autoDownloadSettingsPresets.Medium = tempObj.Medium
+	autoDownloadSettingsPresets.High = tempObj.High
+
+	return nil
+}
+
 // ConnectionStateWaitingForNetwork Currently waiting for the network to become available. Use setNetworkType to change the available network type
 type ConnectionStateWaitingForNetwork struct {
 	tdCommon
@@ -27300,6 +43781,26 @@ func NewConnectionStateWaitingForNetwork() *ConnectionStateWaitingForNetwork {
 	}
 
 	return &connectionStateWaitingForNetworkTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (connectionStateWaitingForNetwork *ConnectionStateWaitingForNetwork) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	connectionStateWaitingForNetwork.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetConnectionStateEnum return the enum type of this object
@@ -27327,6 +43828,26 @@ func NewConnectionStateConnectingToProxy() *ConnectionStateConnectingToProxy {
 	return &connectionStateConnectingToProxyTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (connectionStateConnectingToProxy *ConnectionStateConnectingToProxy) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	connectionStateConnectingToProxy.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetConnectionStateEnum return the enum type of this object
 func (connectionStateConnectingToProxy *ConnectionStateConnectingToProxy) GetConnectionStateEnum() ConnectionStateEnum {
 	return ConnectionStateConnectingToProxyType
@@ -27350,6 +43871,26 @@ func NewConnectionStateConnecting() *ConnectionStateConnecting {
 	}
 
 	return &connectionStateConnectingTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (connectionStateConnecting *ConnectionStateConnecting) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	connectionStateConnecting.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetConnectionStateEnum return the enum type of this object
@@ -27377,6 +43918,26 @@ func NewConnectionStateUpdating() *ConnectionStateUpdating {
 	return &connectionStateUpdatingTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (connectionStateUpdating *ConnectionStateUpdating) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	connectionStateUpdating.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetConnectionStateEnum return the enum type of this object
 func (connectionStateUpdating *ConnectionStateUpdating) GetConnectionStateEnum() ConnectionStateEnum {
 	return ConnectionStateUpdatingType
@@ -27400,6 +43961,26 @@ func NewConnectionStateReady() *ConnectionStateReady {
 	}
 
 	return &connectionStateReadyTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (connectionStateReady *ConnectionStateReady) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	connectionStateReady.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetConnectionStateEnum return the enum type of this object
@@ -27427,6 +44008,26 @@ func NewTopChatCategoryUsers() *TopChatCategoryUsers {
 	return &topChatCategoryUsersTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (topChatCategoryUsers *TopChatCategoryUsers) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	topChatCategoryUsers.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetTopChatCategoryEnum return the enum type of this object
 func (topChatCategoryUsers *TopChatCategoryUsers) GetTopChatCategoryEnum() TopChatCategoryEnum {
 	return TopChatCategoryUsersType
@@ -27450,6 +44051,26 @@ func NewTopChatCategoryBots() *TopChatCategoryBots {
 	}
 
 	return &topChatCategoryBotsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (topChatCategoryBots *TopChatCategoryBots) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	topChatCategoryBots.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetTopChatCategoryEnum return the enum type of this object
@@ -27477,6 +44098,26 @@ func NewTopChatCategoryGroups() *TopChatCategoryGroups {
 	return &topChatCategoryGroupsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (topChatCategoryGroups *TopChatCategoryGroups) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	topChatCategoryGroups.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetTopChatCategoryEnum return the enum type of this object
 func (topChatCategoryGroups *TopChatCategoryGroups) GetTopChatCategoryEnum() TopChatCategoryEnum {
 	return TopChatCategoryGroupsType
@@ -27500,6 +44141,26 @@ func NewTopChatCategoryChannels() *TopChatCategoryChannels {
 	}
 
 	return &topChatCategoryChannelsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (topChatCategoryChannels *TopChatCategoryChannels) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	topChatCategoryChannels.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetTopChatCategoryEnum return the enum type of this object
@@ -27527,6 +44188,26 @@ func NewTopChatCategoryInlineBots() *TopChatCategoryInlineBots {
 	return &topChatCategoryInlineBotsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (topChatCategoryInlineBots *TopChatCategoryInlineBots) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	topChatCategoryInlineBots.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetTopChatCategoryEnum return the enum type of this object
 func (topChatCategoryInlineBots *TopChatCategoryInlineBots) GetTopChatCategoryEnum() TopChatCategoryEnum {
 	return TopChatCategoryInlineBotsType
@@ -27552,6 +44233,26 @@ func NewTopChatCategoryCalls() *TopChatCategoryCalls {
 	return &topChatCategoryCallsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (topChatCategoryCalls *TopChatCategoryCalls) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	topChatCategoryCalls.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetTopChatCategoryEnum return the enum type of this object
 func (topChatCategoryCalls *TopChatCategoryCalls) GetTopChatCategoryEnum() TopChatCategoryEnum {
 	return TopChatCategoryCallsType
@@ -27575,6 +44276,26 @@ func NewTopChatCategoryForwardChats() *TopChatCategoryForwardChats {
 	}
 
 	return &topChatCategoryForwardChatsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (topChatCategoryForwardChats *TopChatCategoryForwardChats) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	topChatCategoryForwardChats.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetTopChatCategoryEnum return the enum type of this object
@@ -27605,6 +44326,28 @@ func NewTMeURLTypeUser(userID int64) *TMeURLTypeUser {
 	return &tMeURLTypeUserTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (tMeURLTypeUser *TMeURLTypeUser) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserID int64 `json:"user_id"` // Identifier of the user
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	tMeURLTypeUser.tdCommon = tempObj.tdCommon
+	tMeURLTypeUser.UserID = tempObj.UserID
+
+	return nil
+}
+
 // TMeURLTypeSupergroup A URL linking to a public supergroup or channel
 type TMeURLTypeSupergroup struct {
 	tdCommon
@@ -27626,6 +44369,28 @@ func NewTMeURLTypeSupergroup(supergroupID int64) *TMeURLTypeSupergroup {
 	}
 
 	return &tMeURLTypeSupergroupTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (tMeURLTypeSupergroup *TMeURLTypeSupergroup) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SupergroupID int64 `json:"supergroup_id"` // Identifier of the supergroup or channel
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	tMeURLTypeSupergroup.tdCommon = tempObj.tdCommon
+	tMeURLTypeSupergroup.SupergroupID = tempObj.SupergroupID
+
+	return nil
 }
 
 // TMeURLTypeChatInvite A chat invite link
@@ -27651,6 +44416,36 @@ func NewTMeURLTypeChatInvite(info *ChatInviteLinkInfo) *TMeURLTypeChatInvite {
 	return &tMeURLTypeChatInviteTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (tMeURLTypeChatInvite *TMeURLTypeChatInvite) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	tMeURLTypeChatInvite.tdCommon = tempObj.tdCommon
+
+	var info ChatInviteLinkInfo
+	if objMap["info"] != nil {
+		err = info.UnmarshalJSON(*objMap["info"])
+		if err != nil {
+			return err
+		}
+	}
+
+	tMeURLTypeChatInvite.Info = &info
+
+	return nil
+}
+
 // TMeURLTypeStickerSet A URL linking to a sticker set
 type TMeURLTypeStickerSet struct {
 	tdCommon
@@ -27672,6 +44467,28 @@ func NewTMeURLTypeStickerSet(stickerSetID JSONInt64) *TMeURLTypeStickerSet {
 	}
 
 	return &tMeURLTypeStickerSetTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (tMeURLTypeStickerSet *TMeURLTypeStickerSet) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		StickerSetID JSONInt64 `json:"sticker_set_id"` // Identifier of the sticker set
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	tMeURLTypeStickerSet.tdCommon = tempObj.tdCommon
+	tMeURLTypeStickerSet.StickerSetID = tempObj.StickerSetID
+
+	return nil
 }
 
 // TMeURL Represents a URL linking to an internal Telegram entity
@@ -27700,6 +44517,32 @@ func NewTMeURL(uRL string, typeParam TMeURLType) *TMeURL {
 	return &tMeURLTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (tMeURL *TMeURL) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		URL string `json:"url"` // URL
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	tMeURL.tdCommon = tempObj.tdCommon
+	tMeURL.URL = tempObj.URL
+
+	fieldType, _ := unmarshalTMeURLType(objMap["type"])
+	tMeURL.Type = fieldType
+
+	return nil
+}
+
 // TMeURLs Contains a list of t.me URLs
 type TMeURLs struct {
 	tdCommon
@@ -27723,6 +44566,28 @@ func NewTMeURLs(uRLs []TMeURL) *TMeURLs {
 	return &tMeURLsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (tMeURLs *TMeURLs) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		URLs []TMeURL `json:"urls"` // List of URLs
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	tMeURLs.tdCommon = tempObj.tdCommon
+	tMeURLs.URLs = tempObj.URLs
+
+	return nil
+}
+
 // SuggestedActionEnableArchiveAndMuteNewChats Suggests the user to enable "archive_and_mute_new_chats_from_unknown_users" option
 type SuggestedActionEnableArchiveAndMuteNewChats struct {
 	tdCommon
@@ -27741,6 +44606,26 @@ func NewSuggestedActionEnableArchiveAndMuteNewChats() *SuggestedActionEnableArch
 	}
 
 	return &suggestedActionEnableArchiveAndMuteNewChatsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (suggestedActionEnableArchiveAndMuteNewChats *SuggestedActionEnableArchiveAndMuteNewChats) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	suggestedActionEnableArchiveAndMuteNewChats.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetSuggestedActionEnum return the enum type of this object
@@ -27768,6 +44653,26 @@ func NewSuggestedActionCheckPassword() *SuggestedActionCheckPassword {
 	return &suggestedActionCheckPasswordTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (suggestedActionCheckPassword *SuggestedActionCheckPassword) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	suggestedActionCheckPassword.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetSuggestedActionEnum return the enum type of this object
 func (suggestedActionCheckPassword *SuggestedActionCheckPassword) GetSuggestedActionEnum() SuggestedActionEnum {
 	return SuggestedActionCheckPasswordType
@@ -27793,6 +44698,26 @@ func NewSuggestedActionCheckPhoneNumber() *SuggestedActionCheckPhoneNumber {
 	return &suggestedActionCheckPhoneNumberTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (suggestedActionCheckPhoneNumber *SuggestedActionCheckPhoneNumber) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	suggestedActionCheckPhoneNumber.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetSuggestedActionEnum return the enum type of this object
 func (suggestedActionCheckPhoneNumber *SuggestedActionCheckPhoneNumber) GetSuggestedActionEnum() SuggestedActionEnum {
 	return SuggestedActionCheckPhoneNumberType
@@ -27816,6 +44741,26 @@ func NewSuggestedActionViewChecksHint() *SuggestedActionViewChecksHint {
 	}
 
 	return &suggestedActionViewChecksHintTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (suggestedActionViewChecksHint *SuggestedActionViewChecksHint) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	suggestedActionViewChecksHint.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetSuggestedActionEnum return the enum type of this object
@@ -27846,6 +44791,28 @@ func NewSuggestedActionConvertToBroadcastGroup(supergroupID int64) *SuggestedAct
 	return &suggestedActionConvertToBroadcastGroupTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (suggestedActionConvertToBroadcastGroup *SuggestedActionConvertToBroadcastGroup) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SupergroupID int64 `json:"supergroup_id"` // Supergroup identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	suggestedActionConvertToBroadcastGroup.tdCommon = tempObj.tdCommon
+	suggestedActionConvertToBroadcastGroup.SupergroupID = tempObj.SupergroupID
+
+	return nil
+}
+
 // GetSuggestedActionEnum return the enum type of this object
 func (suggestedActionConvertToBroadcastGroup *SuggestedActionConvertToBroadcastGroup) GetSuggestedActionEnum() SuggestedActionEnum {
 	return SuggestedActionConvertToBroadcastGroupType
@@ -27872,6 +44839,28 @@ func NewSuggestedActionSetPassword(authorizationDelay int32) *SuggestedActionSet
 	}
 
 	return &suggestedActionSetPasswordTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (suggestedActionSetPassword *SuggestedActionSetPassword) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		AuthorizationDelay int32 `json:"authorization_delay"` // The number of days to pass between consecutive authorizations if the user declines to set password
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	suggestedActionSetPassword.tdCommon = tempObj.tdCommon
+	suggestedActionSetPassword.AuthorizationDelay = tempObj.AuthorizationDelay
+
+	return nil
 }
 
 // GetSuggestedActionEnum return the enum type of this object
@@ -27902,6 +44891,28 @@ func NewCount(count int32) *Count {
 	return &countTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (count *Count) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Count int32 `json:"count"` // Count
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	count.tdCommon = tempObj.tdCommon
+	count.Count = tempObj.Count
+
+	return nil
+}
+
 // Text Contains some text
 type Text struct {
 	tdCommon
@@ -27925,6 +44936,28 @@ func NewText(text string) *Text {
 	return &textTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (text *Text) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Text string `json:"text"` // Text
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	text.tdCommon = tempObj.tdCommon
+	text.Text = tempObj.Text
+
+	return nil
+}
+
 // Seconds Contains a value representing a number of seconds
 type Seconds struct {
 	tdCommon
@@ -27946,6 +44979,28 @@ func NewSeconds(seconds float64) *Seconds {
 	}
 
 	return &secondsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (seconds *Seconds) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Seconds float64 `json:"seconds"` // Number of seconds
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	seconds.tdCommon = tempObj.tdCommon
+	seconds.Seconds = tempObj.Seconds
+
+	return nil
 }
 
 // DeepLinkInfo Contains information about a tg: deep link
@@ -27974,6 +45029,30 @@ func NewDeepLinkInfo(text *FormattedText, needUpdateApplication bool) *DeepLinkI
 	return &deepLinkInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (deepLinkInfo *DeepLinkInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Text                  *FormattedText `json:"text"`                    // Text to be shown to the user
+		NeedUpdateApplication bool           `json:"need_update_application"` // True, if the user must be asked to update the application
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	deepLinkInfo.tdCommon = tempObj.tdCommon
+	deepLinkInfo.Text = tempObj.Text
+	deepLinkInfo.NeedUpdateApplication = tempObj.NeedUpdateApplication
+
+	return nil
+}
+
 // TextParseModeMarkdown The text uses Markdown-style formatting
 type TextParseModeMarkdown struct {
 	tdCommon
@@ -27995,6 +45074,28 @@ func NewTextParseModeMarkdown(version int32) *TextParseModeMarkdown {
 	}
 
 	return &textParseModeMarkdownTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (textParseModeMarkdown *TextParseModeMarkdown) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Version int32 `json:"version"` // Version of the parser: 0 or 1 - Telegram Bot API "Markdown" parse mode, 2 - Telegram Bot API "MarkdownV2" parse mode
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textParseModeMarkdown.tdCommon = tempObj.tdCommon
+	textParseModeMarkdown.Version = tempObj.Version
+
+	return nil
 }
 
 // GetTextParseModeEnum return the enum type of this object
@@ -28020,6 +45121,26 @@ func NewTextParseModeHTML() *TextParseModeHTML {
 	}
 
 	return &textParseModeHTMLTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (textParseModeHTML *TextParseModeHTML) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	textParseModeHTML.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetTextParseModeEnum return the enum type of this object
@@ -28051,6 +45172,30 @@ func NewProxyTypeSocks5(username string, password string) *ProxyTypeSocks5 {
 	}
 
 	return &proxyTypeSocks5Temp
+}
+
+// UnmarshalJSON unmarshal to json
+func (proxyTypeSocks5 *ProxyTypeSocks5) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Username string `json:"username"` // Username for logging in; may be empty
+		Password string `json:"password"` // Password for logging in; may be empty
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	proxyTypeSocks5.tdCommon = tempObj.tdCommon
+	proxyTypeSocks5.Username = tempObj.Username
+	proxyTypeSocks5.Password = tempObj.Password
+
+	return nil
 }
 
 // GetProxyTypeEnum return the enum type of this object
@@ -28087,6 +45232,32 @@ func NewProxyTypeHttp(username string, password string, httpOnly bool) *ProxyTyp
 	return &proxyTypeHttpTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (proxyTypeHttp *ProxyTypeHttp) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Username string `json:"username"`  // Username for logging in; may be empty
+		Password string `json:"password"`  // Password for logging in; may be empty
+		HttpOnly bool   `json:"http_only"` // Pass true if the proxy supports only HTTP requests and doesn't support transparent TCP connections via HTTP CONNECT method
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	proxyTypeHttp.tdCommon = tempObj.tdCommon
+	proxyTypeHttp.Username = tempObj.Username
+	proxyTypeHttp.Password = tempObj.Password
+	proxyTypeHttp.HttpOnly = tempObj.HttpOnly
+
+	return nil
+}
+
 // GetProxyTypeEnum return the enum type of this object
 func (proxyTypeHttp *ProxyTypeHttp) GetProxyTypeEnum() ProxyTypeEnum {
 	return ProxyTypeHttpType
@@ -28113,6 +45284,28 @@ func NewProxyTypeMtproto(secret string) *ProxyTypeMtproto {
 	}
 
 	return &proxyTypeMtprotoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (proxyTypeMtproto *ProxyTypeMtproto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Secret string `json:"secret"` // The proxy's secret in hexadecimal encoding
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	proxyTypeMtproto.tdCommon = tempObj.tdCommon
+	proxyTypeMtproto.Secret = tempObj.Secret
+
+	return nil
 }
 
 // GetProxyTypeEnum return the enum type of this object
@@ -28215,6 +45408,28 @@ func NewProxies(proxies []Proxy) *Proxies {
 	return &proxiesTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (proxies *Proxies) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Proxies []Proxy `json:"proxies"` // List of proxy servers
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	proxies.tdCommon = tempObj.tdCommon
+	proxies.Proxies = tempObj.Proxies
+
+	return nil
+}
+
 // InputStickerStatic A static sticker in PNG format, which will be converted to WEBP server-side
 type InputStickerStatic struct {
 	tdCommon
@@ -28253,8 +45468,8 @@ func (inputStickerStatic *InputStickerStatic) UnmarshalJSON(b []byte) error {
 	}
 	tempObj := struct {
 		tdCommon
-		Emojis       string        `json:"emojis"`        // Emojis corresponding to the sticker
-		MaskPosition *MaskPosition `json:"mask_position"` // For masks, position where the mask is placed; pass null if unspecified
+		Emojis string `json:"emojis"` // Emojis corresponding to the sticker
+
 	}{}
 	err = json.Unmarshal(b, &tempObj)
 	if err != nil {
@@ -28263,10 +45478,19 @@ func (inputStickerStatic *InputStickerStatic) UnmarshalJSON(b []byte) error {
 
 	inputStickerStatic.tdCommon = tempObj.tdCommon
 	inputStickerStatic.Emojis = tempObj.Emojis
-	inputStickerStatic.MaskPosition = tempObj.MaskPosition
 
 	fieldSticker, _ := unmarshalInputFile(objMap["sticker"])
 	inputStickerStatic.Sticker = fieldSticker
+
+	var maskPosition MaskPosition
+	if objMap["mask_position"] != nil {
+		err = maskPosition.UnmarshalJSON(*objMap["mask_position"])
+		if err != nil {
+			return err
+		}
+	}
+
+	inputStickerStatic.MaskPosition = &maskPosition
 
 	return nil
 }
@@ -28358,6 +45582,30 @@ func NewDateRange(startDate int32, endDate int32) *DateRange {
 	return &dateRangeTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (dateRange *DateRange) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		StartDate int32 `json:"start_date"` // Point in time (Unix timestamp) at which the date range begins
+		EndDate   int32 `json:"end_date"`   // Point in time (Unix timestamp) at which the date range ends
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	dateRange.tdCommon = tempObj.tdCommon
+	dateRange.StartDate = tempObj.StartDate
+	dateRange.EndDate = tempObj.EndDate
+
+	return nil
+}
+
 // StatisticalValue A value with information about its recent changes
 type StatisticalValue struct {
 	tdCommon
@@ -28387,6 +45635,32 @@ func NewStatisticalValue(value float64, previousValue float64, growthRatePercent
 	return &statisticalValueTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (statisticalValue *StatisticalValue) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Value                float64 `json:"value"`                  // The current value
+		PreviousValue        float64 `json:"previous_value"`         // The value for the previous day
+		GrowthRatePercentage float64 `json:"growth_rate_percentage"` // The growth rate of the value, as a percentage
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	statisticalValue.tdCommon = tempObj.tdCommon
+	statisticalValue.Value = tempObj.Value
+	statisticalValue.PreviousValue = tempObj.PreviousValue
+	statisticalValue.GrowthRatePercentage = tempObj.GrowthRatePercentage
+
+	return nil
+}
+
 // StatisticalGraphData A graph data
 type StatisticalGraphData struct {
 	tdCommon
@@ -28411,6 +45685,30 @@ func NewStatisticalGraphData(jsonStringData string, zoomToken string) *Statistic
 	}
 
 	return &statisticalGraphDataTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (statisticalGraphData *StatisticalGraphData) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		JsonData  string `json:"json_data"`  // Graph data in JSON format
+		ZoomToken string `json:"zoom_token"` // If non-empty, a token which can be used to receive a zoomed in graph
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	statisticalGraphData.tdCommon = tempObj.tdCommon
+	statisticalGraphData.JsonData = tempObj.JsonData
+	statisticalGraphData.ZoomToken = tempObj.ZoomToken
+
+	return nil
 }
 
 // GetStatisticalGraphEnum return the enum type of this object
@@ -28441,6 +45739,28 @@ func NewStatisticalGraphAsync(token string) *StatisticalGraphAsync {
 	return &statisticalGraphAsyncTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (statisticalGraphAsync *StatisticalGraphAsync) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Token string `json:"token"` // The token to use for data loading
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	statisticalGraphAsync.tdCommon = tempObj.tdCommon
+	statisticalGraphAsync.Token = tempObj.Token
+
+	return nil
+}
+
 // GetStatisticalGraphEnum return the enum type of this object
 func (statisticalGraphAsync *StatisticalGraphAsync) GetStatisticalGraphEnum() StatisticalGraphEnum {
 	return StatisticalGraphAsyncType
@@ -28467,6 +45787,28 @@ func NewStatisticalGraphError(errorMessage string) *StatisticalGraphError {
 	}
 
 	return &statisticalGraphErrorTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (statisticalGraphError *StatisticalGraphError) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ErrorMessage string `json:"error_message"` // The error message
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	statisticalGraphError.tdCommon = tempObj.tdCommon
+	statisticalGraphError.ErrorMessage = tempObj.ErrorMessage
+
+	return nil
 }
 
 // GetStatisticalGraphEnum return the enum type of this object
@@ -28503,6 +45845,32 @@ func NewChatStatisticsMessageInteractionInfo(messageID int64, viewCount int32, f
 	return &chatStatisticsMessageInteractionInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatStatisticsMessageInteractionInfo *ChatStatisticsMessageInteractionInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		MessageID    int64 `json:"message_id"`    // Message identifier
+		ViewCount    int32 `json:"view_count"`    // Number of times the message was viewed
+		ForwardCount int32 `json:"forward_count"` // Number of times the message was forwarded
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatStatisticsMessageInteractionInfo.tdCommon = tempObj.tdCommon
+	chatStatisticsMessageInteractionInfo.MessageID = tempObj.MessageID
+	chatStatisticsMessageInteractionInfo.ViewCount = tempObj.ViewCount
+	chatStatisticsMessageInteractionInfo.ForwardCount = tempObj.ForwardCount
+
+	return nil
+}
+
 // ChatStatisticsMessageSenderInfo Contains statistics about messages sent by a user
 type ChatStatisticsMessageSenderInfo struct {
 	tdCommon
@@ -28530,6 +45898,32 @@ func NewChatStatisticsMessageSenderInfo(userID int64, sentMessageCount int32, av
 	}
 
 	return &chatStatisticsMessageSenderInfoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatStatisticsMessageSenderInfo *ChatStatisticsMessageSenderInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserID                int64 `json:"user_id"`                 // User identifier
+		SentMessageCount      int32 `json:"sent_message_count"`      // Number of sent messages
+		AverageCharacterCount int32 `json:"average_character_count"` // Average number of characters in sent messages; 0 if unknown
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatStatisticsMessageSenderInfo.tdCommon = tempObj.tdCommon
+	chatStatisticsMessageSenderInfo.UserID = tempObj.UserID
+	chatStatisticsMessageSenderInfo.SentMessageCount = tempObj.SentMessageCount
+	chatStatisticsMessageSenderInfo.AverageCharacterCount = tempObj.AverageCharacterCount
+
+	return nil
 }
 
 // ChatStatisticsAdministratorActionsInfo Contains statistics about administrator actions done by a user
@@ -28564,6 +45958,34 @@ func NewChatStatisticsAdministratorActionsInfo(userID int64, deletedMessageCount
 	return &chatStatisticsAdministratorActionsInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (chatStatisticsAdministratorActionsInfo *ChatStatisticsAdministratorActionsInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserID              int64 `json:"user_id"`               // Administrator user identifier
+		DeletedMessageCount int32 `json:"deleted_message_count"` // Number of messages deleted by the administrator
+		BannedUserCount     int32 `json:"banned_user_count"`     // Number of users banned by the administrator
+		RestrictedUserCount int32 `json:"restricted_user_count"` // Number of users restricted by the administrator
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatStatisticsAdministratorActionsInfo.tdCommon = tempObj.tdCommon
+	chatStatisticsAdministratorActionsInfo.UserID = tempObj.UserID
+	chatStatisticsAdministratorActionsInfo.DeletedMessageCount = tempObj.DeletedMessageCount
+	chatStatisticsAdministratorActionsInfo.BannedUserCount = tempObj.BannedUserCount
+	chatStatisticsAdministratorActionsInfo.RestrictedUserCount = tempObj.RestrictedUserCount
+
+	return nil
+}
+
 // ChatStatisticsInviterInfo Contains statistics about number of new members invited by a user
 type ChatStatisticsInviterInfo struct {
 	tdCommon
@@ -28588,6 +46010,30 @@ func NewChatStatisticsInviterInfo(userID int64, addedMemberCount int32) *ChatSta
 	}
 
 	return &chatStatisticsInviterInfoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (chatStatisticsInviterInfo *ChatStatisticsInviterInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserID           int64 `json:"user_id"`            // User identifier
+		AddedMemberCount int32 `json:"added_member_count"` // Number of new members invited by the user
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	chatStatisticsInviterInfo.tdCommon = tempObj.tdCommon
+	chatStatisticsInviterInfo.UserID = tempObj.UserID
+	chatStatisticsInviterInfo.AddedMemberCount = tempObj.AddedMemberCount
+
+	return nil
 }
 
 // ChatStatisticsSupergroup A detailed statistics about a supergroup chat
@@ -28924,6 +46370,30 @@ func NewPoint(x float64, y float64) *Point {
 	return &pointTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (point *Point) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		X float64 `json:"x"` // The point's first coordinate
+		Y float64 `json:"y"` // The point's second coordinate
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	point.tdCommon = tempObj.tdCommon
+	point.X = tempObj.X
+	point.Y = tempObj.Y
+
+	return nil
+}
+
 // VectorPathCommandLine A straight line to a given point
 type VectorPathCommandLine struct {
 	tdCommon
@@ -28945,6 +46415,28 @@ func NewVectorPathCommandLine(endPoint *Point) *VectorPathCommandLine {
 	}
 
 	return &vectorPathCommandLineTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (vectorPathCommandLine *VectorPathCommandLine) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		EndPoint *Point `json:"end_point"` // The end point of the straight line
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	vectorPathCommandLine.tdCommon = tempObj.tdCommon
+	vectorPathCommandLine.EndPoint = tempObj.EndPoint
+
+	return nil
 }
 
 // GetVectorPathCommandEnum return the enum type of this object
@@ -28981,6 +46473,32 @@ func NewVectorPathCommandCubicBezierCurve(startControlPoint *Point, endControlPo
 	return &vectorPathCommandCubicBezierCurveTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (vectorPathCommandCubicBezierCurve *VectorPathCommandCubicBezierCurve) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		StartControlPoint *Point `json:"start_control_point"` // The start control point of the curve
+		EndControlPoint   *Point `json:"end_control_point"`   // The end control point of the curve
+		EndPoint          *Point `json:"end_point"`           // The end point of the curve
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	vectorPathCommandCubicBezierCurve.tdCommon = tempObj.tdCommon
+	vectorPathCommandCubicBezierCurve.StartControlPoint = tempObj.StartControlPoint
+	vectorPathCommandCubicBezierCurve.EndControlPoint = tempObj.EndControlPoint
+	vectorPathCommandCubicBezierCurve.EndPoint = tempObj.EndPoint
+
+	return nil
+}
+
 // GetVectorPathCommandEnum return the enum type of this object
 func (vectorPathCommandCubicBezierCurve *VectorPathCommandCubicBezierCurve) GetVectorPathCommandEnum() VectorPathCommandEnum {
 	return VectorPathCommandCubicBezierCurveType
@@ -29004,6 +46522,26 @@ func NewBotCommandScopeDefault() *BotCommandScopeDefault {
 	}
 
 	return &botCommandScopeDefaultTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (botCommandScopeDefault *BotCommandScopeDefault) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	botCommandScopeDefault.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetBotCommandScopeEnum return the enum type of this object
@@ -29031,6 +46569,26 @@ func NewBotCommandScopeAllPrivateChats() *BotCommandScopeAllPrivateChats {
 	return &botCommandScopeAllPrivateChatsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (botCommandScopeAllPrivateChats *BotCommandScopeAllPrivateChats) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	botCommandScopeAllPrivateChats.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetBotCommandScopeEnum return the enum type of this object
 func (botCommandScopeAllPrivateChats *BotCommandScopeAllPrivateChats) GetBotCommandScopeEnum() BotCommandScopeEnum {
 	return BotCommandScopeAllPrivateChatsType
@@ -29056,6 +46614,26 @@ func NewBotCommandScopeAllGroupChats() *BotCommandScopeAllGroupChats {
 	return &botCommandScopeAllGroupChatsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (botCommandScopeAllGroupChats *BotCommandScopeAllGroupChats) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	botCommandScopeAllGroupChats.tdCommon = tempObj.tdCommon
+
+	return nil
+}
+
 // GetBotCommandScopeEnum return the enum type of this object
 func (botCommandScopeAllGroupChats *BotCommandScopeAllGroupChats) GetBotCommandScopeEnum() BotCommandScopeEnum {
 	return BotCommandScopeAllGroupChatsType
@@ -29079,6 +46657,26 @@ func NewBotCommandScopeAllChatAdministrators() *BotCommandScopeAllChatAdministra
 	}
 
 	return &botCommandScopeAllChatAdministratorsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (botCommandScopeAllChatAdministrators *BotCommandScopeAllChatAdministrators) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	botCommandScopeAllChatAdministrators.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetBotCommandScopeEnum return the enum type of this object
@@ -29109,6 +46707,28 @@ func NewBotCommandScopeChat(chatID int64) *BotCommandScopeChat {
 	return &botCommandScopeChatTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (botCommandScopeChat *BotCommandScopeChat) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID int64 `json:"chat_id"` // Chat identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	botCommandScopeChat.tdCommon = tempObj.tdCommon
+	botCommandScopeChat.ChatID = tempObj.ChatID
+
+	return nil
+}
+
 // GetBotCommandScopeEnum return the enum type of this object
 func (botCommandScopeChat *BotCommandScopeChat) GetBotCommandScopeEnum() BotCommandScopeEnum {
 	return BotCommandScopeChatType
@@ -29135,6 +46755,28 @@ func NewBotCommandScopeChatAdministrators(chatID int64) *BotCommandScopeChatAdmi
 	}
 
 	return &botCommandScopeChatAdministratorsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (botCommandScopeChatAdministrators *BotCommandScopeChatAdministrators) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID int64 `json:"chat_id"` // Chat identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	botCommandScopeChatAdministrators.tdCommon = tempObj.tdCommon
+	botCommandScopeChatAdministrators.ChatID = tempObj.ChatID
+
+	return nil
 }
 
 // GetBotCommandScopeEnum return the enum type of this object
@@ -29166,6 +46808,30 @@ func NewBotCommandScopeChatMember(chatID int64, userID int64) *BotCommandScopeCh
 	}
 
 	return &botCommandScopeChatMemberTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (botCommandScopeChatMember *BotCommandScopeChatMember) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID int64 `json:"chat_id"` // Chat identifier
+		UserID int64 `json:"user_id"` // User identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	botCommandScopeChatMember.tdCommon = tempObj.tdCommon
+	botCommandScopeChatMember.ChatID = tempObj.ChatID
+	botCommandScopeChatMember.UserID = tempObj.UserID
+
+	return nil
 }
 
 // GetBotCommandScopeEnum return the enum type of this object
@@ -29247,6 +46913,36 @@ func NewUpdateNewMessage(message *Message) *UpdateNewMessage {
 	return &updateNewMessageTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateNewMessage *UpdateNewMessage) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateNewMessage.tdCommon = tempObj.tdCommon
+
+	var message Message
+	if objMap["message"] != nil {
+		err = message.UnmarshalJSON(*objMap["message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateNewMessage.Message = &message
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateNewMessage *UpdateNewMessage) GetUpdateEnum() UpdateEnum {
 	return UpdateNewMessageType
@@ -29278,6 +46974,30 @@ func NewUpdateMessageSendAcknowledged(chatID int64, messageID int64) *UpdateMess
 	return &updateMessageSendAcknowledgedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateMessageSendAcknowledged *UpdateMessageSendAcknowledged) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID    int64 `json:"chat_id"`    // The chat identifier of the sent message
+		MessageID int64 `json:"message_id"` // A temporary message identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateMessageSendAcknowledged.tdCommon = tempObj.tdCommon
+	updateMessageSendAcknowledged.ChatID = tempObj.ChatID
+	updateMessageSendAcknowledged.MessageID = tempObj.MessageID
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateMessageSendAcknowledged *UpdateMessageSendAcknowledged) GetUpdateEnum() UpdateEnum {
 	return UpdateMessageSendAcknowledgedType
@@ -29307,6 +47027,38 @@ func NewUpdateMessageSendSucceeded(message *Message, oldMessageID int64) *Update
 	}
 
 	return &updateMessageSendSucceededTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateMessageSendSucceeded *UpdateMessageSendSucceeded) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		OldMessageID int64 `json:"old_message_id"` // The previous temporary message identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateMessageSendSucceeded.tdCommon = tempObj.tdCommon
+	updateMessageSendSucceeded.OldMessageID = tempObj.OldMessageID
+
+	var message Message
+	if objMap["message"] != nil {
+		err = message.UnmarshalJSON(*objMap["message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateMessageSendSucceeded.Message = &message
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -29344,6 +47096,42 @@ func NewUpdateMessageSendFailed(message *Message, oldMessageID int64, errorCode 
 	}
 
 	return &updateMessageSendFailedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateMessageSendFailed *UpdateMessageSendFailed) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		OldMessageID int64  `json:"old_message_id"` // The previous temporary message identifier
+		ErrorCode    int32  `json:"error_code"`     // An error code
+		ErrorMessage string `json:"error_message"`  // Error message
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateMessageSendFailed.tdCommon = tempObj.tdCommon
+	updateMessageSendFailed.OldMessageID = tempObj.OldMessageID
+	updateMessageSendFailed.ErrorCode = tempObj.ErrorCode
+	updateMessageSendFailed.ErrorMessage = tempObj.ErrorMessage
+
+	var message Message
+	if objMap["message"] != nil {
+		err = message.UnmarshalJSON(*objMap["message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateMessageSendFailed.Message = &message
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -29416,10 +47204,10 @@ func (updateMessageContent *UpdateMessageContent) GetUpdateEnum() UpdateEnum {
 // UpdateMessageEdited A message was edited. Changes in the message content will come in a separate updateMessageContent
 type UpdateMessageEdited struct {
 	tdCommon
-	ChatID      int64       `json:"chat_id"`      // Chat identifier
-	MessageID   int64       `json:"message_id"`   // Message identifier
-	EditDate    int32       `json:"edit_date"`    // Point in time (Unix timestamp) when the message was edited
-	ReplyMarkup ReplyMarkup `json:"reply_markup"` // New message reply markup; may be null
+	ChatID      int64        `json:"chat_id"`      // Chat identifier
+	MessageID   int64        `json:"message_id"`   // Message identifier
+	EditDate    int32        `json:"edit_date"`    // Point in time (Unix timestamp) when the message was edited
+	ReplyMarkup *ReplyMarkup `json:"reply_markup"` // New message reply markup; may be null
 }
 
 // MessageType return the string telegram-type of UpdateMessageEdited
@@ -29433,7 +47221,7 @@ func (updateMessageEdited *UpdateMessageEdited) MessageType() string {
 // @param messageID Message identifier
 // @param editDate Point in time (Unix timestamp) when the message was edited
 // @param replyMarkup New message reply markup; may be null
-func NewUpdateMessageEdited(chatID int64, messageID int64, editDate int32, replyMarkup ReplyMarkup) *UpdateMessageEdited {
+func NewUpdateMessageEdited(chatID int64, messageID int64, editDate int32, replyMarkup *ReplyMarkup) *UpdateMessageEdited {
 	updateMessageEditedTemp := UpdateMessageEdited{
 		tdCommon:    tdCommon{Type: "updateMessageEdited"},
 		ChatID:      chatID,
@@ -29470,7 +47258,7 @@ func (updateMessageEdited *UpdateMessageEdited) UnmarshalJSON(b []byte) error {
 	updateMessageEdited.EditDate = tempObj.EditDate
 
 	fieldReplyMarkup, _ := unmarshalReplyMarkup(objMap["reply_markup"])
-	updateMessageEdited.ReplyMarkup = fieldReplyMarkup
+	updateMessageEdited.ReplyMarkup = &fieldReplyMarkup
 
 	return nil
 }
@@ -29509,6 +47297,32 @@ func NewUpdateMessageIsPinned(chatID int64, messageID int64, isPinned bool) *Upd
 	return &updateMessageIsPinnedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateMessageIsPinned *UpdateMessageIsPinned) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID    int64 `json:"chat_id"`    // Chat identifier
+		MessageID int64 `json:"message_id"` // The message identifier
+		IsPinned  bool  `json:"is_pinned"`  // True, if the message is pinned
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateMessageIsPinned.tdCommon = tempObj.tdCommon
+	updateMessageIsPinned.ChatID = tempObj.ChatID
+	updateMessageIsPinned.MessageID = tempObj.MessageID
+	updateMessageIsPinned.IsPinned = tempObj.IsPinned
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateMessageIsPinned *UpdateMessageIsPinned) GetUpdateEnum() UpdateEnum {
 	return UpdateMessageIsPinnedType
@@ -29543,6 +47357,32 @@ func NewUpdateMessageInteractionInfo(chatID int64, messageID int64, interactionI
 	return &updateMessageInteractionInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateMessageInteractionInfo *UpdateMessageInteractionInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID          int64                   `json:"chat_id"`          // Chat identifier
+		MessageID       int64                   `json:"message_id"`       // Message identifier
+		InteractionInfo *MessageInteractionInfo `json:"interaction_info"` // New information about interactions with the message; may be null
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateMessageInteractionInfo.tdCommon = tempObj.tdCommon
+	updateMessageInteractionInfo.ChatID = tempObj.ChatID
+	updateMessageInteractionInfo.MessageID = tempObj.MessageID
+	updateMessageInteractionInfo.InteractionInfo = tempObj.InteractionInfo
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateMessageInteractionInfo *UpdateMessageInteractionInfo) GetUpdateEnum() UpdateEnum {
 	return UpdateMessageInteractionInfoType
@@ -29572,6 +47412,30 @@ func NewUpdateMessageContentOpened(chatID int64, messageID int64) *UpdateMessage
 	}
 
 	return &updateMessageContentOpenedTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateMessageContentOpened *UpdateMessageContentOpened) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID    int64 `json:"chat_id"`    // Chat identifier
+		MessageID int64 `json:"message_id"` // Message identifier
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateMessageContentOpened.tdCommon = tempObj.tdCommon
+	updateMessageContentOpened.ChatID = tempObj.ChatID
+	updateMessageContentOpened.MessageID = tempObj.MessageID
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -29608,6 +47472,32 @@ func NewUpdateMessageMentionRead(chatID int64, messageID int64, unreadMentionCou
 	return &updateMessageMentionReadTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateMessageMentionRead *UpdateMessageMentionRead) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID             int64 `json:"chat_id"`              // Chat identifier
+		MessageID          int64 `json:"message_id"`           // Message identifier
+		UnreadMentionCount int32 `json:"unread_mention_count"` // The new number of unread mention messages left in the chat
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateMessageMentionRead.tdCommon = tempObj.tdCommon
+	updateMessageMentionRead.ChatID = tempObj.ChatID
+	updateMessageMentionRead.MessageID = tempObj.MessageID
+	updateMessageMentionRead.UnreadMentionCount = tempObj.UnreadMentionCount
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateMessageMentionRead *UpdateMessageMentionRead) GetUpdateEnum() UpdateEnum {
 	return UpdateMessageMentionReadType
@@ -29639,6 +47529,30 @@ func NewUpdateMessageLiveLocationViewed(chatID int64, messageID int64) *UpdateMe
 	return &updateMessageLiveLocationViewedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateMessageLiveLocationViewed *UpdateMessageLiveLocationViewed) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID    int64 `json:"chat_id"`    // Identifier of the chat with the live location message
+		MessageID int64 `json:"message_id"` // Identifier of the message with live location
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateMessageLiveLocationViewed.tdCommon = tempObj.tdCommon
+	updateMessageLiveLocationViewed.ChatID = tempObj.ChatID
+	updateMessageLiveLocationViewed.MessageID = tempObj.MessageID
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateMessageLiveLocationViewed *UpdateMessageLiveLocationViewed) GetUpdateEnum() UpdateEnum {
 	return UpdateMessageLiveLocationViewedType
@@ -29665,6 +47579,36 @@ func NewUpdateNewChat(chat *Chat) *UpdateNewChat {
 	}
 
 	return &updateNewChatTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateNewChat *UpdateNewChat) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateNewChat.tdCommon = tempObj.tdCommon
+
+	var chat Chat
+	if objMap["chat"] != nil {
+		err = chat.UnmarshalJSON(*objMap["chat"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateNewChat.Chat = &chat
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -29698,6 +47642,30 @@ func NewUpdateChatTitle(chatID int64, title string) *UpdateChatTitle {
 	return &updateChatTitleTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateChatTitle *UpdateChatTitle) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID int64  `json:"chat_id"` // Chat identifier
+		Title  string `json:"title"`   // The new chat title
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatTitle.tdCommon = tempObj.tdCommon
+	updateChatTitle.ChatID = tempObj.ChatID
+	updateChatTitle.Title = tempObj.Title
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateChatTitle *UpdateChatTitle) GetUpdateEnum() UpdateEnum {
 	return UpdateChatTitleType
@@ -29729,6 +47697,30 @@ func NewUpdateChatPhoto(chatID int64, photo *ChatPhotoInfo) *UpdateChatPhoto {
 	return &updateChatPhotoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateChatPhoto *UpdateChatPhoto) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID int64          `json:"chat_id"` // Chat identifier
+		Photo  *ChatPhotoInfo `json:"photo"`   // The new chat photo; may be null
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatPhoto.tdCommon = tempObj.tdCommon
+	updateChatPhoto.ChatID = tempObj.ChatID
+	updateChatPhoto.Photo = tempObj.Photo
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateChatPhoto *UpdateChatPhoto) GetUpdateEnum() UpdateEnum {
 	return UpdateChatPhotoType
@@ -29758,6 +47750,30 @@ func NewUpdateChatPermissions(chatID int64, permissions *ChatPermissions) *Updat
 	}
 
 	return &updateChatPermissionsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateChatPermissions *UpdateChatPermissions) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID      int64            `json:"chat_id"`     // Chat identifier
+		Permissions *ChatPermissions `json:"permissions"` // The new chat permissions
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatPermissions.tdCommon = tempObj.tdCommon
+	updateChatPermissions.ChatID = tempObj.ChatID
+	updateChatPermissions.Permissions = tempObj.Permissions
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -29794,6 +47810,40 @@ func NewUpdateChatLastMessage(chatID int64, lastMessage *Message, positions []Ch
 	return &updateChatLastMessageTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateChatLastMessage *UpdateChatLastMessage) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID    int64          `json:"chat_id"`   // Chat identifier
+		Positions []ChatPosition `json:"positions"` // The new chat positions in the chat lists
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatLastMessage.tdCommon = tempObj.tdCommon
+	updateChatLastMessage.ChatID = tempObj.ChatID
+	updateChatLastMessage.Positions = tempObj.Positions
+
+	var lastMessage Message
+	if objMap["last_message"] != nil {
+		err = lastMessage.UnmarshalJSON(*objMap["last_message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateChatLastMessage.LastMessage = &lastMessage
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateChatLastMessage *UpdateChatLastMessage) GetUpdateEnum() UpdateEnum {
 	return UpdateChatLastMessageType
@@ -29823,6 +47873,39 @@ func NewUpdateChatPosition(chatID int64, position *ChatPosition) *UpdateChatPosi
 	}
 
 	return &updateChatPositionTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateChatPosition *UpdateChatPosition) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID int64 `json:"chat_id"` // Chat identifier
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatPosition.tdCommon = tempObj.tdCommon
+	updateChatPosition.ChatID = tempObj.ChatID
+
+	var position ChatPosition
+	if objMap["position"] != nil {
+		err = position.UnmarshalJSON(*objMap["position"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateChatPosition.Position = &position
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -29859,6 +47942,32 @@ func NewUpdateChatReadInbox(chatID int64, lastReadInboxMessageID int64, unreadCo
 	return &updateChatReadInboxTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateChatReadInbox *UpdateChatReadInbox) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID                 int64 `json:"chat_id"`                    // Chat identifier
+		LastReadInboxMessageID int64 `json:"last_read_inbox_message_id"` // Identifier of the last read incoming message
+		UnreadCount            int32 `json:"unread_count"`               // The number of unread messages left in the chat
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatReadInbox.tdCommon = tempObj.tdCommon
+	updateChatReadInbox.ChatID = tempObj.ChatID
+	updateChatReadInbox.LastReadInboxMessageID = tempObj.LastReadInboxMessageID
+	updateChatReadInbox.UnreadCount = tempObj.UnreadCount
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateChatReadInbox *UpdateChatReadInbox) GetUpdateEnum() UpdateEnum {
 	return UpdateChatReadInboxType
@@ -29890,6 +47999,30 @@ func NewUpdateChatReadOutbox(chatID int64, lastReadOutboxMessageID int64) *Updat
 	return &updateChatReadOutboxTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateChatReadOutbox *UpdateChatReadOutbox) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID                  int64 `json:"chat_id"`                     // Chat identifier
+		LastReadOutboxMessageID int64 `json:"last_read_outbox_message_id"` // Identifier of last read outgoing message
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatReadOutbox.tdCommon = tempObj.tdCommon
+	updateChatReadOutbox.ChatID = tempObj.ChatID
+	updateChatReadOutbox.LastReadOutboxMessageID = tempObj.LastReadOutboxMessageID
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateChatReadOutbox *UpdateChatReadOutbox) GetUpdateEnum() UpdateEnum {
 	return UpdateChatReadOutboxType
@@ -29898,8 +48031,8 @@ func (updateChatReadOutbox *UpdateChatReadOutbox) GetUpdateEnum() UpdateEnum {
 // UpdateChatActionBar The chat action bar was changed
 type UpdateChatActionBar struct {
 	tdCommon
-	ChatID    int64         `json:"chat_id"`    // Chat identifier
-	ActionBar ChatActionBar `json:"action_bar"` // The new value of the action bar; may be null
+	ChatID    int64          `json:"chat_id"`    // Chat identifier
+	ActionBar *ChatActionBar `json:"action_bar"` // The new value of the action bar; may be null
 }
 
 // MessageType return the string telegram-type of UpdateChatActionBar
@@ -29911,7 +48044,7 @@ func (updateChatActionBar *UpdateChatActionBar) MessageType() string {
 //
 // @param chatID Chat identifier
 // @param actionBar The new value of the action bar; may be null
-func NewUpdateChatActionBar(chatID int64, actionBar ChatActionBar) *UpdateChatActionBar {
+func NewUpdateChatActionBar(chatID int64, actionBar *ChatActionBar) *UpdateChatActionBar {
 	updateChatActionBarTemp := UpdateChatActionBar{
 		tdCommon:  tdCommon{Type: "updateChatActionBar"},
 		ChatID:    chatID,
@@ -29942,7 +48075,7 @@ func (updateChatActionBar *UpdateChatActionBar) UnmarshalJSON(b []byte) error {
 	updateChatActionBar.ChatID = tempObj.ChatID
 
 	fieldActionBar, _ := unmarshalChatActionBar(objMap["action_bar"])
-	updateChatActionBar.ActionBar = fieldActionBar
+	updateChatActionBar.ActionBar = &fieldActionBar
 
 	return nil
 }
@@ -29981,6 +48114,40 @@ func NewUpdateChatDraftMessage(chatID int64, draftMessage *DraftMessage, positio
 	return &updateChatDraftMessageTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateChatDraftMessage *UpdateChatDraftMessage) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID    int64          `json:"chat_id"`   // Chat identifier
+		Positions []ChatPosition `json:"positions"` // The new chat positions in the chat lists
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatDraftMessage.tdCommon = tempObj.tdCommon
+	updateChatDraftMessage.ChatID = tempObj.ChatID
+	updateChatDraftMessage.Positions = tempObj.Positions
+
+	var draftMessage DraftMessage
+	if objMap["draft_message"] != nil {
+		err = draftMessage.UnmarshalJSON(*objMap["draft_message"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateChatDraftMessage.DraftMessage = &draftMessage
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateChatDraftMessage *UpdateChatDraftMessage) GetUpdateEnum() UpdateEnum {
 	return UpdateChatDraftMessageType
@@ -29989,8 +48156,8 @@ func (updateChatDraftMessage *UpdateChatDraftMessage) GetUpdateEnum() UpdateEnum
 // UpdateChatMessageSender The message sender that is selected to send messages in a chat has changed
 type UpdateChatMessageSender struct {
 	tdCommon
-	ChatID          int64         `json:"chat_id"`           // Chat identifier
-	MessageSenderID MessageSender `json:"message_sender_id"` // New value of message_sender_id; may be null if the user can't change message sender
+	ChatID          int64          `json:"chat_id"`           // Chat identifier
+	MessageSenderID *MessageSender `json:"message_sender_id"` // New value of message_sender_id; may be null if the user can't change message sender
 }
 
 // MessageType return the string telegram-type of UpdateChatMessageSender
@@ -30002,7 +48169,7 @@ func (updateChatMessageSender *UpdateChatMessageSender) MessageType() string {
 //
 // @param chatID Chat identifier
 // @param messageSenderID New value of message_sender_id; may be null if the user can't change message sender
-func NewUpdateChatMessageSender(chatID int64, messageSenderID MessageSender) *UpdateChatMessageSender {
+func NewUpdateChatMessageSender(chatID int64, messageSenderID *MessageSender) *UpdateChatMessageSender {
 	updateChatMessageSenderTemp := UpdateChatMessageSender{
 		tdCommon:        tdCommon{Type: "updateChatMessageSender"},
 		ChatID:          chatID,
@@ -30033,7 +48200,7 @@ func (updateChatMessageSender *UpdateChatMessageSender) UnmarshalJSON(b []byte) 
 	updateChatMessageSender.ChatID = tempObj.ChatID
 
 	fieldMessageSenderID, _ := unmarshalMessageSender(objMap["message_sender_id"])
-	updateChatMessageSender.MessageSenderID = fieldMessageSenderID
+	updateChatMessageSender.MessageSenderID = &fieldMessageSenderID
 
 	return nil
 }
@@ -30069,6 +48236,30 @@ func NewUpdateChatMessageTTL(chatID int64, messageTTL int32) *UpdateChatMessageT
 	return &updateChatMessageTTLTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateChatMessageTTL *UpdateChatMessageTTL) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID     int64 `json:"chat_id"`     // Chat identifier
+		MessageTTL int32 `json:"message_ttl"` // New value of message_ttl
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatMessageTTL.tdCommon = tempObj.tdCommon
+	updateChatMessageTTL.ChatID = tempObj.ChatID
+	updateChatMessageTTL.MessageTTL = tempObj.MessageTTL
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateChatMessageTTL *UpdateChatMessageTTL) GetUpdateEnum() UpdateEnum {
 	return UpdateChatMessageTTLType
@@ -30098,6 +48289,30 @@ func NewUpdateChatNotificationSettings(chatID int64, notificationSettings *ChatN
 	}
 
 	return &updateChatNotificationSettingsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateChatNotificationSettings *UpdateChatNotificationSettings) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID               int64                     `json:"chat_id"`               // Chat identifier
+		NotificationSettings *ChatNotificationSettings `json:"notification_settings"` // The new notification settings
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatNotificationSettings.tdCommon = tempObj.tdCommon
+	updateChatNotificationSettings.ChatID = tempObj.ChatID
+	updateChatNotificationSettings.NotificationSettings = tempObj.NotificationSettings
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -30131,6 +48346,30 @@ func NewUpdateChatPendingJoinRequests(chatID int64, pendingJoinRequests *ChatJoi
 	return &updateChatPendingJoinRequestsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateChatPendingJoinRequests *UpdateChatPendingJoinRequests) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID              int64                 `json:"chat_id"`               // Chat identifier
+		PendingJoinRequests *ChatJoinRequestsInfo `json:"pending_join_requests"` // The new data about pending join requests; may be null
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatPendingJoinRequests.tdCommon = tempObj.tdCommon
+	updateChatPendingJoinRequests.ChatID = tempObj.ChatID
+	updateChatPendingJoinRequests.PendingJoinRequests = tempObj.PendingJoinRequests
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateChatPendingJoinRequests *UpdateChatPendingJoinRequests) GetUpdateEnum() UpdateEnum {
 	return UpdateChatPendingJoinRequestsType
@@ -30160,6 +48399,30 @@ func NewUpdateChatReplyMarkup(chatID int64, replyMarkupMessageID int64) *UpdateC
 	}
 
 	return &updateChatReplyMarkupTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateChatReplyMarkup *UpdateChatReplyMarkup) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID               int64 `json:"chat_id"`                 // Chat identifier
+		ReplyMarkupMessageID int64 `json:"reply_markup_message_id"` // Identifier of the message from which reply markup needs to be used; 0 if there is no default custom reply markup in the chat
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatReplyMarkup.tdCommon = tempObj.tdCommon
+	updateChatReplyMarkup.ChatID = tempObj.ChatID
+	updateChatReplyMarkup.ReplyMarkupMessageID = tempObj.ReplyMarkupMessageID
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -30193,6 +48456,30 @@ func NewUpdateChatTheme(chatID int64, themeName string) *UpdateChatTheme {
 	return &updateChatThemeTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateChatTheme *UpdateChatTheme) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID    int64  `json:"chat_id"`    // Chat identifier
+		ThemeName string `json:"theme_name"` // The new name of the chat theme; may be empty if theme was reset to default
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatTheme.tdCommon = tempObj.tdCommon
+	updateChatTheme.ChatID = tempObj.ChatID
+	updateChatTheme.ThemeName = tempObj.ThemeName
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateChatTheme *UpdateChatTheme) GetUpdateEnum() UpdateEnum {
 	return UpdateChatThemeType
@@ -30222,6 +48509,30 @@ func NewUpdateChatUnreadMentionCount(chatID int64, unreadMentionCount int32) *Up
 	}
 
 	return &updateChatUnreadMentionCountTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateChatUnreadMentionCount *UpdateChatUnreadMentionCount) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID             int64 `json:"chat_id"`              // Chat identifier
+		UnreadMentionCount int32 `json:"unread_mention_count"` // The number of unread mention messages left in the chat
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatUnreadMentionCount.tdCommon = tempObj.tdCommon
+	updateChatUnreadMentionCount.ChatID = tempObj.ChatID
+	updateChatUnreadMentionCount.UnreadMentionCount = tempObj.UnreadMentionCount
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -30255,6 +48566,39 @@ func NewUpdateChatVideoChat(chatID int64, videoChat *VideoChat) *UpdateChatVideo
 	return &updateChatVideoChatTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateChatVideoChat *UpdateChatVideoChat) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID int64 `json:"chat_id"` // Chat identifier
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatVideoChat.tdCommon = tempObj.tdCommon
+	updateChatVideoChat.ChatID = tempObj.ChatID
+
+	var videoChat VideoChat
+	if objMap["video_chat"] != nil {
+		err = videoChat.UnmarshalJSON(*objMap["video_chat"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateChatVideoChat.VideoChat = &videoChat
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateChatVideoChat *UpdateChatVideoChat) GetUpdateEnum() UpdateEnum {
 	return UpdateChatVideoChatType
@@ -30284,6 +48628,30 @@ func NewUpdateChatDefaultDisableNotification(chatID int64, defaultDisableNotific
 	}
 
 	return &updateChatDefaultDisableNotificationTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateChatDefaultDisableNotification *UpdateChatDefaultDisableNotification) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID                     int64 `json:"chat_id"`                      // Chat identifier
+		DefaultDisableNotification bool  `json:"default_disable_notification"` // The new default_disable_notification value
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatDefaultDisableNotification.tdCommon = tempObj.tdCommon
+	updateChatDefaultDisableNotification.ChatID = tempObj.ChatID
+	updateChatDefaultDisableNotification.DefaultDisableNotification = tempObj.DefaultDisableNotification
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -30317,6 +48685,30 @@ func NewUpdateChatHasProtectedContent(chatID int64, hasProtectedContent bool) *U
 	return &updateChatHasProtectedContentTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateChatHasProtectedContent *UpdateChatHasProtectedContent) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID              int64 `json:"chat_id"`               // Chat identifier
+		HasProtectedContent bool  `json:"has_protected_content"` // New value of has_protected_content
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatHasProtectedContent.tdCommon = tempObj.tdCommon
+	updateChatHasProtectedContent.ChatID = tempObj.ChatID
+	updateChatHasProtectedContent.HasProtectedContent = tempObj.HasProtectedContent
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateChatHasProtectedContent *UpdateChatHasProtectedContent) GetUpdateEnum() UpdateEnum {
 	return UpdateChatHasProtectedContentType
@@ -30346,6 +48738,30 @@ func NewUpdateChatHasScheduledMessages(chatID int64, hasScheduledMessages bool) 
 	}
 
 	return &updateChatHasScheduledMessagesTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateChatHasScheduledMessages *UpdateChatHasScheduledMessages) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID               int64 `json:"chat_id"`                // Chat identifier
+		HasScheduledMessages bool  `json:"has_scheduled_messages"` // New value of has_scheduled_messages
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatHasScheduledMessages.tdCommon = tempObj.tdCommon
+	updateChatHasScheduledMessages.ChatID = tempObj.ChatID
+	updateChatHasScheduledMessages.HasScheduledMessages = tempObj.HasScheduledMessages
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -30379,6 +48795,30 @@ func NewUpdateChatIsBlocked(chatID int64, isBlocked bool) *UpdateChatIsBlocked {
 	return &updateChatIsBlockedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateChatIsBlocked *UpdateChatIsBlocked) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID    int64 `json:"chat_id"`    // Chat identifier
+		IsBlocked bool  `json:"is_blocked"` // New value of is_blocked
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatIsBlocked.tdCommon = tempObj.tdCommon
+	updateChatIsBlocked.ChatID = tempObj.ChatID
+	updateChatIsBlocked.IsBlocked = tempObj.IsBlocked
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateChatIsBlocked *UpdateChatIsBlocked) GetUpdateEnum() UpdateEnum {
 	return UpdateChatIsBlockedType
@@ -30410,6 +48850,30 @@ func NewUpdateChatIsMarkedAsUnread(chatID int64, isMarkedAsUnread bool) *UpdateC
 	return &updateChatIsMarkedAsUnreadTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateChatIsMarkedAsUnread *UpdateChatIsMarkedAsUnread) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID           int64 `json:"chat_id"`             // Chat identifier
+		IsMarkedAsUnread bool  `json:"is_marked_as_unread"` // New value of is_marked_as_unread
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatIsMarkedAsUnread.tdCommon = tempObj.tdCommon
+	updateChatIsMarkedAsUnread.ChatID = tempObj.ChatID
+	updateChatIsMarkedAsUnread.IsMarkedAsUnread = tempObj.IsMarkedAsUnread
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateChatIsMarkedAsUnread *UpdateChatIsMarkedAsUnread) GetUpdateEnum() UpdateEnum {
 	return UpdateChatIsMarkedAsUnreadType
@@ -30436,6 +48900,28 @@ func NewUpdateChatFilters(chatFilters []ChatFilterInfo) *UpdateChatFilters {
 	}
 
 	return &updateChatFiltersTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateChatFilters *UpdateChatFilters) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatFilters []ChatFilterInfo `json:"chat_filters"` // The new list of chat filters
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatFilters.tdCommon = tempObj.tdCommon
+	updateChatFilters.ChatFilters = tempObj.ChatFilters
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -30467,6 +48953,30 @@ func NewUpdateChatOnlineMemberCount(chatID int64, onlineMemberCount int32) *Upda
 	}
 
 	return &updateChatOnlineMemberCountTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateChatOnlineMemberCount *UpdateChatOnlineMemberCount) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID            int64 `json:"chat_id"`             // Identifier of the chat
+		OnlineMemberCount int32 `json:"online_member_count"` // New number of online members in the chat, or 0 if unknown
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatOnlineMemberCount.tdCommon = tempObj.tdCommon
+	updateChatOnlineMemberCount.ChatID = tempObj.ChatID
+	updateChatOnlineMemberCount.OnlineMemberCount = tempObj.OnlineMemberCount
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -30554,6 +49064,39 @@ func NewUpdateNotification(notificationGroupID int32, notification *Notification
 	}
 
 	return &updateNotificationTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateNotification *UpdateNotification) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		NotificationGroupID int32 `json:"notification_group_id"` // Unique notification group identifier
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateNotification.tdCommon = tempObj.tdCommon
+	updateNotification.NotificationGroupID = tempObj.NotificationGroupID
+
+	var notification Notification
+	if objMap["notification"] != nil {
+		err = notification.UnmarshalJSON(*objMap["notification"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateNotification.Notification = &notification
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -30670,6 +49213,28 @@ func NewUpdateActiveNotifications(groups []NotificationGroup) *UpdateActiveNotif
 	return &updateActiveNotificationsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateActiveNotifications *UpdateActiveNotifications) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Groups []NotificationGroup `json:"groups"` // Lists of active notification groups
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateActiveNotifications.tdCommon = tempObj.tdCommon
+	updateActiveNotifications.Groups = tempObj.Groups
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateActiveNotifications *UpdateActiveNotifications) GetUpdateEnum() UpdateEnum {
 	return UpdateActiveNotificationsType
@@ -30699,6 +49264,30 @@ func NewUpdateHavePendingNotifications(haveDelayedNotifications bool, haveUnrece
 	}
 
 	return &updateHavePendingNotificationsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateHavePendingNotifications *UpdateHavePendingNotifications) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		HaveDelayedNotifications    bool `json:"have_delayed_notifications"`    // True, if there are some delayed notification updates, which will be sent soon
+		HaveUnreceivedNotifications bool `json:"have_unreceived_notifications"` // True, if there can be some yet unreceived notifications, which are being fetched from the server
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateHavePendingNotifications.tdCommon = tempObj.tdCommon
+	updateHavePendingNotifications.HaveDelayedNotifications = tempObj.HaveDelayedNotifications
+	updateHavePendingNotifications.HaveUnreceivedNotifications = tempObj.HaveUnreceivedNotifications
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -30736,6 +49325,34 @@ func NewUpdateDeleteMessages(chatID int64, messageIDs []int64, isPermanent bool,
 	}
 
 	return &updateDeleteMessagesTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateDeleteMessages *UpdateDeleteMessages) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID      int64   `json:"chat_id"`      // Chat identifier
+		MessageIDs  []int64 `json:"message_ids"`  // Identifiers of the deleted messages
+		IsPermanent bool    `json:"is_permanent"` // True, if the messages are permanently deleted by a user (as opposed to just becoming inaccessible)
+		FromCache   bool    `json:"from_cache"`   // True, if the messages are deleted only from the cache and can possibly be retrieved again in the future
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateDeleteMessages.tdCommon = tempObj.tdCommon
+	updateDeleteMessages.ChatID = tempObj.ChatID
+	updateDeleteMessages.MessageIDs = tempObj.MessageIDs
+	updateDeleteMessages.IsPermanent = tempObj.IsPermanent
+	updateDeleteMessages.FromCache = tempObj.FromCache
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -30891,6 +49508,36 @@ func NewUpdateUser(user *User) *UpdateUser {
 	return &updateUserTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateUser *UpdateUser) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateUser.tdCommon = tempObj.tdCommon
+
+	var user User
+	if objMap["user"] != nil {
+		err = user.UnmarshalJSON(*objMap["user"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateUser.User = &user
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateUser *UpdateUser) GetUpdateEnum() UpdateEnum {
 	return UpdateUserType
@@ -30917,6 +49564,36 @@ func NewUpdateBasicGroup(basicGroup *BasicGroup) *UpdateBasicGroup {
 	}
 
 	return &updateBasicGroupTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateBasicGroup *UpdateBasicGroup) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateBasicGroup.tdCommon = tempObj.tdCommon
+
+	var basicGroup BasicGroup
+	if objMap["basic_group"] != nil {
+		err = basicGroup.UnmarshalJSON(*objMap["basic_group"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateBasicGroup.BasicGroup = &basicGroup
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -30947,6 +49624,36 @@ func NewUpdateSupergroup(supergroup *Supergroup) *UpdateSupergroup {
 	return &updateSupergroupTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateSupergroup *UpdateSupergroup) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateSupergroup.tdCommon = tempObj.tdCommon
+
+	var supergroup Supergroup
+	if objMap["supergroup"] != nil {
+		err = supergroup.UnmarshalJSON(*objMap["supergroup"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateSupergroup.Supergroup = &supergroup
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateSupergroup *UpdateSupergroup) GetUpdateEnum() UpdateEnum {
 	return UpdateSupergroupType
@@ -30973,6 +49680,36 @@ func NewUpdateSecretChat(secretChat *SecretChat) *UpdateSecretChat {
 	}
 
 	return &updateSecretChatTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateSecretChat *UpdateSecretChat) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateSecretChat.tdCommon = tempObj.tdCommon
+
+	var secretChat SecretChat
+	if objMap["secret_chat"] != nil {
+		err = secretChat.UnmarshalJSON(*objMap["secret_chat"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateSecretChat.SecretChat = &secretChat
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -31006,6 +49743,30 @@ func NewUpdateUserFullInfo(userID int64, userFullInfo *UserFullInfo) *UpdateUser
 	return &updateUserFullInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateUserFullInfo *UpdateUserFullInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UserID       int64         `json:"user_id"`        // User identifier
+		UserFullInfo *UserFullInfo `json:"user_full_info"` // New full information about the user
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateUserFullInfo.tdCommon = tempObj.tdCommon
+	updateUserFullInfo.UserID = tempObj.UserID
+	updateUserFullInfo.UserFullInfo = tempObj.UserFullInfo
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateUserFullInfo *UpdateUserFullInfo) GetUpdateEnum() UpdateEnum {
 	return UpdateUserFullInfoType
@@ -31037,6 +49798,30 @@ func NewUpdateBasicGroupFullInfo(basicGroupID int64, basicGroupFullInfo *BasicGr
 	return &updateBasicGroupFullInfoTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateBasicGroupFullInfo *UpdateBasicGroupFullInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		BasicGroupID       int64               `json:"basic_group_id"`        // Identifier of a basic group
+		BasicGroupFullInfo *BasicGroupFullInfo `json:"basic_group_full_info"` // New full information about the group
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateBasicGroupFullInfo.tdCommon = tempObj.tdCommon
+	updateBasicGroupFullInfo.BasicGroupID = tempObj.BasicGroupID
+	updateBasicGroupFullInfo.BasicGroupFullInfo = tempObj.BasicGroupFullInfo
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateBasicGroupFullInfo *UpdateBasicGroupFullInfo) GetUpdateEnum() UpdateEnum {
 	return UpdateBasicGroupFullInfoType
@@ -31066,6 +49851,30 @@ func NewUpdateSupergroupFullInfo(supergroupID int64, supergroupFullInfo *Supergr
 	}
 
 	return &updateSupergroupFullInfoTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateSupergroupFullInfo *UpdateSupergroupFullInfo) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SupergroupID       int64               `json:"supergroup_id"`        // Identifier of the supergroup or channel
+		SupergroupFullInfo *SupergroupFullInfo `json:"supergroup_full_info"` // New full information about the supergroup
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateSupergroupFullInfo.tdCommon = tempObj.tdCommon
+	updateSupergroupFullInfo.SupergroupID = tempObj.SupergroupID
+	updateSupergroupFullInfo.SupergroupFullInfo = tempObj.SupergroupFullInfo
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -31153,6 +49962,28 @@ func NewUpdateFile(file *File) *UpdateFile {
 	return &updateFileTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateFile *UpdateFile) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		File *File `json:"file"` // New data about the file
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateFile.tdCommon = tempObj.tdCommon
+	updateFile.File = tempObj.File
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateFile *UpdateFile) GetUpdateEnum() UpdateEnum {
 	return UpdateFileType
@@ -31190,6 +50021,34 @@ func NewUpdateFileGenerationStart(generationID JSONInt64, originalPath string, d
 	return &updateFileGenerationStartTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateFileGenerationStart *UpdateFileGenerationStart) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		GenerationID    JSONInt64 `json:"generation_id"`    // Unique identifier for the generation process
+		OriginalPath    string    `json:"original_path"`    // The path to a file from which a new file is generated; may be empty
+		DestinationPath string    `json:"destination_path"` // The path to a file that must be created and where the new file is generated
+		Conversion      string    `json:"conversion"`       // String specifying the conversion applied to the original file. If conversion is "#url#" than original_path contains an HTTP/HTTPS URL of a file, which must be downloaded by the application
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateFileGenerationStart.tdCommon = tempObj.tdCommon
+	updateFileGenerationStart.GenerationID = tempObj.GenerationID
+	updateFileGenerationStart.OriginalPath = tempObj.OriginalPath
+	updateFileGenerationStart.DestinationPath = tempObj.DestinationPath
+	updateFileGenerationStart.Conversion = tempObj.Conversion
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateFileGenerationStart *UpdateFileGenerationStart) GetUpdateEnum() UpdateEnum {
 	return UpdateFileGenerationStartType
@@ -31216,6 +50075,28 @@ func NewUpdateFileGenerationStop(generationID JSONInt64) *UpdateFileGenerationSt
 	}
 
 	return &updateFileGenerationStopTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateFileGenerationStop *UpdateFileGenerationStop) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		GenerationID JSONInt64 `json:"generation_id"` // Unique identifier for the generation process
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateFileGenerationStop.tdCommon = tempObj.tdCommon
+	updateFileGenerationStop.GenerationID = tempObj.GenerationID
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -31246,6 +50127,36 @@ func NewUpdateCall(call *Call) *UpdateCall {
 	return &updateCallTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateCall *UpdateCall) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateCall.tdCommon = tempObj.tdCommon
+
+	var call Call
+	if objMap["call"] != nil {
+		err = call.UnmarshalJSON(*objMap["call"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateCall.Call = &call
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateCall *UpdateCall) GetUpdateEnum() UpdateEnum {
 	return UpdateCallType
@@ -31272,6 +50183,28 @@ func NewUpdateGroupCall(groupCall *GroupCall) *UpdateGroupCall {
 	}
 
 	return &updateGroupCallTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateGroupCall *UpdateGroupCall) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		GroupCall *GroupCall `json:"group_call"` // New data about a group call
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateGroupCall.tdCommon = tempObj.tdCommon
+	updateGroupCall.GroupCall = tempObj.GroupCall
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -31305,6 +50238,39 @@ func NewUpdateGroupCallParticipant(groupCallID int32, participant *GroupCallPart
 	return &updateGroupCallParticipantTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateGroupCallParticipant *UpdateGroupCallParticipant) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		GroupCallID int32 `json:"group_call_id"` // Identifier of group call
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateGroupCallParticipant.tdCommon = tempObj.tdCommon
+	updateGroupCallParticipant.GroupCallID = tempObj.GroupCallID
+
+	var participant GroupCallParticipant
+	if objMap["participant"] != nil {
+		err = participant.UnmarshalJSON(*objMap["participant"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateGroupCallParticipant.Participant = &participant
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateGroupCallParticipant *UpdateGroupCallParticipant) GetUpdateEnum() UpdateEnum {
 	return UpdateGroupCallParticipantType
@@ -31334,6 +50300,30 @@ func NewUpdateNewCallSignalingData(callID int32, data []byte) *UpdateNewCallSign
 	}
 
 	return &updateNewCallSignalingDataTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateNewCallSignalingData *UpdateNewCallSignalingData) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		CallID int32  `json:"call_id"` // The call identifier
+		Data   []byte `json:"data"`    // The data
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateNewCallSignalingData.tdCommon = tempObj.tdCommon
+	updateNewCallSignalingData.CallID = tempObj.CallID
+	updateNewCallSignalingData.Data = tempObj.Data
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -31376,7 +50366,6 @@ func (updateUserPrivacySettingRules *UpdateUserPrivacySettingRules) UnmarshalJSO
 	}
 	tempObj := struct {
 		tdCommon
-		Rules *UserPrivacySettingRules `json:"rules"` // New privacy rules
 	}{}
 	err = json.Unmarshal(b, &tempObj)
 	if err != nil {
@@ -31384,10 +50373,19 @@ func (updateUserPrivacySettingRules *UpdateUserPrivacySettingRules) UnmarshalJSO
 	}
 
 	updateUserPrivacySettingRules.tdCommon = tempObj.tdCommon
-	updateUserPrivacySettingRules.Rules = tempObj.Rules
 
 	fieldSetting, _ := unmarshalUserPrivacySetting(objMap["setting"])
 	updateUserPrivacySettingRules.Setting = fieldSetting
+
+	var rules UserPrivacySettingRules
+	if objMap["rules"] != nil {
+		err = rules.UnmarshalJSON(*objMap["rules"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateUserPrivacySettingRules.Rules = &rules
 
 	return nil
 }
@@ -31614,6 +50612,28 @@ func NewUpdateStickerSet(stickerSet *StickerSet) *UpdateStickerSet {
 	return &updateStickerSetTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateStickerSet *UpdateStickerSet) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		StickerSet *StickerSet `json:"sticker_set"` // The sticker set
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateStickerSet.tdCommon = tempObj.tdCommon
+	updateStickerSet.StickerSet = tempObj.StickerSet
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateStickerSet *UpdateStickerSet) GetUpdateEnum() UpdateEnum {
 	return UpdateStickerSetType
@@ -31645,6 +50665,30 @@ func NewUpdateInstalledStickerSets(isMasks bool, stickerSetIDs []JSONInt64) *Upd
 	return &updateInstalledStickerSetsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateInstalledStickerSets *UpdateInstalledStickerSets) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		IsMasks       bool        `json:"is_masks"`        // True, if the list of installed mask sticker sets was updated
+		StickerSetIDs []JSONInt64 `json:"sticker_set_ids"` // The new list of installed ordinary sticker sets
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateInstalledStickerSets.tdCommon = tempObj.tdCommon
+	updateInstalledStickerSets.IsMasks = tempObj.IsMasks
+	updateInstalledStickerSets.StickerSetIDs = tempObj.StickerSetIDs
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateInstalledStickerSets *UpdateInstalledStickerSets) GetUpdateEnum() UpdateEnum {
 	return UpdateInstalledStickerSetsType
@@ -31671,6 +50715,28 @@ func NewUpdateTrendingStickerSets(stickerSets *StickerSets) *UpdateTrendingStick
 	}
 
 	return &updateTrendingStickerSetsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateTrendingStickerSets *UpdateTrendingStickerSets) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		StickerSets *StickerSets `json:"sticker_sets"` // The prefix of the list of trending sticker sets with the newest trending sticker sets
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateTrendingStickerSets.tdCommon = tempObj.tdCommon
+	updateTrendingStickerSets.StickerSets = tempObj.StickerSets
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -31704,6 +50770,30 @@ func NewUpdateRecentStickers(isAttached bool, stickerIDs []int32) *UpdateRecentS
 	return &updateRecentStickersTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateRecentStickers *UpdateRecentStickers) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		IsAttached bool    `json:"is_attached"` // True, if the list of stickers attached to photo or video files was updated, otherwise the list of sent stickers is updated
+		StickerIDs []int32 `json:"sticker_ids"` // The new list of file identifiers of recently used stickers
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateRecentStickers.tdCommon = tempObj.tdCommon
+	updateRecentStickers.IsAttached = tempObj.IsAttached
+	updateRecentStickers.StickerIDs = tempObj.StickerIDs
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateRecentStickers *UpdateRecentStickers) GetUpdateEnum() UpdateEnum {
 	return UpdateRecentStickersType
@@ -31732,6 +50822,28 @@ func NewUpdateFavoriteStickers(stickerIDs []int32) *UpdateFavoriteStickers {
 	return &updateFavoriteStickersTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateFavoriteStickers *UpdateFavoriteStickers) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		StickerIDs []int32 `json:"sticker_ids"` // The new list of file identifiers of favorite stickers
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateFavoriteStickers.tdCommon = tempObj.tdCommon
+	updateFavoriteStickers.StickerIDs = tempObj.StickerIDs
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateFavoriteStickers *UpdateFavoriteStickers) GetUpdateEnum() UpdateEnum {
 	return UpdateFavoriteStickersType
@@ -31758,6 +50870,28 @@ func NewUpdateSavedAnimations(animationIDs []int32) *UpdateSavedAnimations {
 	}
 
 	return &updateSavedAnimationsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateSavedAnimations *UpdateSavedAnimations) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		AnimationIDs []int32 `json:"animation_ids"` // The new list of file identifiers of saved animations
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateSavedAnimations.tdCommon = tempObj.tdCommon
+	updateSavedAnimations.AnimationIDs = tempObj.AnimationIDs
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -31791,6 +50925,39 @@ func NewUpdateSelectedBackground(forDarkTheme bool, background *Background) *Upd
 	return &updateSelectedBackgroundTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateSelectedBackground *UpdateSelectedBackground) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ForDarkTheme bool `json:"for_dark_theme"` // True, if background for dark theme has changed
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateSelectedBackground.tdCommon = tempObj.tdCommon
+	updateSelectedBackground.ForDarkTheme = tempObj.ForDarkTheme
+
+	var background Background
+	if objMap["background"] != nil {
+		err = background.UnmarshalJSON(*objMap["background"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateSelectedBackground.Background = &background
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateSelectedBackground *UpdateSelectedBackground) GetUpdateEnum() UpdateEnum {
 	return UpdateSelectedBackgroundType
@@ -31817,6 +50984,28 @@ func NewUpdateChatThemes(chatThemes []ChatTheme) *UpdateChatThemes {
 	}
 
 	return &updateChatThemesTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateChatThemes *UpdateChatThemes) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatThemes []ChatTheme `json:"chat_themes"` // The new list of chat themes
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatThemes.tdCommon = tempObj.tdCommon
+	updateChatThemes.ChatThemes = tempObj.ChatThemes
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -31851,6 +51040,32 @@ func NewUpdateLanguagePackStrings(localizationTarget string, languagePackID stri
 	}
 
 	return &updateLanguagePackStringsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateLanguagePackStrings *UpdateLanguagePackStrings) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		LocalizationTarget string               `json:"localization_target"` // Localization target to which the language pack belongs
+		LanguagePackID     string               `json:"language_pack_id"`    // Identifier of the updated language pack
+		Strings            []LanguagePackString `json:"strings"`             // List of changed language pack strings
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateLanguagePackStrings.tdCommon = tempObj.tdCommon
+	updateLanguagePackStrings.LocalizationTarget = tempObj.LocalizationTarget
+	updateLanguagePackStrings.LanguagePackID = tempObj.LanguagePackID
+	updateLanguagePackStrings.Strings = tempObj.Strings
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -31935,6 +51150,30 @@ func NewUpdateTermsOfService(termsOfServiceID string, termsOfService *TermsOfSer
 	return &updateTermsOfServiceTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateTermsOfService *UpdateTermsOfService) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		TermsOfServiceID string          `json:"terms_of_service_id"` // Identifier of the terms of service
+		TermsOfService   *TermsOfService `json:"terms_of_service"`    // The new terms of service
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateTermsOfService.tdCommon = tempObj.tdCommon
+	updateTermsOfService.TermsOfServiceID = tempObj.TermsOfServiceID
+	updateTermsOfService.TermsOfService = tempObj.TermsOfService
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateTermsOfService *UpdateTermsOfService) GetUpdateEnum() UpdateEnum {
 	return UpdateTermsOfServiceType
@@ -31963,6 +51202,28 @@ func NewUpdateUsersNearby(usersNearby []ChatNearby) *UpdateUsersNearby {
 	return &updateUsersNearbyTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateUsersNearby *UpdateUsersNearby) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		UsersNearby []ChatNearby `json:"users_nearby"` // The new list of users nearby
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateUsersNearby.tdCommon = tempObj.tdCommon
+	updateUsersNearby.UsersNearby = tempObj.UsersNearby
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateUsersNearby *UpdateUsersNearby) GetUpdateEnum() UpdateEnum {
 	return UpdateUsersNearbyType
@@ -31989,6 +51250,28 @@ func NewUpdateDiceEmojis(emojis []string) *UpdateDiceEmojis {
 	}
 
 	return &updateDiceEmojisTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateDiceEmojis *UpdateDiceEmojis) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Emojis []string `json:"emojis"` // The new list of supported dice emojis
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateDiceEmojis.tdCommon = tempObj.tdCommon
+	updateDiceEmojis.Emojis = tempObj.Emojis
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -32025,6 +51308,32 @@ func NewUpdateAnimatedEmojiMessageClicked(chatID int64, messageID int64, sticker
 	return &updateAnimatedEmojiMessageClickedTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateAnimatedEmojiMessageClicked *UpdateAnimatedEmojiMessageClicked) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID    int64    `json:"chat_id"`    // Chat identifier
+		MessageID int64    `json:"message_id"` // Message identifier
+		Sticker   *Sticker `json:"sticker"`    // The animated sticker to be played
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateAnimatedEmojiMessageClicked.tdCommon = tempObj.tdCommon
+	updateAnimatedEmojiMessageClicked.ChatID = tempObj.ChatID
+	updateAnimatedEmojiMessageClicked.MessageID = tempObj.MessageID
+	updateAnimatedEmojiMessageClicked.Sticker = tempObj.Sticker
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateAnimatedEmojiMessageClicked *UpdateAnimatedEmojiMessageClicked) GetUpdateEnum() UpdateEnum {
 	return UpdateAnimatedEmojiMessageClickedType
@@ -32054,6 +51363,30 @@ func NewUpdateAnimationSearchParameters(provider string, emojis []string) *Updat
 	}
 
 	return &updateAnimationSearchParametersTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateAnimationSearchParameters *UpdateAnimationSearchParameters) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Provider string   `json:"provider"` // Name of the animation search provider
+		Emojis   []string `json:"emojis"`   // The new list of emojis suggested for searching
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateAnimationSearchParameters.tdCommon = tempObj.tdCommon
+	updateAnimationSearchParameters.Provider = tempObj.Provider
+	updateAnimationSearchParameters.Emojis = tempObj.Emojis
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -32087,6 +51420,32 @@ func NewUpdateSuggestedActions(addedActions []SuggestedAction, removedActions []
 	return &updateSuggestedActionsTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateSuggestedActions *UpdateSuggestedActions) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateSuggestedActions.tdCommon = tempObj.tdCommon
+
+	fieldAddedActions, _ := unmarshalSuggestedActionSlice(objMap["added_actions"])
+	updateSuggestedActions.AddedActions = fieldAddedActions
+
+	fieldRemovedActions, _ := unmarshalSuggestedActionSlice(objMap["removed_actions"])
+	updateSuggestedActions.RemovedActions = fieldRemovedActions
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateSuggestedActions *UpdateSuggestedActions) GetUpdateEnum() UpdateEnum {
 	return UpdateSuggestedActionsType
@@ -32098,7 +51457,7 @@ type UpdateNewInlineQuery struct {
 	ID           JSONInt64 `json:"id"`             // Unique query identifier
 	SenderUserID int64     `json:"sender_user_id"` // Identifier of the user who sent the query
 	UserLocation *Location `json:"user_location"`  // User location; may be null
-	ChatType     ChatType  `json:"chat_type"`      // The type of the chat, from which the query originated; may be null if unknown
+	ChatType     *ChatType `json:"chat_type"`      // The type of the chat, from which the query originated; may be null if unknown
 	Query        string    `json:"query"`          // Text of the query
 	Offset       string    `json:"offset"`         // Offset of the first entry to return
 }
@@ -32116,7 +51475,7 @@ func (updateNewInlineQuery *UpdateNewInlineQuery) MessageType() string {
 // @param chatType The type of the chat, from which the query originated; may be null if unknown
 // @param query Text of the query
 // @param offset Offset of the first entry to return
-func NewUpdateNewInlineQuery(iD JSONInt64, senderUserID int64, userLocation *Location, chatType ChatType, query string, offset string) *UpdateNewInlineQuery {
+func NewUpdateNewInlineQuery(iD JSONInt64, senderUserID int64, userLocation *Location, chatType *ChatType, query string, offset string) *UpdateNewInlineQuery {
 	updateNewInlineQueryTemp := UpdateNewInlineQuery{
 		tdCommon:     tdCommon{Type: "updateNewInlineQuery"},
 		ID:           iD,
@@ -32158,7 +51517,7 @@ func (updateNewInlineQuery *UpdateNewInlineQuery) UnmarshalJSON(b []byte) error 
 	updateNewInlineQuery.Offset = tempObj.Offset
 
 	fieldChatType, _ := unmarshalChatType(objMap["chat_type"])
-	updateNewInlineQuery.ChatType = fieldChatType
+	updateNewInlineQuery.ChatType = &fieldChatType
 
 	return nil
 }
@@ -32201,6 +51560,36 @@ func NewUpdateNewChosenInlineResult(senderUserID int64, userLocation *Location, 
 	}
 
 	return &updateNewChosenInlineResultTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateNewChosenInlineResult *UpdateNewChosenInlineResult) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		SenderUserID    int64     `json:"sender_user_id"`    // Identifier of the user who sent the query
+		UserLocation    *Location `json:"user_location"`     // User location; may be null
+		Query           string    `json:"query"`             // Text of the query
+		ResultID        string    `json:"result_id"`         // Identifier of the chosen result
+		InlineMessageID string    `json:"inline_message_id"` // Identifier of the sent inline message, if known
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateNewChosenInlineResult.tdCommon = tempObj.tdCommon
+	updateNewChosenInlineResult.SenderUserID = tempObj.SenderUserID
+	updateNewChosenInlineResult.UserLocation = tempObj.UserLocation
+	updateNewChosenInlineResult.Query = tempObj.Query
+	updateNewChosenInlineResult.ResultID = tempObj.ResultID
+	updateNewChosenInlineResult.InlineMessageID = tempObj.InlineMessageID
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -32389,6 +51778,34 @@ func NewUpdateNewShippingQuery(iD JSONInt64, senderUserID int64, invoicePayload 
 	return &updateNewShippingQueryTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateNewShippingQuery *UpdateNewShippingQuery) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID              JSONInt64 `json:"id"`               // Unique query identifier
+		SenderUserID    int64     `json:"sender_user_id"`   // Identifier of the user who sent the query
+		InvoicePayload  string    `json:"invoice_payload"`  // Invoice payload
+		ShippingAddress *Address  `json:"shipping_address"` // User shipping address
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateNewShippingQuery.tdCommon = tempObj.tdCommon
+	updateNewShippingQuery.ID = tempObj.ID
+	updateNewShippingQuery.SenderUserID = tempObj.SenderUserID
+	updateNewShippingQuery.InvoicePayload = tempObj.InvoicePayload
+	updateNewShippingQuery.ShippingAddress = tempObj.ShippingAddress
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateNewShippingQuery *UpdateNewShippingQuery) GetUpdateEnum() UpdateEnum {
 	return UpdateNewShippingQueryType
@@ -32435,6 +51852,40 @@ func NewUpdateNewPreCheckoutQuery(iD JSONInt64, senderUserID int64, currency str
 	return &updateNewPreCheckoutQueryTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateNewPreCheckoutQuery *UpdateNewPreCheckoutQuery) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID               JSONInt64  `json:"id"`                 // Unique query identifier
+		SenderUserID     int64      `json:"sender_user_id"`     // Identifier of the user who sent the query
+		Currency         string     `json:"currency"`           // Currency for the product price
+		TotalAmount      int64      `json:"total_amount"`       // Total price for the product, in the smallest units of the currency
+		InvoicePayload   []byte     `json:"invoice_payload"`    // Invoice payload
+		ShippingOptionID string     `json:"shipping_option_id"` // Identifier of a shipping option chosen by the user; may be empty if not applicable
+		OrderInfo        *OrderInfo `json:"order_info"`         // Information about the order; may be null
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateNewPreCheckoutQuery.tdCommon = tempObj.tdCommon
+	updateNewPreCheckoutQuery.ID = tempObj.ID
+	updateNewPreCheckoutQuery.SenderUserID = tempObj.SenderUserID
+	updateNewPreCheckoutQuery.Currency = tempObj.Currency
+	updateNewPreCheckoutQuery.TotalAmount = tempObj.TotalAmount
+	updateNewPreCheckoutQuery.InvoicePayload = tempObj.InvoicePayload
+	updateNewPreCheckoutQuery.ShippingOptionID = tempObj.ShippingOptionID
+	updateNewPreCheckoutQuery.OrderInfo = tempObj.OrderInfo
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateNewPreCheckoutQuery *UpdateNewPreCheckoutQuery) GetUpdateEnum() UpdateEnum {
 	return UpdateNewPreCheckoutQueryType
@@ -32461,6 +51912,28 @@ func NewUpdateNewCustomEvent(event string) *UpdateNewCustomEvent {
 	}
 
 	return &updateNewCustomEventTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updateNewCustomEvent *UpdateNewCustomEvent) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Event string `json:"event"` // A JSON-serialized event
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateNewCustomEvent.tdCommon = tempObj.tdCommon
+	updateNewCustomEvent.Event = tempObj.Event
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -32497,6 +51970,32 @@ func NewUpdateNewCustomQuery(iD JSONInt64, data string, timeout int32) *UpdateNe
 	return &updateNewCustomQueryTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateNewCustomQuery *UpdateNewCustomQuery) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ID      JSONInt64 `json:"id"`      // The query identifier
+		Data    string    `json:"data"`    // JSON-serialized query data
+		Timeout int32     `json:"timeout"` // Query timeout
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateNewCustomQuery.tdCommon = tempObj.tdCommon
+	updateNewCustomQuery.ID = tempObj.ID
+	updateNewCustomQuery.Data = tempObj.Data
+	updateNewCustomQuery.Timeout = tempObj.Timeout
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateNewCustomQuery *UpdateNewCustomQuery) GetUpdateEnum() UpdateEnum {
 	return UpdateNewCustomQueryType
@@ -32523,6 +52022,36 @@ func NewUpdatePoll(poll *Poll) *UpdatePoll {
 	}
 
 	return &updatePollTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updatePoll *UpdatePoll) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updatePoll.tdCommon = tempObj.tdCommon
+
+	var poll Poll
+	if objMap["poll"] != nil {
+		err = poll.UnmarshalJSON(*objMap["poll"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updatePoll.Poll = &poll
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -32557,6 +52086,32 @@ func NewUpdatePollAnswer(pollID JSONInt64, userID int64, optionIDs []int32) *Upd
 	}
 
 	return &updatePollAnswerTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (updatePollAnswer *UpdatePollAnswer) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		PollID    JSONInt64 `json:"poll_id"`    // Unique poll identifier
+		UserID    int64     `json:"user_id"`    // The user, who changed the answer to the poll
+		OptionIDs []int32   `json:"option_ids"` // 0-based identifiers of answer options, chosen by the user
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updatePollAnswer.tdCommon = tempObj.tdCommon
+	updatePollAnswer.PollID = tempObj.PollID
+	updatePollAnswer.UserID = tempObj.UserID
+	updatePollAnswer.OptionIDs = tempObj.OptionIDs
+
+	return nil
 }
 
 // GetUpdateEnum return the enum type of this object
@@ -32602,6 +52157,55 @@ func NewUpdateChatMember(chatID int64, actorUserID int64, date int32, inviteLink
 	return &updateChatMemberTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateChatMember *UpdateChatMember) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID      int64           `json:"chat_id"`       // Chat identifier
+		ActorUserID int64           `json:"actor_user_id"` // Identifier of the user, changing the rights
+		Date        int32           `json:"date"`          // Point in time (Unix timestamp) when the user rights was changed
+		InviteLink  *ChatInviteLink `json:"invite_link"`   // If user has joined the chat using an invite link, the invite link; may be null
+
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateChatMember.tdCommon = tempObj.tdCommon
+	updateChatMember.ChatID = tempObj.ChatID
+	updateChatMember.ActorUserID = tempObj.ActorUserID
+	updateChatMember.Date = tempObj.Date
+	updateChatMember.InviteLink = tempObj.InviteLink
+
+	var oldChatMember ChatMember
+	if objMap["old_chat_member"] != nil {
+		err = oldChatMember.UnmarshalJSON(*objMap["old_chat_member"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateChatMember.OldChatMember = &oldChatMember
+
+	var newChatMember ChatMember
+	if objMap["new_chat_member"] != nil {
+		err = newChatMember.UnmarshalJSON(*objMap["new_chat_member"])
+		if err != nil {
+			return err
+		}
+	}
+
+	updateChatMember.NewChatMember = &newChatMember
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateChatMember *UpdateChatMember) GetUpdateEnum() UpdateEnum {
 	return UpdateChatMemberType
@@ -32636,6 +52240,32 @@ func NewUpdateNewChatJoinRequest(chatID int64, request *ChatJoinRequest, inviteL
 	return &updateNewChatJoinRequestTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updateNewChatJoinRequest *UpdateNewChatJoinRequest) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		ChatID     int64            `json:"chat_id"`     // Chat identifier
+		Request    *ChatJoinRequest `json:"request"`     // Join request
+		InviteLink *ChatInviteLink  `json:"invite_link"` // The invite link, which was used to send join request; may be null
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updateNewChatJoinRequest.tdCommon = tempObj.tdCommon
+	updateNewChatJoinRequest.ChatID = tempObj.ChatID
+	updateNewChatJoinRequest.Request = tempObj.Request
+	updateNewChatJoinRequest.InviteLink = tempObj.InviteLink
+
+	return nil
+}
+
 // GetUpdateEnum return the enum type of this object
 func (updateNewChatJoinRequest *UpdateNewChatJoinRequest) GetUpdateEnum() UpdateEnum {
 	return UpdateNewChatJoinRequestType
@@ -32664,6 +52294,29 @@ func NewUpdates(updates []Update) *Updates {
 	return &updatesTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (updates *Updates) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	updates.tdCommon = tempObj.tdCommon
+
+	fieldUpdates, _ := unmarshalUpdateSlice(objMap["updates"])
+	updates.Updates = fieldUpdates
+
+	return nil
+}
+
 // LogStreamDefault The log is written to stderr or an OS specific log
 type LogStreamDefault struct {
 	tdCommon
@@ -32682,6 +52335,26 @@ func NewLogStreamDefault() *LogStreamDefault {
 	}
 
 	return &logStreamDefaultTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (logStreamDefault *LogStreamDefault) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	logStreamDefault.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetLogStreamEnum return the enum type of this object
@@ -32718,6 +52391,32 @@ func NewLogStreamFile(path string, maxFileSize int64, redirectStderr bool) *LogS
 	return &logStreamFileTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (logStreamFile *LogStreamFile) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Path           string `json:"path"`            // Path to the file to where the internal TDLib log will be written
+		MaxFileSize    int64  `json:"max_file_size"`   // The maximum size of the file to where the internal TDLib log is written before the file will automatically be rotated, in bytes
+		RedirectStderr bool   `json:"redirect_stderr"` // Pass true to additionally redirect stderr to the log file. Ignored on Windows
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	logStreamFile.tdCommon = tempObj.tdCommon
+	logStreamFile.Path = tempObj.Path
+	logStreamFile.MaxFileSize = tempObj.MaxFileSize
+	logStreamFile.RedirectStderr = tempObj.RedirectStderr
+
+	return nil
+}
+
 // GetLogStreamEnum return the enum type of this object
 func (logStreamFile *LogStreamFile) GetLogStreamEnum() LogStreamEnum {
 	return LogStreamFileType
@@ -32741,6 +52440,26 @@ func NewLogStreamEmpty() *LogStreamEmpty {
 	}
 
 	return &logStreamEmptyTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (logStreamEmpty *LogStreamEmpty) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	logStreamEmpty.tdCommon = tempObj.tdCommon
+
+	return nil
 }
 
 // GetLogStreamEnum return the enum type of this object
@@ -32771,6 +52490,28 @@ func NewLogVerbosityLevel(verbosityLevel int32) *LogVerbosityLevel {
 	return &logVerbosityLevelTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (logVerbosityLevel *LogVerbosityLevel) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		VerbosityLevel int32 `json:"verbosity_level"` // Log verbosity level
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	logVerbosityLevel.tdCommon = tempObj.tdCommon
+	logVerbosityLevel.VerbosityLevel = tempObj.VerbosityLevel
+
+	return nil
+}
+
 // LogTags Contains a list of available TDLib internal log tags
 type LogTags struct {
 	tdCommon
@@ -32792,6 +52533,28 @@ func NewLogTags(tags []string) *LogTags {
 	}
 
 	return &logTagsTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (logTags *LogTags) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Tags []string `json:"tags"` // List of log tags
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	logTags.tdCommon = tempObj.tdCommon
+	logTags.Tags = tempObj.Tags
+
+	return nil
 }
 
 // TestInt A simple object containing a number; for testing only
@@ -32817,6 +52580,28 @@ func NewTestInt(value int32) *TestInt {
 	return &testIntTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (testInt *TestInt) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Value int32 `json:"value"` // Number
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	testInt.tdCommon = tempObj.tdCommon
+	testInt.Value = tempObj.Value
+
+	return nil
+}
+
 // TestString A simple object containing a string; for testing only
 type TestString struct {
 	tdCommon
@@ -32838,6 +52623,28 @@ func NewTestString(value string) *TestString {
 	}
 
 	return &testStringTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (testString *TestString) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Value string `json:"value"` // String
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	testString.tdCommon = tempObj.tdCommon
+	testString.Value = tempObj.Value
+
+	return nil
 }
 
 // TestBytes A simple object containing a sequence of bytes; for testing only
@@ -32863,6 +52670,28 @@ func NewTestBytes(value []byte) *TestBytes {
 	return &testBytesTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (testBytes *TestBytes) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Value []byte `json:"value"` // Bytes
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	testBytes.tdCommon = tempObj.tdCommon
+	testBytes.Value = tempObj.Value
+
+	return nil
+}
+
 // TestVectorInt A simple object containing a vector of numbers; for testing only
 type TestVectorInt struct {
 	tdCommon
@@ -32884,6 +52713,28 @@ func NewTestVectorInt(value []int32) *TestVectorInt {
 	}
 
 	return &testVectorIntTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (testVectorInt *TestVectorInt) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Value []int32 `json:"value"` // Vector of numbers
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	testVectorInt.tdCommon = tempObj.tdCommon
+	testVectorInt.Value = tempObj.Value
+
+	return nil
 }
 
 // TestVectorIntObject A simple object containing a vector of objects that hold a number; for testing only
@@ -32909,6 +52760,28 @@ func NewTestVectorIntObject(value []TestInt) *TestVectorIntObject {
 	return &testVectorIntObjectTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (testVectorIntObject *TestVectorIntObject) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Value []TestInt `json:"value"` // Vector of objects
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	testVectorIntObject.tdCommon = tempObj.tdCommon
+	testVectorIntObject.Value = tempObj.Value
+
+	return nil
+}
+
 // TestVectorString A simple object containing a vector of strings; for testing only
 type TestVectorString struct {
 	tdCommon
@@ -32932,6 +52805,28 @@ func NewTestVectorString(value []string) *TestVectorString {
 	return &testVectorStringTemp
 }
 
+// UnmarshalJSON unmarshal to json
+func (testVectorString *TestVectorString) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Value []string `json:"value"` // Vector of strings
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	testVectorString.tdCommon = tempObj.tdCommon
+	testVectorString.Value = tempObj.Value
+
+	return nil
+}
+
 // TestVectorStringObject A simple object containing a vector of objects that hold a string; for testing only
 type TestVectorStringObject struct {
 	tdCommon
@@ -32953,4 +52848,26 @@ func NewTestVectorStringObject(value []TestString) *TestVectorStringObject {
 	}
 
 	return &testVectorStringObjectTemp
+}
+
+// UnmarshalJSON unmarshal to json
+func (testVectorStringObject *TestVectorStringObject) UnmarshalJSON(b []byte) error {
+	var objMap map[string]*json.RawMessage
+	err := json.Unmarshal(b, &objMap)
+	if err != nil {
+		return err
+	}
+	tempObj := struct {
+		tdCommon
+		Value []TestString `json:"value"` // Vector of objects
+	}{}
+	err = json.Unmarshal(b, &tempObj)
+	if err != nil {
+		return err
+	}
+
+	testVectorStringObject.tdCommon = tempObj.tdCommon
+	testVectorStringObject.Value = tempObj.Value
+
+	return nil
 }
