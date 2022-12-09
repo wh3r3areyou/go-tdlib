@@ -23,37 +23,33 @@ If hit any build errors, refer to [Tdlib build instructions](https://github.com/
 
 
 ## Docker
-I advise you to work through a docker container with the correct installation of tdlib. This dockerfile serves as an example, but I do not advise deleting the necessary packages, and even more so I do not advise deleting the tdlib installation.
+I advise you to work through a docker container with a proper tdlib installation. This dockerfile file serves as an example, I do not advise deleting the necessary packages, and even more so I do not advise deleting the tdlib copy.
 
-Place this dockerfile in your project and organize the volume for project
+Put this dockerfile in your project and organize the volume for the project
 ```
-FROM golang:1.18-alpine AS golang
+ARG VERSION_ALPINE=3.16
+ARG VERSION_GOLANG=1.18.5
 
-WORKDIR /
+FROM golang:${VERSION_GOLANG}-alpine${VERSION_ALPINE} as golang
 
-RUN apk add --no-cache \
-        ca-certificates
+RUN apk update && \
+    apk add --no-cache ca-certificates curl g++
 
-RUN apk add --no-cache --virtual .build-deps \
-        g++ \
-        make \
-        cmake \
-        git \
-        gperf \
-        libressl-dev \
-        zlib-dev \
-        zlib-static \
-        alpine-sdk openssl-dev gperf \
-        linux-headers;
+RUN apk update && \
+    apk add --no-cache bash ca-certificates git openssh make gcc  \
+    alpine-sdk openssl-dev gperf openssh gcc libressl-dev \
+    zlib-dev \
+    zlib-static \
+    linux-headers \
+    cmake && \
+    rm -fr /var/cache/apk/*
 
-RUN git clone https://github.com/tdlib/td.git && \
-    cd td && \
-    git checkout v1.8.0 && \
-    mkdir build && \
-    cd build && \
-    cmake -DCMAKE_BUILD_TYPE=Release .. && \
-    cmake --build .  && \
-    make install
+
+COPY --from=wcsiu/tdlib:1.8.0-alpine /usr/local/include/td /usr/local/include/td
+COPY --from=wcsiu/tdlib:1.8.0-alpine /usr/local/lib/libtd* /usr/local/lib/
+COPY --from=wcsiu/tdlib:1.8.0-alpine /usr/lib/libssl.a /usr/local/lib/libssl.a
+COPY --from=wcsiu/tdlib:1.8.0-alpine /usr/lib/libcrypto.a /usr/local/lib/libcrypto.a
+COPY --from=wcsiu/tdlib:1.8.0-alpine /lib/libz.a /usr/local/lib/libz.a
 
 WORKDIR /app
 
@@ -66,5 +62,4 @@ $ docker run -it tdlib-docker
 ```
 
 ## Thx!
-https://github.com/Arman92/go-tl-parser - Generates JSON or Go structs/methods of a Telegram .tl file Adds every single comment (Structs, Struct members, Methods, Method arguments)
-https://github.com/Arman92/go-tdlib - base client and examples
+https://github.com/Arman92/go-tdlib - Main reference
