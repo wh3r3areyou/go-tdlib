@@ -7110,15 +7110,3 @@ func (mr *MockClientMockRecorder) WriteGeneratedFilePart(generationID, offset, d
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "WriteGeneratedFilePart", reflect.TypeOf((*MockClient)(nil).WriteGeneratedFilePart), generationID, offset, data)
 }
-
-// sendTdLibParams mocks base method.
-func (m *MockClient) sendTdLibParams() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "sendTdLibParams")
-}
-
-// sendTdLibParams indicates an expected call of sendTdLibParams.
-func (mr *MockClientMockRecorder) sendTdLibParams() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "sendTdLibParams", reflect.TypeOf((*MockClient)(nil).sendTdLibParams))
-}

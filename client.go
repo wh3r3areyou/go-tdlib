@@ -21,8 +21,6 @@ type Client interface {
 	AuthFunctions
 	EventFunctions
 	TDLibFunctions
-
-	sendTdLibParams()
 }
 
 // ClientImpl is the Telegram TdLib client
