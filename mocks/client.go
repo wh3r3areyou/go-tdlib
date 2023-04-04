@@ -64,6 +64,21 @@ func (mr *MockClientMockRecorder) AcceptTermsOfService(termsOfServiceID interfac
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AcceptTermsOfService", reflect.TypeOf((*MockClient)(nil).AcceptTermsOfService), termsOfServiceID)
 }
 
+// AddApplicationChangelog mocks base method.
+func (m *MockClient) AddApplicationChangelog(previousApplicationVersion string) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddApplicationChangelog", previousApplicationVersion)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AddApplicationChangelog indicates an expected call of AddApplicationChangelog.
+func (mr *MockClientMockRecorder) AddApplicationChangelog(previousApplicationVersion interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddApplicationChangelog", reflect.TypeOf((*MockClient)(nil).AddApplicationChangelog), previousApplicationVersion)
+}
+
 // AddChatMember mocks base method.
 func (m *MockClient) AddChatMember(chatID, userID int64, forwardLimit int32) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -168,6 +183,21 @@ func (mr *MockClientMockRecorder) AddFavoriteSticker(sticker interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddFavoriteSticker", reflect.TypeOf((*MockClient)(nil).AddFavoriteSticker), sticker)
 }
 
+// AddFileToDownloads mocks base method.
+func (m *MockClient) AddFileToDownloads(fileID int32, chatID, messageID int64, priority int32) (*tdlib.File, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddFileToDownloads", fileID, chatID, messageID, priority)
+	ret0, _ := ret[0].(*tdlib.File)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AddFileToDownloads indicates an expected call of AddFileToDownloads.
+func (mr *MockClientMockRecorder) AddFileToDownloads(fileID, chatID, messageID, priority interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddFileToDownloads", reflect.TypeOf((*MockClient)(nil).AddFileToDownloads), fileID, chatID, messageID, priority)
+}
+
 // AddLocalMessage mocks base method.
 func (m *MockClient) AddLocalMessage(chatID int64, senderID tdlib.MessageSender, replyToMessageID int64, disableNotification bool, inputMessageContent tdlib.InputMessageContent) (*tdlib.Message, error) {
 	m.ctrl.T.Helper()
@@ -196,6 +226,21 @@ func (m *MockClient) AddLogMessage(verbosityLevel int32, text string) (*tdlib.Ok
 func (mr *MockClientMockRecorder) AddLogMessage(verbosityLevel, text interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddLogMessage", reflect.TypeOf((*MockClient)(nil).AddLogMessage), verbosityLevel, text)
+}
+
+// AddMessageReaction mocks base method.
+func (m *MockClient) AddMessageReaction(chatID, messageID int64, reactionType tdlib.ReactionType, isBig, updateRecentReactions bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddMessageReaction", chatID, messageID, reactionType, isBig, updateRecentReactions)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AddMessageReaction indicates an expected call of AddMessageReaction.
+func (mr *MockClientMockRecorder) AddMessageReaction(chatID, messageID, reactionType, isBig, updateRecentReactions interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddMessageReaction", reflect.TypeOf((*MockClient)(nil).AddMessageReaction), chatID, messageID, reactionType, isBig, updateRecentReactions)
 }
 
 // AddNetworkStatistics mocks base method.
@@ -273,11 +318,26 @@ func (mr *MockClientMockRecorder) AddSavedAnimation(animation interface{}) *gomo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddSavedAnimation", reflect.TypeOf((*MockClient)(nil).AddSavedAnimation), animation)
 }
 
+// AddSavedNotificationSound mocks base method.
+func (m *MockClient) AddSavedNotificationSound(sound tdlib.InputFile) (*tdlib.NotificationSound, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddSavedNotificationSound", sound)
+	ret0, _ := ret[0].(*tdlib.NotificationSound)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AddSavedNotificationSound indicates an expected call of AddSavedNotificationSound.
+func (mr *MockClientMockRecorder) AddSavedNotificationSound(sound interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddSavedNotificationSound", reflect.TypeOf((*MockClient)(nil).AddSavedNotificationSound), sound)
+}
+
 // AddStickerToSet mocks base method.
-func (m *MockClient) AddStickerToSet(userID int64, name string, sticker tdlib.InputSticker) (*tdlib.StickerSet, error) {
+func (m *MockClient) AddStickerToSet(userID int64, name string, sticker *tdlib.InputSticker) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddStickerToSet", userID, name, sticker)
-	ret0, _ := ret[0].(*tdlib.StickerSet)
+	ret0, _ := ret[0].(*tdlib.Ok)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -319,18 +379,18 @@ func (mr *MockClientMockRecorder) AnswerCustomQuery(customQueryID, data interfac
 }
 
 // AnswerInlineQuery mocks base method.
-func (m *MockClient) AnswerInlineQuery(inlineQueryID *tdlib.JSONInt64, isPersonal bool, results []tdlib.InputInlineQueryResult, cacheTime int32, nextOffset, switchPmText, switchPmParameter string) (*tdlib.Ok, error) {
+func (m *MockClient) AnswerInlineQuery(inlineQueryID *tdlib.JSONInt64, isPersonal bool, button *tdlib.InlineQueryResultsButton, results []tdlib.InputInlineQueryResult, cacheTime int32, nextOffset string) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AnswerInlineQuery", inlineQueryID, isPersonal, results, cacheTime, nextOffset, switchPmText, switchPmParameter)
+	ret := m.ctrl.Call(m, "AnswerInlineQuery", inlineQueryID, isPersonal, button, results, cacheTime, nextOffset)
 	ret0, _ := ret[0].(*tdlib.Ok)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // AnswerInlineQuery indicates an expected call of AnswerInlineQuery.
-func (mr *MockClientMockRecorder) AnswerInlineQuery(inlineQueryID, isPersonal, results, cacheTime, nextOffset, switchPmText, switchPmParameter interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) AnswerInlineQuery(inlineQueryID, isPersonal, button, results, cacheTime, nextOffset interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AnswerInlineQuery", reflect.TypeOf((*MockClient)(nil).AnswerInlineQuery), inlineQueryID, isPersonal, results, cacheTime, nextOffset, switchPmText, switchPmParameter)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AnswerInlineQuery", reflect.TypeOf((*MockClient)(nil).AnswerInlineQuery), inlineQueryID, isPersonal, button, results, cacheTime, nextOffset)
 }
 
 // AnswerPreCheckoutQuery mocks base method.
@@ -361,6 +421,51 @@ func (m *MockClient) AnswerShippingQuery(shippingQueryID *tdlib.JSONInt64, shipp
 func (mr *MockClientMockRecorder) AnswerShippingQuery(shippingQueryID, shippingOptions, errParamMessage interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AnswerShippingQuery", reflect.TypeOf((*MockClient)(nil).AnswerShippingQuery), shippingQueryID, shippingOptions, errParamMessage)
+}
+
+// AnswerWebAppQuery mocks base method.
+func (m *MockClient) AnswerWebAppQuery(webAppQueryID string, resultParam tdlib.InputInlineQueryResult) (*tdlib.SentWebAppMessage, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AnswerWebAppQuery", webAppQueryID, resultParam)
+	ret0, _ := ret[0].(*tdlib.SentWebAppMessage)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AnswerWebAppQuery indicates an expected call of AnswerWebAppQuery.
+func (mr *MockClientMockRecorder) AnswerWebAppQuery(webAppQueryID, resultParam interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AnswerWebAppQuery", reflect.TypeOf((*MockClient)(nil).AnswerWebAppQuery), webAppQueryID, resultParam)
+}
+
+// AssignAppStoreTransaction mocks base method.
+func (m *MockClient) AssignAppStoreTransaction(receipt []byte, purpose tdlib.StorePaymentPurpose) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AssignAppStoreTransaction", receipt, purpose)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AssignAppStoreTransaction indicates an expected call of AssignAppStoreTransaction.
+func (mr *MockClientMockRecorder) AssignAppStoreTransaction(receipt, purpose interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssignAppStoreTransaction", reflect.TypeOf((*MockClient)(nil).AssignAppStoreTransaction), receipt, purpose)
+}
+
+// AssignGooglePlayTransaction mocks base method.
+func (m *MockClient) AssignGooglePlayTransaction(packageName, storeProductID, purchaseToken string, purpose tdlib.StorePaymentPurpose) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AssignGooglePlayTransaction", packageName, storeProductID, purchaseToken, purpose)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AssignGooglePlayTransaction indicates an expected call of AssignGooglePlayTransaction.
+func (mr *MockClientMockRecorder) AssignGooglePlayTransaction(packageName, storeProductID, purchaseToken, purpose interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AssignGooglePlayTransaction", reflect.TypeOf((*MockClient)(nil).AssignGooglePlayTransaction), packageName, storeProductID, purchaseToken, purpose)
 }
 
 // Authorize mocks base method.
@@ -408,6 +513,21 @@ func (mr *MockClientMockRecorder) BlockMessageSenderFromReplies(messageID, delet
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BlockMessageSenderFromReplies", reflect.TypeOf((*MockClient)(nil).BlockMessageSenderFromReplies), messageID, deleteMessage, deleteAllMessages, reportSpam)
 }
 
+// CanPurchasePremium mocks base method.
+func (m *MockClient) CanPurchasePremium(purpose tdlib.StorePaymentPurpose) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CanPurchasePremium", purpose)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CanPurchasePremium indicates an expected call of CanPurchasePremium.
+func (mr *MockClientMockRecorder) CanPurchasePremium(purpose interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CanPurchasePremium", reflect.TypeOf((*MockClient)(nil).CanPurchasePremium), purpose)
+}
+
 // CanTransferOwnership mocks base method.
 func (m *MockClient) CanTransferOwnership() (tdlib.CanTransferOwnershipResult, error) {
 	m.ctrl.T.Helper()
@@ -453,19 +573,19 @@ func (mr *MockClientMockRecorder) CancelPasswordReset() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CancelPasswordReset", reflect.TypeOf((*MockClient)(nil).CancelPasswordReset))
 }
 
-// CancelUploadFile mocks base method.
-func (m *MockClient) CancelUploadFile(fileID int32) (*tdlib.Ok, error) {
+// CancelPreliminaryUploadFile mocks base method.
+func (m *MockClient) CancelPreliminaryUploadFile(fileID int32) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CancelUploadFile", fileID)
+	ret := m.ctrl.Call(m, "CancelPreliminaryUploadFile", fileID)
 	ret0, _ := ret[0].(*tdlib.Ok)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// CancelUploadFile indicates an expected call of CancelUploadFile.
-func (mr *MockClientMockRecorder) CancelUploadFile(fileID interface{}) *gomock.Call {
+// CancelPreliminaryUploadFile indicates an expected call of CancelPreliminaryUploadFile.
+func (mr *MockClientMockRecorder) CancelPreliminaryUploadFile(fileID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CancelUploadFile", reflect.TypeOf((*MockClient)(nil).CancelUploadFile), fileID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CancelPreliminaryUploadFile", reflect.TypeOf((*MockClient)(nil).CancelPreliminaryUploadFile), fileID)
 }
 
 // ChangeImportedContacts mocks base method.
@@ -541,6 +661,21 @@ func (m *MockClient) CheckAuthenticationCode(code string) (*tdlib.Ok, error) {
 func (mr *MockClientMockRecorder) CheckAuthenticationCode(code interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckAuthenticationCode", reflect.TypeOf((*MockClient)(nil).CheckAuthenticationCode), code)
+}
+
+// CheckAuthenticationEmailCode mocks base method.
+func (m *MockClient) CheckAuthenticationEmailCode(code tdlib.EmailAddressAuthentication) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckAuthenticationEmailCode", code)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CheckAuthenticationEmailCode indicates an expected call of CheckAuthenticationEmailCode.
+func (mr *MockClientMockRecorder) CheckAuthenticationEmailCode(code interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckAuthenticationEmailCode", reflect.TypeOf((*MockClient)(nil).CheckAuthenticationEmailCode), code)
 }
 
 // CheckAuthenticationPassword mocks base method.
@@ -633,21 +768,6 @@ func (mr *MockClientMockRecorder) CheckCreatedPublicChatsLimit(typeParam interfa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckCreatedPublicChatsLimit", reflect.TypeOf((*MockClient)(nil).CheckCreatedPublicChatsLimit), typeParam)
 }
 
-// CheckDatabaseEncryptionKey mocks base method.
-func (m *MockClient) CheckDatabaseEncryptionKey(encryptionKey []byte) (*tdlib.Ok, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CheckDatabaseEncryptionKey", encryptionKey)
-	ret0, _ := ret[0].(*tdlib.Ok)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// CheckDatabaseEncryptionKey indicates an expected call of CheckDatabaseEncryptionKey.
-func (mr *MockClientMockRecorder) CheckDatabaseEncryptionKey(encryptionKey interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckDatabaseEncryptionKey", reflect.TypeOf((*MockClient)(nil).CheckDatabaseEncryptionKey), encryptionKey)
-}
-
 // CheckEmailAddressVerificationCode mocks base method.
 func (m *MockClient) CheckEmailAddressVerificationCode(code string) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -661,6 +781,21 @@ func (m *MockClient) CheckEmailAddressVerificationCode(code string) (*tdlib.Ok, 
 func (mr *MockClientMockRecorder) CheckEmailAddressVerificationCode(code interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckEmailAddressVerificationCode", reflect.TypeOf((*MockClient)(nil).CheckEmailAddressVerificationCode), code)
+}
+
+// CheckLoginEmailAddressCode mocks base method.
+func (m *MockClient) CheckLoginEmailAddressCode(code tdlib.EmailAddressAuthentication) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CheckLoginEmailAddressCode", code)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CheckLoginEmailAddressCode indicates an expected call of CheckLoginEmailAddressCode.
+func (mr *MockClientMockRecorder) CheckLoginEmailAddressCode(code interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckLoginEmailAddressCode", reflect.TypeOf((*MockClient)(nil).CheckLoginEmailAddressCode), code)
 }
 
 // CheckPasswordRecoveryCode mocks base method.
@@ -768,6 +903,21 @@ func (mr *MockClientMockRecorder) ClearAllDraftMessages(excludeSecretChats inter
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearAllDraftMessages", reflect.TypeOf((*MockClient)(nil).ClearAllDraftMessages), excludeSecretChats)
 }
 
+// ClearAutosaveSettingsExceptions mocks base method.
+func (m *MockClient) ClearAutosaveSettingsExceptions() (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ClearAutosaveSettingsExceptions")
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ClearAutosaveSettingsExceptions indicates an expected call of ClearAutosaveSettingsExceptions.
+func (mr *MockClientMockRecorder) ClearAutosaveSettingsExceptions() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearAutosaveSettingsExceptions", reflect.TypeOf((*MockClient)(nil).ClearAutosaveSettingsExceptions))
+}
+
 // ClearImportedContacts mocks base method.
 func (m *MockClient) ClearImportedContacts() (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -781,6 +931,36 @@ func (m *MockClient) ClearImportedContacts() (*tdlib.Ok, error) {
 func (mr *MockClientMockRecorder) ClearImportedContacts() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearImportedContacts", reflect.TypeOf((*MockClient)(nil).ClearImportedContacts))
+}
+
+// ClearRecentEmojiStatuses mocks base method.
+func (m *MockClient) ClearRecentEmojiStatuses() (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ClearRecentEmojiStatuses")
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ClearRecentEmojiStatuses indicates an expected call of ClearRecentEmojiStatuses.
+func (mr *MockClientMockRecorder) ClearRecentEmojiStatuses() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearRecentEmojiStatuses", reflect.TypeOf((*MockClient)(nil).ClearRecentEmojiStatuses))
+}
+
+// ClearRecentReactions mocks base method.
+func (m *MockClient) ClearRecentReactions() (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ClearRecentReactions")
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ClearRecentReactions indicates an expected call of ClearRecentReactions.
+func (mr *MockClientMockRecorder) ClearRecentReactions() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClearRecentReactions", reflect.TypeOf((*MockClient)(nil).ClearRecentReactions))
 }
 
 // ClearRecentStickers mocks base method.
@@ -828,6 +1008,21 @@ func (mr *MockClientMockRecorder) ClickAnimatedEmojiMessage(chatID, messageID in
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClickAnimatedEmojiMessage", reflect.TypeOf((*MockClient)(nil).ClickAnimatedEmojiMessage), chatID, messageID)
 }
 
+// ClickPremiumSubscriptionButton mocks base method.
+func (m *MockClient) ClickPremiumSubscriptionButton() (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ClickPremiumSubscriptionButton")
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ClickPremiumSubscriptionButton indicates an expected call of ClickPremiumSubscriptionButton.
+func (mr *MockClientMockRecorder) ClickPremiumSubscriptionButton() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ClickPremiumSubscriptionButton", reflect.TypeOf((*MockClient)(nil).ClickPremiumSubscriptionButton))
+}
+
 // Close mocks base method.
 func (m *MockClient) Close() (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -871,6 +1066,21 @@ func (m *MockClient) CloseSecretChat(secretChatID int32) (*tdlib.Ok, error) {
 func (mr *MockClientMockRecorder) CloseSecretChat(secretChatID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloseSecretChat", reflect.TypeOf((*MockClient)(nil).CloseSecretChat), secretChatID)
+}
+
+// CloseWebApp mocks base method.
+func (m *MockClient) CloseWebApp(webAppLaunchID *tdlib.JSONInt64) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CloseWebApp", webAppLaunchID)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CloseWebApp indicates an expected call of CloseWebApp.
+func (mr *MockClientMockRecorder) CloseWebApp(webAppLaunchID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CloseWebApp", reflect.TypeOf((*MockClient)(nil).CloseWebApp), webAppLaunchID)
 }
 
 // ConfirmQrCodeAuthentication mocks base method.
@@ -948,19 +1158,49 @@ func (mr *MockClientMockRecorder) CreateChatInviteLink(chatID, name, expirationD
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateChatInviteLink", reflect.TypeOf((*MockClient)(nil).CreateChatInviteLink), chatID, name, expirationDate, memberLimit, createsJoinRequest)
 }
 
-// CreateNewBasicGroupChat mocks base method.
-func (m *MockClient) CreateNewBasicGroupChat(userIDs []int64, title string) (*tdlib.Chat, error) {
+// CreateForumTopic mocks base method.
+func (m *MockClient) CreateForumTopic(chatID int64, name string, icon *tdlib.ForumTopicIcon) (*tdlib.ForumTopicInfo, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateNewBasicGroupChat", userIDs, title)
+	ret := m.ctrl.Call(m, "CreateForumTopic", chatID, name, icon)
+	ret0, _ := ret[0].(*tdlib.ForumTopicInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateForumTopic indicates an expected call of CreateForumTopic.
+func (mr *MockClientMockRecorder) CreateForumTopic(chatID, name, icon interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateForumTopic", reflect.TypeOf((*MockClient)(nil).CreateForumTopic), chatID, name, icon)
+}
+
+// CreateInvoiceLink mocks base method.
+func (m *MockClient) CreateInvoiceLink(invoice tdlib.InputMessageContent) (*tdlib.HttpURL, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateInvoiceLink", invoice)
+	ret0, _ := ret[0].(*tdlib.HttpURL)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateInvoiceLink indicates an expected call of CreateInvoiceLink.
+func (mr *MockClientMockRecorder) CreateInvoiceLink(invoice interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateInvoiceLink", reflect.TypeOf((*MockClient)(nil).CreateInvoiceLink), invoice)
+}
+
+// CreateNewBasicGroupChat mocks base method.
+func (m *MockClient) CreateNewBasicGroupChat(userIDs []int64, title string, messageAutoDeleteTime int32) (*tdlib.Chat, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateNewBasicGroupChat", userIDs, title, messageAutoDeleteTime)
 	ret0, _ := ret[0].(*tdlib.Chat)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateNewBasicGroupChat indicates an expected call of CreateNewBasicGroupChat.
-func (mr *MockClientMockRecorder) CreateNewBasicGroupChat(userIDs, title interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) CreateNewBasicGroupChat(userIDs, title, messageAutoDeleteTime interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateNewBasicGroupChat", reflect.TypeOf((*MockClient)(nil).CreateNewBasicGroupChat), userIDs, title)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateNewBasicGroupChat", reflect.TypeOf((*MockClient)(nil).CreateNewBasicGroupChat), userIDs, title, messageAutoDeleteTime)
 }
 
 // CreateNewSecretChat mocks base method.
@@ -979,33 +1219,33 @@ func (mr *MockClientMockRecorder) CreateNewSecretChat(userID interface{}) *gomoc
 }
 
 // CreateNewStickerSet mocks base method.
-func (m *MockClient) CreateNewStickerSet(userID int64, title, name string, isMasks bool, stickers []tdlib.InputSticker, source string) (*tdlib.StickerSet, error) {
+func (m *MockClient) CreateNewStickerSet(userID int64, title, name string, stickerFormat tdlib.StickerFormat, stickerType tdlib.StickerType, needsRepainting bool, stickers []tdlib.InputSticker, source string) (*tdlib.StickerSet, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateNewStickerSet", userID, title, name, isMasks, stickers, source)
+	ret := m.ctrl.Call(m, "CreateNewStickerSet", userID, title, name, stickerFormat, stickerType, needsRepainting, stickers, source)
 	ret0, _ := ret[0].(*tdlib.StickerSet)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateNewStickerSet indicates an expected call of CreateNewStickerSet.
-func (mr *MockClientMockRecorder) CreateNewStickerSet(userID, title, name, isMasks, stickers, source interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) CreateNewStickerSet(userID, title, name, stickerFormat, stickerType, needsRepainting, stickers, source interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateNewStickerSet", reflect.TypeOf((*MockClient)(nil).CreateNewStickerSet), userID, title, name, isMasks, stickers, source)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateNewStickerSet", reflect.TypeOf((*MockClient)(nil).CreateNewStickerSet), userID, title, name, stickerFormat, stickerType, needsRepainting, stickers, source)
 }
 
 // CreateNewSupergroupChat mocks base method.
-func (m *MockClient) CreateNewSupergroupChat(title string, isChannel bool, description string, location *tdlib.ChatLocation, forImport bool) (*tdlib.Chat, error) {
+func (m *MockClient) CreateNewSupergroupChat(title string, isForum, isChannel bool, description string, location *tdlib.ChatLocation, messageAutoDeleteTime int32, forImport bool) (*tdlib.Chat, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateNewSupergroupChat", title, isChannel, description, location, forImport)
+	ret := m.ctrl.Call(m, "CreateNewSupergroupChat", title, isForum, isChannel, description, location, messageAutoDeleteTime, forImport)
 	ret0, _ := ret[0].(*tdlib.Chat)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateNewSupergroupChat indicates an expected call of CreateNewSupergroupChat.
-func (mr *MockClientMockRecorder) CreateNewSupergroupChat(title, isChannel, description, location, forImport interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) CreateNewSupergroupChat(title, isForum, isChannel, description, location, messageAutoDeleteTime, forImport interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateNewSupergroupChat", reflect.TypeOf((*MockClient)(nil).CreateNewSupergroupChat), title, isChannel, description, location, forImport)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateNewSupergroupChat", reflect.TypeOf((*MockClient)(nil).CreateNewSupergroupChat), title, isForum, isChannel, description, location, messageAutoDeleteTime, forImport)
 }
 
 // CreatePrivateChat mocks base method.
@@ -1069,33 +1309,33 @@ func (mr *MockClientMockRecorder) CreateTemporaryPassword(password, validFor int
 }
 
 // CreateVideoChat mocks base method.
-func (m *MockClient) CreateVideoChat(chatID int64, title string, startDate int32) (*tdlib.GroupCallID, error) {
+func (m *MockClient) CreateVideoChat(chatID int64, title string, startDate int32, isRtmpStream bool) (*tdlib.GroupCallID, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreateVideoChat", chatID, title, startDate)
+	ret := m.ctrl.Call(m, "CreateVideoChat", chatID, title, startDate, isRtmpStream)
 	ret0, _ := ret[0].(*tdlib.GroupCallID)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // CreateVideoChat indicates an expected call of CreateVideoChat.
-func (mr *MockClientMockRecorder) CreateVideoChat(chatID, title, startDate interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) CreateVideoChat(chatID, title, startDate, isRtmpStream interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateVideoChat", reflect.TypeOf((*MockClient)(nil).CreateVideoChat), chatID, title, startDate)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateVideoChat", reflect.TypeOf((*MockClient)(nil).CreateVideoChat), chatID, title, startDate, isRtmpStream)
 }
 
 // DeleteAccount mocks base method.
-func (m *MockClient) DeleteAccount(reason string) (*tdlib.Ok, error) {
+func (m *MockClient) DeleteAccount(reason, password string) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "DeleteAccount", reason)
+	ret := m.ctrl.Call(m, "DeleteAccount", reason, password)
 	ret0, _ := ret[0].(*tdlib.Ok)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // DeleteAccount indicates an expected call of DeleteAccount.
-func (mr *MockClientMockRecorder) DeleteAccount(reason interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) DeleteAccount(reason, password interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAccount", reflect.TypeOf((*MockClient)(nil).DeleteAccount), reason)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAccount", reflect.TypeOf((*MockClient)(nil).DeleteAccount), reason, password)
 }
 
 // DeleteAllCallMessages mocks base method.
@@ -1248,6 +1488,21 @@ func (mr *MockClientMockRecorder) DeleteFile(fileID interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteFile", reflect.TypeOf((*MockClient)(nil).DeleteFile), fileID)
 }
 
+// DeleteForumTopic mocks base method.
+func (m *MockClient) DeleteForumTopic(chatID, messageThreadID int64) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteForumTopic", chatID, messageThreadID)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteForumTopic indicates an expected call of DeleteForumTopic.
+func (mr *MockClientMockRecorder) DeleteForumTopic(chatID, messageThreadID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteForumTopic", reflect.TypeOf((*MockClient)(nil).DeleteForumTopic), chatID, messageThreadID)
+}
+
 // DeleteLanguagePack mocks base method.
 func (m *MockClient) DeleteLanguagePack(languagePackID string) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -1353,6 +1608,21 @@ func (mr *MockClientMockRecorder) DeleteSavedOrderInfo() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSavedOrderInfo", reflect.TypeOf((*MockClient)(nil).DeleteSavedOrderInfo))
 }
 
+// DeleteStickerSet mocks base method.
+func (m *MockClient) DeleteStickerSet(name string) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteStickerSet", name)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DeleteStickerSet indicates an expected call of DeleteStickerSet.
+func (mr *MockClientMockRecorder) DeleteStickerSet(name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteStickerSet", reflect.TypeOf((*MockClient)(nil).DeleteStickerSet), name)
+}
+
 // Destroy mocks base method.
 func (m *MockClient) Destroy() (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -1366,6 +1636,21 @@ func (m *MockClient) Destroy() (*tdlib.Ok, error) {
 func (mr *MockClientMockRecorder) Destroy() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Destroy", reflect.TypeOf((*MockClient)(nil).Destroy))
+}
+
+// DisableAllSupergroupUsernames mocks base method.
+func (m *MockClient) DisableAllSupergroupUsernames(supergroupID int64) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DisableAllSupergroupUsernames", supergroupID)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DisableAllSupergroupUsernames indicates an expected call of DisableAllSupergroupUsernames.
+func (mr *MockClientMockRecorder) DisableAllSupergroupUsernames(supergroupID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DisableAllSupergroupUsernames", reflect.TypeOf((*MockClient)(nil).DisableAllSupergroupUsernames), supergroupID)
 }
 
 // DisableProxy mocks base method.
@@ -1429,7 +1714,7 @@ func (mr *MockClientMockRecorder) DisconnectWebsite(websiteID interface{}) *gomo
 }
 
 // DownloadFile mocks base method.
-func (m *MockClient) DownloadFile(fileID, priority, offset, limit int32, synchronous bool) (*tdlib.File, error) {
+func (m *MockClient) DownloadFile(fileID, priority int32, offset, limit int64, synchronous bool) (*tdlib.File, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DownloadFile", fileID, priority, offset, limit, synchronous)
 	ret0, _ := ret[0].(*tdlib.File)
@@ -1486,6 +1771,21 @@ func (m *MockClient) EditCustomLanguagePackInfo(info *tdlib.LanguagePackInfo) (*
 func (mr *MockClientMockRecorder) EditCustomLanguagePackInfo(info interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditCustomLanguagePackInfo", reflect.TypeOf((*MockClient)(nil).EditCustomLanguagePackInfo), info)
+}
+
+// EditForumTopic mocks base method.
+func (m *MockClient) EditForumTopic(chatID, messageThreadID int64, name string, editIconCustomEmoji bool, iconCustomEmojiID *tdlib.JSONInt64) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "EditForumTopic", chatID, messageThreadID, name, editIconCustomEmoji, iconCustomEmojiID)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// EditForumTopic indicates an expected call of EditForumTopic.
+func (mr *MockClientMockRecorder) EditForumTopic(chatID, messageThreadID, name, editIconCustomEmoji, iconCustomEmojiID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EditForumTopic", reflect.TypeOf((*MockClient)(nil).EditForumTopic), chatID, messageThreadID, name, editIconCustomEmoji, iconCustomEmojiID)
 }
 
 // EditInlineMessageCaption mocks base method.
@@ -1744,18 +2044,18 @@ func (mr *MockClientMockRecorder) FinishFileGeneration(generationID, errParam in
 }
 
 // ForwardMessages mocks base method.
-func (m *MockClient) ForwardMessages(chatID, fromChatID int64, messageIDs []int64, options *tdlib.MessageSendOptions, sendCopy, removeCaption, onlyPreview bool) (*tdlib.Messages, error) {
+func (m *MockClient) ForwardMessages(chatID, messageThreadID, fromChatID int64, messageIDs []int64, options *tdlib.MessageSendOptions, sendCopy, removeCaption, onlyPreview bool) (*tdlib.Messages, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ForwardMessages", chatID, fromChatID, messageIDs, options, sendCopy, removeCaption, onlyPreview)
+	ret := m.ctrl.Call(m, "ForwardMessages", chatID, messageThreadID, fromChatID, messageIDs, options, sendCopy, removeCaption, onlyPreview)
 	ret0, _ := ret[0].(*tdlib.Messages)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ForwardMessages indicates an expected call of ForwardMessages.
-func (mr *MockClientMockRecorder) ForwardMessages(chatID, fromChatID, messageIDs, options, sendCopy, removeCaption, onlyPreview interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) ForwardMessages(chatID, messageThreadID, fromChatID, messageIDs, options, sendCopy, removeCaption, onlyPreview interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ForwardMessages", reflect.TypeOf((*MockClient)(nil).ForwardMessages), chatID, fromChatID, messageIDs, options, sendCopy, removeCaption, onlyPreview)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ForwardMessages", reflect.TypeOf((*MockClient)(nil).ForwardMessages), chatID, messageThreadID, fromChatID, messageIDs, options, sendCopy, removeCaption, onlyPreview)
 }
 
 // GetAccountTTL mocks base method.
@@ -1864,18 +2164,18 @@ func (mr *MockClientMockRecorder) GetApplicationDownloadLink() *gomock.Call {
 }
 
 // GetArchivedStickerSets mocks base method.
-func (m *MockClient) GetArchivedStickerSets(isMasks bool, offsetStickerSetID *tdlib.JSONInt64, limit int32) (*tdlib.StickerSets, error) {
+func (m *MockClient) GetArchivedStickerSets(stickerType tdlib.StickerType, offsetStickerSetID *tdlib.JSONInt64, limit int32) (*tdlib.StickerSets, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetArchivedStickerSets", isMasks, offsetStickerSetID, limit)
+	ret := m.ctrl.Call(m, "GetArchivedStickerSets", stickerType, offsetStickerSetID, limit)
 	ret0, _ := ret[0].(*tdlib.StickerSets)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetArchivedStickerSets indicates an expected call of GetArchivedStickerSets.
-func (mr *MockClientMockRecorder) GetArchivedStickerSets(isMasks, offsetStickerSetID, limit interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) GetArchivedStickerSets(stickerType, offsetStickerSetID, limit interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetArchivedStickerSets", reflect.TypeOf((*MockClient)(nil).GetArchivedStickerSets), isMasks, offsetStickerSetID, limit)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetArchivedStickerSets", reflect.TypeOf((*MockClient)(nil).GetArchivedStickerSets), stickerType, offsetStickerSetID, limit)
 }
 
 // GetAttachedStickerSets mocks base method.
@@ -1891,6 +2191,21 @@ func (m *MockClient) GetAttachedStickerSets(fileID int32) (*tdlib.StickerSets, e
 func (mr *MockClientMockRecorder) GetAttachedStickerSets(fileID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAttachedStickerSets", reflect.TypeOf((*MockClient)(nil).GetAttachedStickerSets), fileID)
+}
+
+// GetAttachmentMenuBot mocks base method.
+func (m *MockClient) GetAttachmentMenuBot(botUserID int64) (*tdlib.AttachmentMenuBot, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAttachmentMenuBot", botUserID)
+	ret0, _ := ret[0].(*tdlib.AttachmentMenuBot)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAttachmentMenuBot indicates an expected call of GetAttachmentMenuBot.
+func (mr *MockClientMockRecorder) GetAttachmentMenuBot(botUserID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAttachmentMenuBot", reflect.TypeOf((*MockClient)(nil).GetAttachmentMenuBot), botUserID)
 }
 
 // GetAuthorizationState mocks base method.
@@ -1921,6 +2236,21 @@ func (m *MockClient) GetAutoDownloadSettingsPresets() (*tdlib.AutoDownloadSettin
 func (mr *MockClientMockRecorder) GetAutoDownloadSettingsPresets() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAutoDownloadSettingsPresets", reflect.TypeOf((*MockClient)(nil).GetAutoDownloadSettingsPresets))
+}
+
+// GetAutosaveSettings mocks base method.
+func (m *MockClient) GetAutosaveSettings() (*tdlib.AutosaveSettings, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAutosaveSettings")
+	ret0, _ := ret[0].(*tdlib.AutosaveSettings)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAutosaveSettings indicates an expected call of GetAutosaveSettings.
+func (mr *MockClientMockRecorder) GetAutosaveSettings() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAutosaveSettings", reflect.TypeOf((*MockClient)(nil).GetAutosaveSettings))
 }
 
 // GetBackgroundURL mocks base method.
@@ -2013,6 +2343,36 @@ func (mr *MockClientMockRecorder) GetBlockedMessageSenders(offset, limit interfa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBlockedMessageSenders", reflect.TypeOf((*MockClient)(nil).GetBlockedMessageSenders), offset, limit)
 }
 
+// GetBotInfoDescription mocks base method.
+func (m *MockClient) GetBotInfoDescription(languageCode string) (*tdlib.Text, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBotInfoDescription", languageCode)
+	ret0, _ := ret[0].(*tdlib.Text)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBotInfoDescription indicates an expected call of GetBotInfoDescription.
+func (mr *MockClientMockRecorder) GetBotInfoDescription(languageCode interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBotInfoDescription", reflect.TypeOf((*MockClient)(nil).GetBotInfoDescription), languageCode)
+}
+
+// GetBotInfoShortDescription mocks base method.
+func (m *MockClient) GetBotInfoShortDescription(languageCode string) (*tdlib.Text, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBotInfoShortDescription", languageCode)
+	ret0, _ := ret[0].(*tdlib.Text)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBotInfoShortDescription indicates an expected call of GetBotInfoShortDescription.
+func (mr *MockClientMockRecorder) GetBotInfoShortDescription(languageCode interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBotInfoShortDescription", reflect.TypeOf((*MockClient)(nil).GetBotInfoShortDescription), languageCode)
+}
+
 // GetCallbackQueryAnswer mocks base method.
 func (m *MockClient) GetCallbackQueryAnswer(chatID, messageID int64, payload tdlib.CallbackQueryPayload) (*tdlib.CallbackQueryAnswer, error) {
 	m.ctrl.T.Helper()
@@ -2074,10 +2434,10 @@ func (mr *MockClientMockRecorder) GetChatAdministrators(chatID interface{}) *gom
 }
 
 // GetChatAvailableMessageSenders mocks base method.
-func (m *MockClient) GetChatAvailableMessageSenders(chatID int64) (*tdlib.MessageSenders, error) {
+func (m *MockClient) GetChatAvailableMessageSenders(chatID int64) (*tdlib.ChatMessageSenders, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetChatAvailableMessageSenders", chatID)
-	ret0, _ := ret[0].(*tdlib.MessageSenders)
+	ret0, _ := ret[0].(*tdlib.ChatMessageSenders)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -2298,6 +2658,21 @@ func (mr *MockClientMockRecorder) GetChatMessageCount(chatID, filter, returnLoca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetChatMessageCount", reflect.TypeOf((*MockClient)(nil).GetChatMessageCount), chatID, filter, returnLocal)
 }
 
+// GetChatMessagePosition mocks base method.
+func (m *MockClient) GetChatMessagePosition(chatID, messageID int64, filter tdlib.SearchMessagesFilter, messageThreadID int64) (*tdlib.Count, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetChatMessagePosition", chatID, messageID, filter, messageThreadID)
+	ret0, _ := ret[0].(*tdlib.Count)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetChatMessagePosition indicates an expected call of GetChatMessagePosition.
+func (mr *MockClientMockRecorder) GetChatMessagePosition(chatID, messageID, filter, messageThreadID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetChatMessagePosition", reflect.TypeOf((*MockClient)(nil).GetChatMessagePosition), chatID, messageID, filter, messageThreadID)
+}
+
 // GetChatNotificationSettingsExceptions mocks base method.
 func (m *MockClient) GetChatNotificationSettingsExceptions(scope tdlib.NotificationSettingsScope, compareSound bool) (*tdlib.Chats, error) {
 	m.ctrl.T.Helper()
@@ -2358,19 +2733,19 @@ func (mr *MockClientMockRecorder) GetChatSparseMessagePositions(chatID, filter, 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetChatSparseMessagePositions", reflect.TypeOf((*MockClient)(nil).GetChatSparseMessagePositions), chatID, filter, fromMessageID, limit)
 }
 
-// GetChatSponsoredMessage mocks base method.
-func (m *MockClient) GetChatSponsoredMessage(chatID int64) (*tdlib.SponsoredMessage, error) {
+// GetChatSponsoredMessages mocks base method.
+func (m *MockClient) GetChatSponsoredMessages(chatID int64) (*tdlib.SponsoredMessages, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetChatSponsoredMessage", chatID)
-	ret0, _ := ret[0].(*tdlib.SponsoredMessage)
+	ret := m.ctrl.Call(m, "GetChatSponsoredMessages", chatID)
+	ret0, _ := ret[0].(*tdlib.SponsoredMessages)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetChatSponsoredMessage indicates an expected call of GetChatSponsoredMessage.
-func (mr *MockClientMockRecorder) GetChatSponsoredMessage(chatID interface{}) *gomock.Call {
+// GetChatSponsoredMessages indicates an expected call of GetChatSponsoredMessages.
+func (mr *MockClientMockRecorder) GetChatSponsoredMessages(chatID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetChatSponsoredMessage", reflect.TypeOf((*MockClient)(nil).GetChatSponsoredMessage), chatID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetChatSponsoredMessages", reflect.TypeOf((*MockClient)(nil).GetChatSponsoredMessages), chatID)
 }
 
 // GetChatStatistics mocks base method.
@@ -2522,6 +2897,36 @@ func (mr *MockClientMockRecorder) GetCurrentState() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCurrentState", reflect.TypeOf((*MockClient)(nil).GetCurrentState))
 }
 
+// GetCustomEmojiReactionAnimations mocks base method.
+func (m *MockClient) GetCustomEmojiReactionAnimations() (*tdlib.Stickers, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCustomEmojiReactionAnimations")
+	ret0, _ := ret[0].(*tdlib.Stickers)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCustomEmojiReactionAnimations indicates an expected call of GetCustomEmojiReactionAnimations.
+func (mr *MockClientMockRecorder) GetCustomEmojiReactionAnimations() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCustomEmojiReactionAnimations", reflect.TypeOf((*MockClient)(nil).GetCustomEmojiReactionAnimations))
+}
+
+// GetCustomEmojiStickers mocks base method.
+func (m *MockClient) GetCustomEmojiStickers(customEmojiIDs []tdlib.JSONInt64) (*tdlib.Stickers, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCustomEmojiStickers", customEmojiIDs)
+	ret0, _ := ret[0].(*tdlib.Stickers)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCustomEmojiStickers indicates an expected call of GetCustomEmojiStickers.
+func (mr *MockClientMockRecorder) GetCustomEmojiStickers(customEmojiIDs interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCustomEmojiStickers", reflect.TypeOf((*MockClient)(nil).GetCustomEmojiStickers), customEmojiIDs)
+}
+
 // GetDatabaseStatistics mocks base method.
 func (m *MockClient) GetDatabaseStatistics() (*tdlib.DatabaseStatistics, error) {
 	m.ctrl.T.Helper()
@@ -2550,6 +2955,96 @@ func (m *MockClient) GetDeepLinkInfo(link string) (*tdlib.DeepLinkInfo, error) {
 func (mr *MockClientMockRecorder) GetDeepLinkInfo(link interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDeepLinkInfo", reflect.TypeOf((*MockClient)(nil).GetDeepLinkInfo), link)
+}
+
+// GetDefaultChatPhotoCustomEmojiStickers mocks base method.
+func (m *MockClient) GetDefaultChatPhotoCustomEmojiStickers() (*tdlib.Stickers, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDefaultChatPhotoCustomEmojiStickers")
+	ret0, _ := ret[0].(*tdlib.Stickers)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDefaultChatPhotoCustomEmojiStickers indicates an expected call of GetDefaultChatPhotoCustomEmojiStickers.
+func (mr *MockClientMockRecorder) GetDefaultChatPhotoCustomEmojiStickers() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDefaultChatPhotoCustomEmojiStickers", reflect.TypeOf((*MockClient)(nil).GetDefaultChatPhotoCustomEmojiStickers))
+}
+
+// GetDefaultEmojiStatuses mocks base method.
+func (m *MockClient) GetDefaultEmojiStatuses() (*tdlib.EmojiStatuses, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDefaultEmojiStatuses")
+	ret0, _ := ret[0].(*tdlib.EmojiStatuses)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDefaultEmojiStatuses indicates an expected call of GetDefaultEmojiStatuses.
+func (mr *MockClientMockRecorder) GetDefaultEmojiStatuses() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDefaultEmojiStatuses", reflect.TypeOf((*MockClient)(nil).GetDefaultEmojiStatuses))
+}
+
+// GetDefaultMessageAutoDeleteTime mocks base method.
+func (m *MockClient) GetDefaultMessageAutoDeleteTime() (*tdlib.MessageAutoDeleteTime, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDefaultMessageAutoDeleteTime")
+	ret0, _ := ret[0].(*tdlib.MessageAutoDeleteTime)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDefaultMessageAutoDeleteTime indicates an expected call of GetDefaultMessageAutoDeleteTime.
+func (mr *MockClientMockRecorder) GetDefaultMessageAutoDeleteTime() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDefaultMessageAutoDeleteTime", reflect.TypeOf((*MockClient)(nil).GetDefaultMessageAutoDeleteTime))
+}
+
+// GetDefaultProfilePhotoCustomEmojiStickers mocks base method.
+func (m *MockClient) GetDefaultProfilePhotoCustomEmojiStickers() (*tdlib.Stickers, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetDefaultProfilePhotoCustomEmojiStickers")
+	ret0, _ := ret[0].(*tdlib.Stickers)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetDefaultProfilePhotoCustomEmojiStickers indicates an expected call of GetDefaultProfilePhotoCustomEmojiStickers.
+func (mr *MockClientMockRecorder) GetDefaultProfilePhotoCustomEmojiStickers() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetDefaultProfilePhotoCustomEmojiStickers", reflect.TypeOf((*MockClient)(nil).GetDefaultProfilePhotoCustomEmojiStickers))
+}
+
+// GetEmojiCategories mocks base method.
+func (m *MockClient) GetEmojiCategories(typeParam tdlib.EmojiCategoryType) (*tdlib.EmojiCategories, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetEmojiCategories", typeParam)
+	ret0, _ := ret[0].(*tdlib.EmojiCategories)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetEmojiCategories indicates an expected call of GetEmojiCategories.
+func (mr *MockClientMockRecorder) GetEmojiCategories(typeParam interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEmojiCategories", reflect.TypeOf((*MockClient)(nil).GetEmojiCategories), typeParam)
+}
+
+// GetEmojiReaction mocks base method.
+func (m *MockClient) GetEmojiReaction(emoji string) (*tdlib.EmojiReaction, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetEmojiReaction", emoji)
+	ret0, _ := ret[0].(*tdlib.EmojiReaction)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetEmojiReaction indicates an expected call of GetEmojiReaction.
+func (mr *MockClientMockRecorder) GetEmojiReaction(emoji interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetEmojiReaction", reflect.TypeOf((*MockClient)(nil).GetEmojiReaction), emoji)
 }
 
 // GetEmojiSuggestionsURL mocks base method.
@@ -2628,10 +3123,10 @@ func (mr *MockClientMockRecorder) GetFile(fileID interface{}) *gomock.Call {
 }
 
 // GetFileDownloadedPrefixSize mocks base method.
-func (m *MockClient) GetFileDownloadedPrefixSize(fileID, offset int32) (*tdlib.Count, error) {
+func (m *MockClient) GetFileDownloadedPrefixSize(fileID int32, offset int64) (*tdlib.FileDownloadedPrefixSize, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetFileDownloadedPrefixSize", fileID, offset)
-	ret0, _ := ret[0].(*tdlib.Count)
+	ret0, _ := ret[0].(*tdlib.FileDownloadedPrefixSize)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -2670,6 +3165,66 @@ func (m *MockClient) GetFileMimeType(fileName string) (*tdlib.Text, error) {
 func (mr *MockClientMockRecorder) GetFileMimeType(fileName interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFileMimeType", reflect.TypeOf((*MockClient)(nil).GetFileMimeType), fileName)
+}
+
+// GetForumTopic mocks base method.
+func (m *MockClient) GetForumTopic(chatID, messageThreadID int64) (*tdlib.ForumTopic, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetForumTopic", chatID, messageThreadID)
+	ret0, _ := ret[0].(*tdlib.ForumTopic)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetForumTopic indicates an expected call of GetForumTopic.
+func (mr *MockClientMockRecorder) GetForumTopic(chatID, messageThreadID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetForumTopic", reflect.TypeOf((*MockClient)(nil).GetForumTopic), chatID, messageThreadID)
+}
+
+// GetForumTopicDefaultIcons mocks base method.
+func (m *MockClient) GetForumTopicDefaultIcons() (*tdlib.Stickers, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetForumTopicDefaultIcons")
+	ret0, _ := ret[0].(*tdlib.Stickers)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetForumTopicDefaultIcons indicates an expected call of GetForumTopicDefaultIcons.
+func (mr *MockClientMockRecorder) GetForumTopicDefaultIcons() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetForumTopicDefaultIcons", reflect.TypeOf((*MockClient)(nil).GetForumTopicDefaultIcons))
+}
+
+// GetForumTopicLink mocks base method.
+func (m *MockClient) GetForumTopicLink(chatID, messageThreadID int64) (*tdlib.MessageLink, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetForumTopicLink", chatID, messageThreadID)
+	ret0, _ := ret[0].(*tdlib.MessageLink)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetForumTopicLink indicates an expected call of GetForumTopicLink.
+func (mr *MockClientMockRecorder) GetForumTopicLink(chatID, messageThreadID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetForumTopicLink", reflect.TypeOf((*MockClient)(nil).GetForumTopicLink), chatID, messageThreadID)
+}
+
+// GetForumTopics mocks base method.
+func (m *MockClient) GetForumTopics(chatID int64, query string, offsetDate int32, offsetMessageID, offsetMessageThreadID int64, limit int32) (*tdlib.ForumTopics, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetForumTopics", chatID, query, offsetDate, offsetMessageID, offsetMessageThreadID, limit)
+	ret0, _ := ret[0].(*tdlib.ForumTopics)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetForumTopics indicates an expected call of GetForumTopics.
+func (mr *MockClientMockRecorder) GetForumTopics(chatID, query, offsetDate, offsetMessageID, offsetMessageThreadID, limit interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetForumTopics", reflect.TypeOf((*MockClient)(nil).GetForumTopics), chatID, query, offsetDate, offsetMessageID, offsetMessageThreadID, limit)
 }
 
 // GetGameHighScores mocks base method.
@@ -2730,6 +3285,21 @@ func (m *MockClient) GetGroupCallStreamSegment(groupCallID int32, timeOffset int
 func (mr *MockClientMockRecorder) GetGroupCallStreamSegment(groupCallID, timeOffset, scale, channelID, videoQuality interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetGroupCallStreamSegment", reflect.TypeOf((*MockClient)(nil).GetGroupCallStreamSegment), groupCallID, timeOffset, scale, channelID, videoQuality)
+}
+
+// GetGroupCallStreams mocks base method.
+func (m *MockClient) GetGroupCallStreams(groupCallID int32) (*tdlib.GroupCallStreams, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetGroupCallStreams", groupCallID)
+	ret0, _ := ret[0].(*tdlib.GroupCallStreams)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetGroupCallStreams indicates an expected call of GetGroupCallStreams.
+func (mr *MockClientMockRecorder) GetGroupCallStreams(groupCallID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetGroupCallStreams", reflect.TypeOf((*MockClient)(nil).GetGroupCallStreams), groupCallID)
 }
 
 // GetGroupsInCommon mocks base method.
@@ -2808,18 +3378,33 @@ func (mr *MockClientMockRecorder) GetInlineQueryResults(botUserID, chatID, userL
 }
 
 // GetInstalledStickerSets mocks base method.
-func (m *MockClient) GetInstalledStickerSets(isMasks bool) (*tdlib.StickerSets, error) {
+func (m *MockClient) GetInstalledStickerSets(stickerType tdlib.StickerType) (*tdlib.StickerSets, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetInstalledStickerSets", isMasks)
+	ret := m.ctrl.Call(m, "GetInstalledStickerSets", stickerType)
 	ret0, _ := ret[0].(*tdlib.StickerSets)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetInstalledStickerSets indicates an expected call of GetInstalledStickerSets.
-func (mr *MockClientMockRecorder) GetInstalledStickerSets(isMasks interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) GetInstalledStickerSets(stickerType interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInstalledStickerSets", reflect.TypeOf((*MockClient)(nil).GetInstalledStickerSets), isMasks)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInstalledStickerSets", reflect.TypeOf((*MockClient)(nil).GetInstalledStickerSets), stickerType)
+}
+
+// GetInternalLink mocks base method.
+func (m *MockClient) GetInternalLink(typeParam tdlib.InternalLinkType, isHttp bool) (*tdlib.HttpURL, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetInternalLink", typeParam, isHttp)
+	ret0, _ := ret[0].(*tdlib.HttpURL)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetInternalLink indicates an expected call of GetInternalLink.
+func (mr *MockClientMockRecorder) GetInternalLink(typeParam, isHttp interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetInternalLink", reflect.TypeOf((*MockClient)(nil).GetInternalLink), typeParam, isHttp)
 }
 
 // GetInternalLinkType mocks base method.
@@ -3062,6 +3647,21 @@ func (mr *MockClientMockRecorder) GetMe() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMe", reflect.TypeOf((*MockClient)(nil).GetMe))
 }
 
+// GetMenuButton mocks base method.
+func (m *MockClient) GetMenuButton(userID int64) (*tdlib.BotMenuButton, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetMenuButton", userID)
+	ret0, _ := ret[0].(*tdlib.BotMenuButton)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetMenuButton indicates an expected call of GetMenuButton.
+func (mr *MockClientMockRecorder) GetMenuButton(userID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMenuButton", reflect.TypeOf((*MockClient)(nil).GetMenuButton), userID)
+}
+
 // GetMessage mocks base method.
 func (m *MockClient) GetMessage(chatID, messageID int64) (*tdlib.Message, error) {
 	m.ctrl.T.Helper()
@@ -3075,6 +3675,36 @@ func (m *MockClient) GetMessage(chatID, messageID int64) (*tdlib.Message, error)
 func (mr *MockClientMockRecorder) GetMessage(chatID, messageID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMessage", reflect.TypeOf((*MockClient)(nil).GetMessage), chatID, messageID)
+}
+
+// GetMessageAddedReactions mocks base method.
+func (m *MockClient) GetMessageAddedReactions(chatID, messageID int64, reactionType tdlib.ReactionType, offset string, limit int32) (*tdlib.AddedReactions, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetMessageAddedReactions", chatID, messageID, reactionType, offset, limit)
+	ret0, _ := ret[0].(*tdlib.AddedReactions)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetMessageAddedReactions indicates an expected call of GetMessageAddedReactions.
+func (mr *MockClientMockRecorder) GetMessageAddedReactions(chatID, messageID, reactionType, offset, limit interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMessageAddedReactions", reflect.TypeOf((*MockClient)(nil).GetMessageAddedReactions), chatID, messageID, reactionType, offset, limit)
+}
+
+// GetMessageAvailableReactions mocks base method.
+func (m *MockClient) GetMessageAvailableReactions(chatID, messageID int64, rowSize int32) (*tdlib.AvailableReactions, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetMessageAvailableReactions", chatID, messageID, rowSize)
+	ret0, _ := ret[0].(*tdlib.AvailableReactions)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetMessageAvailableReactions indicates an expected call of GetMessageAvailableReactions.
+func (mr *MockClientMockRecorder) GetMessageAvailableReactions(chatID, messageID, rowSize interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMessageAvailableReactions", reflect.TypeOf((*MockClient)(nil).GetMessageAvailableReactions), chatID, messageID, rowSize)
 }
 
 // GetMessageEmbeddingCode mocks base method.
@@ -3123,18 +3753,18 @@ func (mr *MockClientMockRecorder) GetMessageImportConfirmationText(chatID interf
 }
 
 // GetMessageLink mocks base method.
-func (m *MockClient) GetMessageLink(chatID, messageID int64, mediaTimestamp int32, forAlbum, forComment bool) (*tdlib.MessageLink, error) {
+func (m *MockClient) GetMessageLink(chatID, messageID int64, mediaTimestamp int32, forAlbum, inMessageThread bool) (*tdlib.MessageLink, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetMessageLink", chatID, messageID, mediaTimestamp, forAlbum, forComment)
+	ret := m.ctrl.Call(m, "GetMessageLink", chatID, messageID, mediaTimestamp, forAlbum, inMessageThread)
 	ret0, _ := ret[0].(*tdlib.MessageLink)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetMessageLink indicates an expected call of GetMessageLink.
-func (mr *MockClientMockRecorder) GetMessageLink(chatID, messageID, mediaTimestamp, forAlbum, forComment interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) GetMessageLink(chatID, messageID, mediaTimestamp, forAlbum, inMessageThread interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMessageLink", reflect.TypeOf((*MockClient)(nil).GetMessageLink), chatID, messageID, mediaTimestamp, forAlbum, forComment)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMessageLink", reflect.TypeOf((*MockClient)(nil).GetMessageLink), chatID, messageID, mediaTimestamp, forAlbum, inMessageThread)
 }
 
 // GetMessageLinkInfo mocks base method.
@@ -3228,10 +3858,10 @@ func (mr *MockClientMockRecorder) GetMessageThreadHistory(chatID, messageID, fro
 }
 
 // GetMessageViewers mocks base method.
-func (m *MockClient) GetMessageViewers(chatID, messageID int64) (*tdlib.Users, error) {
+func (m *MockClient) GetMessageViewers(chatID, messageID int64) (*tdlib.MessageViewers, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetMessageViewers", chatID, messageID)
-	ret0, _ := ret[0].(*tdlib.Users)
+	ret0, _ := ret[0].(*tdlib.MessageViewers)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -3303,18 +3933,18 @@ func (mr *MockClientMockRecorder) GetPassportAuthorizationForm(botUserID, scope,
 }
 
 // GetPassportAuthorizationFormAvailableElements mocks base method.
-func (m *MockClient) GetPassportAuthorizationFormAvailableElements(autorizationFormID int32, password string) (*tdlib.PassportElementsWithErrors, error) {
+func (m *MockClient) GetPassportAuthorizationFormAvailableElements(authorizationFormID int32, password string) (*tdlib.PassportElementsWithErrors, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPassportAuthorizationFormAvailableElements", autorizationFormID, password)
+	ret := m.ctrl.Call(m, "GetPassportAuthorizationFormAvailableElements", authorizationFormID, password)
 	ret0, _ := ret[0].(*tdlib.PassportElementsWithErrors)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetPassportAuthorizationFormAvailableElements indicates an expected call of GetPassportAuthorizationFormAvailableElements.
-func (mr *MockClientMockRecorder) GetPassportAuthorizationFormAvailableElements(autorizationFormID, password interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) GetPassportAuthorizationFormAvailableElements(authorizationFormID, password interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPassportAuthorizationFormAvailableElements", reflect.TypeOf((*MockClient)(nil).GetPassportAuthorizationFormAvailableElements), autorizationFormID, password)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPassportAuthorizationFormAvailableElements", reflect.TypeOf((*MockClient)(nil).GetPassportAuthorizationFormAvailableElements), authorizationFormID, password)
 }
 
 // GetPassportElement mocks base method.
@@ -3348,18 +3978,18 @@ func (mr *MockClientMockRecorder) GetPasswordState() *gomock.Call {
 }
 
 // GetPaymentForm mocks base method.
-func (m *MockClient) GetPaymentForm(chatID, messageID int64, theme *tdlib.PaymentFormTheme) (*tdlib.PaymentForm, error) {
+func (m *MockClient) GetPaymentForm(inputInvoice tdlib.InputInvoice, theme *tdlib.ThemeParameters) (*tdlib.PaymentForm, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetPaymentForm", chatID, messageID, theme)
+	ret := m.ctrl.Call(m, "GetPaymentForm", inputInvoice, theme)
 	ret0, _ := ret[0].(*tdlib.PaymentForm)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetPaymentForm indicates an expected call of GetPaymentForm.
-func (mr *MockClientMockRecorder) GetPaymentForm(chatID, messageID, theme interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) GetPaymentForm(inputInvoice, theme interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPaymentForm", reflect.TypeOf((*MockClient)(nil).GetPaymentForm), chatID, messageID, theme)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPaymentForm", reflect.TypeOf((*MockClient)(nil).GetPaymentForm), inputInvoice, theme)
 }
 
 // GetPaymentReceipt mocks base method.
@@ -3437,6 +4067,81 @@ func (mr *MockClientMockRecorder) GetPreferredCountryLanguage(countryCode interf
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPreferredCountryLanguage", reflect.TypeOf((*MockClient)(nil).GetPreferredCountryLanguage), countryCode)
 }
 
+// GetPremiumFeatures mocks base method.
+func (m *MockClient) GetPremiumFeatures(source tdlib.PremiumSource) (*tdlib.PremiumFeatures, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPremiumFeatures", source)
+	ret0, _ := ret[0].(*tdlib.PremiumFeatures)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPremiumFeatures indicates an expected call of GetPremiumFeatures.
+func (mr *MockClientMockRecorder) GetPremiumFeatures(source interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPremiumFeatures", reflect.TypeOf((*MockClient)(nil).GetPremiumFeatures), source)
+}
+
+// GetPremiumLimit mocks base method.
+func (m *MockClient) GetPremiumLimit(limitType tdlib.PremiumLimitType) (*tdlib.PremiumLimit, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPremiumLimit", limitType)
+	ret0, _ := ret[0].(*tdlib.PremiumLimit)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPremiumLimit indicates an expected call of GetPremiumLimit.
+func (mr *MockClientMockRecorder) GetPremiumLimit(limitType interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPremiumLimit", reflect.TypeOf((*MockClient)(nil).GetPremiumLimit), limitType)
+}
+
+// GetPremiumState mocks base method.
+func (m *MockClient) GetPremiumState() (*tdlib.PremiumState, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPremiumState")
+	ret0, _ := ret[0].(*tdlib.PremiumState)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPremiumState indicates an expected call of GetPremiumState.
+func (mr *MockClientMockRecorder) GetPremiumState() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPremiumState", reflect.TypeOf((*MockClient)(nil).GetPremiumState))
+}
+
+// GetPremiumStickerExamples mocks base method.
+func (m *MockClient) GetPremiumStickerExamples() (*tdlib.Stickers, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPremiumStickerExamples")
+	ret0, _ := ret[0].(*tdlib.Stickers)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPremiumStickerExamples indicates an expected call of GetPremiumStickerExamples.
+func (mr *MockClientMockRecorder) GetPremiumStickerExamples() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPremiumStickerExamples", reflect.TypeOf((*MockClient)(nil).GetPremiumStickerExamples))
+}
+
+// GetPremiumStickers mocks base method.
+func (m *MockClient) GetPremiumStickers(limit int32) (*tdlib.Stickers, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetPremiumStickers", limit)
+	ret0, _ := ret[0].(*tdlib.Stickers)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetPremiumStickers indicates an expected call of GetPremiumStickers.
+func (mr *MockClientMockRecorder) GetPremiumStickers(limit interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPremiumStickers", reflect.TypeOf((*MockClient)(nil).GetPremiumStickers), limit)
+}
+
 // GetProxies mocks base method.
 func (m *MockClient) GetProxies() (*tdlib.Proxies, error) {
 	m.ctrl.T.Helper()
@@ -3494,6 +4199,21 @@ func (m *MockClient) GetRawUpdatesChannel(capacity int) chan tdlib.UpdateMsg {
 func (mr *MockClientMockRecorder) GetRawUpdatesChannel(capacity interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRawUpdatesChannel", reflect.TypeOf((*MockClient)(nil).GetRawUpdatesChannel), capacity)
+}
+
+// GetRecentEmojiStatuses mocks base method.
+func (m *MockClient) GetRecentEmojiStatuses() (*tdlib.EmojiStatuses, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetRecentEmojiStatuses")
+	ret0, _ := ret[0].(*tdlib.EmojiStatuses)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRecentEmojiStatuses indicates an expected call of GetRecentEmojiStatuses.
+func (mr *MockClientMockRecorder) GetRecentEmojiStatuses() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRecentEmojiStatuses", reflect.TypeOf((*MockClient)(nil).GetRecentEmojiStatuses))
 }
 
 // GetRecentInlineBots mocks base method.
@@ -3631,6 +4351,36 @@ func (mr *MockClientMockRecorder) GetSavedAnimations() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSavedAnimations", reflect.TypeOf((*MockClient)(nil).GetSavedAnimations))
 }
 
+// GetSavedNotificationSound mocks base method.
+func (m *MockClient) GetSavedNotificationSound(notificationSoundID *tdlib.JSONInt64) (*tdlib.NotificationSounds, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSavedNotificationSound", notificationSoundID)
+	ret0, _ := ret[0].(*tdlib.NotificationSounds)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSavedNotificationSound indicates an expected call of GetSavedNotificationSound.
+func (mr *MockClientMockRecorder) GetSavedNotificationSound(notificationSoundID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSavedNotificationSound", reflect.TypeOf((*MockClient)(nil).GetSavedNotificationSound), notificationSoundID)
+}
+
+// GetSavedNotificationSounds mocks base method.
+func (m *MockClient) GetSavedNotificationSounds() (*tdlib.NotificationSounds, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSavedNotificationSounds")
+	ret0, _ := ret[0].(*tdlib.NotificationSounds)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSavedNotificationSounds indicates an expected call of GetSavedNotificationSounds.
+func (mr *MockClientMockRecorder) GetSavedNotificationSounds() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSavedNotificationSounds", reflect.TypeOf((*MockClient)(nil).GetSavedNotificationSounds))
+}
+
 // GetSavedOrderInfo mocks base method.
 func (m *MockClient) GetSavedOrderInfo() (*tdlib.OrderInfo, error) {
 	m.ctrl.T.Helper()
@@ -3722,18 +4472,18 @@ func (mr *MockClientMockRecorder) GetStickerSet(setID interface{}) *gomock.Call 
 }
 
 // GetStickers mocks base method.
-func (m *MockClient) GetStickers(emoji string, limit int32) (*tdlib.Stickers, error) {
+func (m *MockClient) GetStickers(stickerType tdlib.StickerType, query string, limit int32, chatID int64) (*tdlib.Stickers, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetStickers", emoji, limit)
+	ret := m.ctrl.Call(m, "GetStickers", stickerType, query, limit, chatID)
 	ret0, _ := ret[0].(*tdlib.Stickers)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetStickers indicates an expected call of GetStickers.
-func (mr *MockClientMockRecorder) GetStickers(emoji, limit interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) GetStickers(stickerType, query, limit, chatID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStickers", reflect.TypeOf((*MockClient)(nil).GetStickers), emoji, limit)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetStickers", reflect.TypeOf((*MockClient)(nil).GetStickers), stickerType, query, limit, chatID)
 }
 
 // GetStorageStatistics mocks base method.
@@ -3856,6 +4606,21 @@ func (mr *MockClientMockRecorder) GetSupergroupMembers(supergroupID, filter, off
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSupergroupMembers", reflect.TypeOf((*MockClient)(nil).GetSupergroupMembers), supergroupID, filter, offset, limit)
 }
 
+// GetSupportName mocks base method.
+func (m *MockClient) GetSupportName() (*tdlib.Text, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSupportName")
+	ret0, _ := ret[0].(*tdlib.Text)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSupportName indicates an expected call of GetSupportName.
+func (mr *MockClientMockRecorder) GetSupportName() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSupportName", reflect.TypeOf((*MockClient)(nil).GetSupportName))
+}
+
 // GetSupportUser mocks base method.
 func (m *MockClient) GetSupportUser() (*tdlib.User, error) {
 	m.ctrl.T.Helper()
@@ -3901,6 +4666,36 @@ func (mr *MockClientMockRecorder) GetTextEntities(text interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTextEntities", reflect.TypeOf((*MockClient)(nil).GetTextEntities), text)
 }
 
+// GetThemeParametersJsonString mocks base method.
+func (m *MockClient) GetThemeParametersJsonString(theme *tdlib.ThemeParameters) (*tdlib.Text, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetThemeParametersJsonString", theme)
+	ret0, _ := ret[0].(*tdlib.Text)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetThemeParametersJsonString indicates an expected call of GetThemeParametersJsonString.
+func (mr *MockClientMockRecorder) GetThemeParametersJsonString(theme interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetThemeParametersJsonString", reflect.TypeOf((*MockClient)(nil).GetThemeParametersJsonString), theme)
+}
+
+// GetThemedEmojiStatuses mocks base method.
+func (m *MockClient) GetThemedEmojiStatuses() (*tdlib.EmojiStatuses, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetThemedEmojiStatuses")
+	ret0, _ := ret[0].(*tdlib.EmojiStatuses)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetThemedEmojiStatuses indicates an expected call of GetThemedEmojiStatuses.
+func (mr *MockClientMockRecorder) GetThemedEmojiStatuses() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetThemedEmojiStatuses", reflect.TypeOf((*MockClient)(nil).GetThemedEmojiStatuses))
+}
+
 // GetTopChats mocks base method.
 func (m *MockClient) GetTopChats(category tdlib.TopChatCategory, limit int32) (*tdlib.Chats, error) {
 	m.ctrl.T.Helper()
@@ -3917,18 +4712,18 @@ func (mr *MockClientMockRecorder) GetTopChats(category, limit interface{}) *gomo
 }
 
 // GetTrendingStickerSets mocks base method.
-func (m *MockClient) GetTrendingStickerSets(offset, limit int32) (*tdlib.StickerSets, error) {
+func (m *MockClient) GetTrendingStickerSets(stickerType tdlib.StickerType, offset, limit int32) (*tdlib.TrendingStickerSets, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTrendingStickerSets", offset, limit)
-	ret0, _ := ret[0].(*tdlib.StickerSets)
+	ret := m.ctrl.Call(m, "GetTrendingStickerSets", stickerType, offset, limit)
+	ret0, _ := ret[0].(*tdlib.TrendingStickerSets)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetTrendingStickerSets indicates an expected call of GetTrendingStickerSets.
-func (mr *MockClientMockRecorder) GetTrendingStickerSets(offset, limit interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) GetTrendingStickerSets(stickerType, offset, limit interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTrendingStickerSets", reflect.TypeOf((*MockClient)(nil).GetTrendingStickerSets), offset, limit)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTrendingStickerSets", reflect.TypeOf((*MockClient)(nil).GetTrendingStickerSets), stickerType, offset, limit)
 }
 
 // GetUser mocks base method.
@@ -3961,6 +4756,21 @@ func (mr *MockClientMockRecorder) GetUserFullInfo(userID interface{}) *gomock.Ca
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserFullInfo", reflect.TypeOf((*MockClient)(nil).GetUserFullInfo), userID)
 }
 
+// GetUserLink mocks base method.
+func (m *MockClient) GetUserLink() (*tdlib.UserLink, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserLink")
+	ret0, _ := ret[0].(*tdlib.UserLink)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserLink indicates an expected call of GetUserLink.
+func (mr *MockClientMockRecorder) GetUserLink() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserLink", reflect.TypeOf((*MockClient)(nil).GetUserLink))
+}
+
 // GetUserPrivacySettingRules mocks base method.
 func (m *MockClient) GetUserPrivacySettingRules(setting tdlib.UserPrivacySetting) (*tdlib.UserPrivacySettingRules, error) {
 	m.ctrl.T.Helper()
@@ -3991,6 +4801,21 @@ func (mr *MockClientMockRecorder) GetUserProfilePhotos(userID, offset, limit int
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserProfilePhotos", reflect.TypeOf((*MockClient)(nil).GetUserProfilePhotos), userID, offset, limit)
 }
 
+// GetUserSupportInfo mocks base method.
+func (m *MockClient) GetUserSupportInfo(userID int64) (*tdlib.UserSupportInfo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUserSupportInfo", userID)
+	ret0, _ := ret[0].(*tdlib.UserSupportInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUserSupportInfo indicates an expected call of GetUserSupportInfo.
+func (mr *MockClientMockRecorder) GetUserSupportInfo(userID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserSupportInfo", reflect.TypeOf((*MockClient)(nil).GetUserSupportInfo), userID)
+}
+
 // GetVideoChatAvailableParticipants mocks base method.
 func (m *MockClient) GetVideoChatAvailableParticipants(chatID int64) (*tdlib.MessageSenders, error) {
 	m.ctrl.T.Helper()
@@ -4004,6 +4829,51 @@ func (m *MockClient) GetVideoChatAvailableParticipants(chatID int64) (*tdlib.Mes
 func (mr *MockClientMockRecorder) GetVideoChatAvailableParticipants(chatID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetVideoChatAvailableParticipants", reflect.TypeOf((*MockClient)(nil).GetVideoChatAvailableParticipants), chatID)
+}
+
+// GetVideoChatRtmpURL mocks base method.
+func (m *MockClient) GetVideoChatRtmpURL(chatID int64) (*tdlib.RtmpURL, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetVideoChatRtmpURL", chatID)
+	ret0, _ := ret[0].(*tdlib.RtmpURL)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetVideoChatRtmpURL indicates an expected call of GetVideoChatRtmpURL.
+func (mr *MockClientMockRecorder) GetVideoChatRtmpURL(chatID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetVideoChatRtmpURL", reflect.TypeOf((*MockClient)(nil).GetVideoChatRtmpURL), chatID)
+}
+
+// GetWebAppLinkURL mocks base method.
+func (m *MockClient) GetWebAppLinkURL(chatID, botUserID int64, webAppShortName, startParameter string, theme *tdlib.ThemeParameters, applicationName string, allowWriteAccess bool) (*tdlib.HttpURL, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetWebAppLinkURL", chatID, botUserID, webAppShortName, startParameter, theme, applicationName, allowWriteAccess)
+	ret0, _ := ret[0].(*tdlib.HttpURL)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetWebAppLinkURL indicates an expected call of GetWebAppLinkURL.
+func (mr *MockClientMockRecorder) GetWebAppLinkURL(chatID, botUserID, webAppShortName, startParameter, theme, applicationName, allowWriteAccess interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWebAppLinkURL", reflect.TypeOf((*MockClient)(nil).GetWebAppLinkURL), chatID, botUserID, webAppShortName, startParameter, theme, applicationName, allowWriteAccess)
+}
+
+// GetWebAppURL mocks base method.
+func (m *MockClient) GetWebAppURL(botUserID int64, uRL string, theme *tdlib.ThemeParameters, applicationName string) (*tdlib.HttpURL, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetWebAppURL", botUserID, uRL, theme, applicationName)
+	ret0, _ := ret[0].(*tdlib.HttpURL)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetWebAppURL indicates an expected call of GetWebAppURL.
+func (mr *MockClientMockRecorder) GetWebAppURL(botUserID, uRL, theme, applicationName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetWebAppURL", reflect.TypeOf((*MockClient)(nil).GetWebAppURL), botUserID, uRL, theme, applicationName)
 }
 
 // GetWebPageInstantView mocks base method.
@@ -4246,6 +5116,21 @@ func (mr *MockClientMockRecorder) OpenMessageContent(chatID, messageID interface
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OpenMessageContent", reflect.TypeOf((*MockClient)(nil).OpenMessageContent), chatID, messageID)
 }
 
+// OpenWebApp mocks base method.
+func (m *MockClient) OpenWebApp(chatID, botUserID int64, uRL string, theme *tdlib.ThemeParameters, applicationName string, messageThreadID, replyToMessageID int64) (*tdlib.WebAppInfo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "OpenWebApp", chatID, botUserID, uRL, theme, applicationName, messageThreadID, replyToMessageID)
+	ret0, _ := ret[0].(*tdlib.WebAppInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// OpenWebApp indicates an expected call of OpenWebApp.
+func (mr *MockClientMockRecorder) OpenWebApp(chatID, botUserID, uRL, theme, applicationName, messageThreadID, replyToMessageID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "OpenWebApp", reflect.TypeOf((*MockClient)(nil).OpenWebApp), chatID, botUserID, uRL, theme, applicationName, messageThreadID, replyToMessageID)
+}
+
 // OptimizeStorage mocks base method.
 func (m *MockClient) OptimizeStorage(size int64, tTL, count, immunityDelay int32, fileTypes []tdlib.FileType, chatIDs, excludeChatIDs []int64, returnDeletedFileStatistics bool, chatLimit int32) (*tdlib.StorageStatistics, error) {
 	m.ctrl.T.Helper()
@@ -4321,6 +5206,21 @@ func (mr *MockClientMockRecorder) PingProxy(proxyID interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PingProxy", reflect.TypeOf((*MockClient)(nil).PingProxy), proxyID)
 }
 
+// PreliminaryUploadFile mocks base method.
+func (m *MockClient) PreliminaryUploadFile(file tdlib.InputFile, fileType tdlib.FileType, priority int32) (*tdlib.File, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "PreliminaryUploadFile", file, fileType, priority)
+	ret0, _ := ret[0].(*tdlib.File)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// PreliminaryUploadFile indicates an expected call of PreliminaryUploadFile.
+func (mr *MockClientMockRecorder) PreliminaryUploadFile(file, fileType, priority interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "PreliminaryUploadFile", reflect.TypeOf((*MockClient)(nil).PreliminaryUploadFile), file, fileType, priority)
+}
+
 // ProcessChatJoinRequest mocks base method.
 func (m *MockClient) ProcessChatJoinRequest(chatID, userID int64, approve bool) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -4366,6 +5266,21 @@ func (mr *MockClientMockRecorder) ProcessPushNotification(payload interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProcessPushNotification", reflect.TypeOf((*MockClient)(nil).ProcessPushNotification), payload)
 }
 
+// RateSpeechRecognition mocks base method.
+func (m *MockClient) RateSpeechRecognition(chatID, messageID int64, isGood bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RateSpeechRecognition", chatID, messageID, isGood)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RateSpeechRecognition indicates an expected call of RateSpeechRecognition.
+func (mr *MockClientMockRecorder) RateSpeechRecognition(chatID, messageID, isGood interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RateSpeechRecognition", reflect.TypeOf((*MockClient)(nil).RateSpeechRecognition), chatID, messageID, isGood)
+}
+
 // ReadAllChatMentions mocks base method.
 func (m *MockClient) ReadAllChatMentions(chatID int64) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -4381,8 +5296,53 @@ func (mr *MockClientMockRecorder) ReadAllChatMentions(chatID interface{}) *gomoc
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadAllChatMentions", reflect.TypeOf((*MockClient)(nil).ReadAllChatMentions), chatID)
 }
 
+// ReadAllChatReactions mocks base method.
+func (m *MockClient) ReadAllChatReactions(chatID int64) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReadAllChatReactions", chatID)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReadAllChatReactions indicates an expected call of ReadAllChatReactions.
+func (mr *MockClientMockRecorder) ReadAllChatReactions(chatID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadAllChatReactions", reflect.TypeOf((*MockClient)(nil).ReadAllChatReactions), chatID)
+}
+
+// ReadAllMessageThreadMentions mocks base method.
+func (m *MockClient) ReadAllMessageThreadMentions(chatID, messageThreadID int64) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReadAllMessageThreadMentions", chatID, messageThreadID)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReadAllMessageThreadMentions indicates an expected call of ReadAllMessageThreadMentions.
+func (mr *MockClientMockRecorder) ReadAllMessageThreadMentions(chatID, messageThreadID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadAllMessageThreadMentions", reflect.TypeOf((*MockClient)(nil).ReadAllMessageThreadMentions), chatID, messageThreadID)
+}
+
+// ReadAllMessageThreadReactions mocks base method.
+func (m *MockClient) ReadAllMessageThreadReactions(chatID, messageThreadID int64) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReadAllMessageThreadReactions", chatID, messageThreadID)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReadAllMessageThreadReactions indicates an expected call of ReadAllMessageThreadReactions.
+func (mr *MockClientMockRecorder) ReadAllMessageThreadReactions(chatID, messageThreadID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadAllMessageThreadReactions", reflect.TypeOf((*MockClient)(nil).ReadAllMessageThreadReactions), chatID, messageThreadID)
+}
+
 // ReadFilePart mocks base method.
-func (m *MockClient) ReadFilePart(fileID, offset, count int32) (*tdlib.FilePart, error) {
+func (m *MockClient) ReadFilePart(fileID int32, offset, count int64) (*tdlib.FilePart, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ReadFilePart", fileID, offset, count)
 	ret0, _ := ret[0].(*tdlib.FilePart)
@@ -4394,6 +5354,21 @@ func (m *MockClient) ReadFilePart(fileID, offset, count int32) (*tdlib.FilePart,
 func (mr *MockClientMockRecorder) ReadFilePart(fileID, offset, count interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadFilePart", reflect.TypeOf((*MockClient)(nil).ReadFilePart), fileID, offset, count)
+}
+
+// RecognizeSpeech mocks base method.
+func (m *MockClient) RecognizeSpeech(chatID, messageID int64) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RecognizeSpeech", chatID, messageID)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RecognizeSpeech indicates an expected call of RecognizeSpeech.
+func (mr *MockClientMockRecorder) RecognizeSpeech(chatID, messageID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RecognizeSpeech", reflect.TypeOf((*MockClient)(nil).RecognizeSpeech), chatID, messageID)
 }
 
 // RecoverAuthenticationPassword mocks base method.
@@ -4456,6 +5431,21 @@ func (mr *MockClientMockRecorder) RegisterUser(firstName, lastName interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RegisterUser", reflect.TypeOf((*MockClient)(nil).RegisterUser), firstName, lastName)
 }
 
+// RemoveAllFilesFromDownloads mocks base method.
+func (m *MockClient) RemoveAllFilesFromDownloads(onlyActive, onlyCompleted, deleteFromCache bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RemoveAllFilesFromDownloads", onlyActive, onlyCompleted, deleteFromCache)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RemoveAllFilesFromDownloads indicates an expected call of RemoveAllFilesFromDownloads.
+func (mr *MockClientMockRecorder) RemoveAllFilesFromDownloads(onlyActive, onlyCompleted, deleteFromCache interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveAllFilesFromDownloads", reflect.TypeOf((*MockClient)(nil).RemoveAllFilesFromDownloads), onlyActive, onlyCompleted, deleteFromCache)
+}
+
 // RemoveBackground mocks base method.
 func (m *MockClient) RemoveBackground(backgroundID *tdlib.JSONInt64) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -4514,6 +5504,36 @@ func (m *MockClient) RemoveFavoriteSticker(sticker tdlib.InputFile) (*tdlib.Ok, 
 func (mr *MockClientMockRecorder) RemoveFavoriteSticker(sticker interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveFavoriteSticker", reflect.TypeOf((*MockClient)(nil).RemoveFavoriteSticker), sticker)
+}
+
+// RemoveFileFromDownloads mocks base method.
+func (m *MockClient) RemoveFileFromDownloads(fileID int32, deleteFromCache bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RemoveFileFromDownloads", fileID, deleteFromCache)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RemoveFileFromDownloads indicates an expected call of RemoveFileFromDownloads.
+func (mr *MockClientMockRecorder) RemoveFileFromDownloads(fileID, deleteFromCache interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveFileFromDownloads", reflect.TypeOf((*MockClient)(nil).RemoveFileFromDownloads), fileID, deleteFromCache)
+}
+
+// RemoveMessageReaction mocks base method.
+func (m *MockClient) RemoveMessageReaction(chatID, messageID int64, reactionType tdlib.ReactionType) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RemoveMessageReaction", chatID, messageID, reactionType)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RemoveMessageReaction indicates an expected call of RemoveMessageReaction.
+func (mr *MockClientMockRecorder) RemoveMessageReaction(chatID, messageID, reactionType interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveMessageReaction", reflect.TypeOf((*MockClient)(nil).RemoveMessageReaction), chatID, messageID, reactionType)
 }
 
 // RemoveNotification mocks base method.
@@ -4621,6 +5641,21 @@ func (mr *MockClientMockRecorder) RemoveSavedAnimation(animation interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveSavedAnimation", reflect.TypeOf((*MockClient)(nil).RemoveSavedAnimation), animation)
 }
 
+// RemoveSavedNotificationSound mocks base method.
+func (m *MockClient) RemoveSavedNotificationSound(notificationSoundID *tdlib.JSONInt64) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RemoveSavedNotificationSound", notificationSoundID)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// RemoveSavedNotificationSound indicates an expected call of RemoveSavedNotificationSound.
+func (mr *MockClientMockRecorder) RemoveSavedNotificationSound(notificationSoundID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveSavedNotificationSound", reflect.TypeOf((*MockClient)(nil).RemoveSavedNotificationSound), notificationSoundID)
+}
+
 // RemoveStickerFromSet mocks base method.
 func (m *MockClient) RemoveStickerFromSet(sticker tdlib.InputFile) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -4651,34 +5686,64 @@ func (mr *MockClientMockRecorder) RemoveTopChat(category, chatID interface{}) *g
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveTopChat", reflect.TypeOf((*MockClient)(nil).RemoveTopChat), category, chatID)
 }
 
-// ReorderChatFilters mocks base method.
-func (m *MockClient) ReorderChatFilters(chatFilterIDs []int32) (*tdlib.Ok, error) {
+// ReorderActiveUsernames mocks base method.
+func (m *MockClient) ReorderActiveUsernames(usernames []string) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ReorderChatFilters", chatFilterIDs)
+	ret := m.ctrl.Call(m, "ReorderActiveUsernames", usernames)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReorderActiveUsernames indicates an expected call of ReorderActiveUsernames.
+func (mr *MockClientMockRecorder) ReorderActiveUsernames(usernames interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReorderActiveUsernames", reflect.TypeOf((*MockClient)(nil).ReorderActiveUsernames), usernames)
+}
+
+// ReorderChatFilters mocks base method.
+func (m *MockClient) ReorderChatFilters(chatFilterIDs []int32, mainChatListPosition int32) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReorderChatFilters", chatFilterIDs, mainChatListPosition)
 	ret0, _ := ret[0].(*tdlib.Ok)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ReorderChatFilters indicates an expected call of ReorderChatFilters.
-func (mr *MockClientMockRecorder) ReorderChatFilters(chatFilterIDs interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) ReorderChatFilters(chatFilterIDs, mainChatListPosition interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReorderChatFilters", reflect.TypeOf((*MockClient)(nil).ReorderChatFilters), chatFilterIDs)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReorderChatFilters", reflect.TypeOf((*MockClient)(nil).ReorderChatFilters), chatFilterIDs, mainChatListPosition)
 }
 
 // ReorderInstalledStickerSets mocks base method.
-func (m *MockClient) ReorderInstalledStickerSets(isMasks bool, stickerSetIDs []tdlib.JSONInt64) (*tdlib.Ok, error) {
+func (m *MockClient) ReorderInstalledStickerSets(stickerType tdlib.StickerType, stickerSetIDs []tdlib.JSONInt64) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ReorderInstalledStickerSets", isMasks, stickerSetIDs)
+	ret := m.ctrl.Call(m, "ReorderInstalledStickerSets", stickerType, stickerSetIDs)
 	ret0, _ := ret[0].(*tdlib.Ok)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ReorderInstalledStickerSets indicates an expected call of ReorderInstalledStickerSets.
-func (mr *MockClientMockRecorder) ReorderInstalledStickerSets(isMasks, stickerSetIDs interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) ReorderInstalledStickerSets(stickerType, stickerSetIDs interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReorderInstalledStickerSets", reflect.TypeOf((*MockClient)(nil).ReorderInstalledStickerSets), isMasks, stickerSetIDs)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReorderInstalledStickerSets", reflect.TypeOf((*MockClient)(nil).ReorderInstalledStickerSets), stickerType, stickerSetIDs)
+}
+
+// ReorderSupergroupActiveUsernames mocks base method.
+func (m *MockClient) ReorderSupergroupActiveUsernames(supergroupID int64, usernames []string) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReorderSupergroupActiveUsernames", supergroupID, usernames)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReorderSupergroupActiveUsernames indicates an expected call of ReorderSupergroupActiveUsernames.
+func (mr *MockClientMockRecorder) ReorderSupergroupActiveUsernames(supergroupID, usernames interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReorderSupergroupActiveUsernames", reflect.TypeOf((*MockClient)(nil).ReorderSupergroupActiveUsernames), supergroupID, usernames)
 }
 
 // ReplacePrimaryChatInviteLink mocks base method.
@@ -4694,6 +5759,21 @@ func (m *MockClient) ReplacePrimaryChatInviteLink(chatID int64) (*tdlib.ChatInvi
 func (mr *MockClientMockRecorder) ReplacePrimaryChatInviteLink(chatID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReplacePrimaryChatInviteLink", reflect.TypeOf((*MockClient)(nil).ReplacePrimaryChatInviteLink), chatID)
+}
+
+// ReplaceVideoChatRtmpURL mocks base method.
+func (m *MockClient) ReplaceVideoChatRtmpURL(chatID int64) (*tdlib.RtmpURL, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReplaceVideoChatRtmpURL", chatID)
+	ret0, _ := ret[0].(*tdlib.RtmpURL)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReplaceVideoChatRtmpURL indicates an expected call of ReplaceVideoChatRtmpURL.
+func (mr *MockClientMockRecorder) ReplaceVideoChatRtmpURL(chatID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReplaceVideoChatRtmpURL", reflect.TypeOf((*MockClient)(nil).ReplaceVideoChatRtmpURL), chatID)
 }
 
 // ReportChat mocks base method.
@@ -4724,6 +5804,36 @@ func (m *MockClient) ReportChatPhoto(chatID int64, fileID int32, reason tdlib.Ch
 func (mr *MockClientMockRecorder) ReportChatPhoto(chatID, fileID, reason, text interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReportChatPhoto", reflect.TypeOf((*MockClient)(nil).ReportChatPhoto), chatID, fileID, reason, text)
+}
+
+// ReportMessageReactions mocks base method.
+func (m *MockClient) ReportMessageReactions(chatID, messageID int64, senderID tdlib.MessageSender) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReportMessageReactions", chatID, messageID, senderID)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReportMessageReactions indicates an expected call of ReportMessageReactions.
+func (mr *MockClientMockRecorder) ReportMessageReactions(chatID, messageID, senderID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReportMessageReactions", reflect.TypeOf((*MockClient)(nil).ReportMessageReactions), chatID, messageID, senderID)
+}
+
+// ReportSupergroupAntiSpamFalsePositive mocks base method.
+func (m *MockClient) ReportSupergroupAntiSpamFalsePositive(supergroupID, messageID int64) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReportSupergroupAntiSpamFalsePositive", supergroupID, messageID)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReportSupergroupAntiSpamFalsePositive indicates an expected call of ReportSupergroupAntiSpamFalsePositive.
+func (mr *MockClientMockRecorder) ReportSupergroupAntiSpamFalsePositive(supergroupID, messageID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReportSupergroupAntiSpamFalsePositive", reflect.TypeOf((*MockClient)(nil).ReportSupergroupAntiSpamFalsePositive), supergroupID, messageID)
 }
 
 // ReportSupergroupSpam mocks base method.
@@ -4831,6 +5941,21 @@ func (mr *MockClientMockRecorder) ResendEmailAddressVerificationCode() *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResendEmailAddressVerificationCode", reflect.TypeOf((*MockClient)(nil).ResendEmailAddressVerificationCode))
 }
 
+// ResendLoginEmailAddressCode mocks base method.
+func (m *MockClient) ResendLoginEmailAddressCode() (*tdlib.EmailAddressAuthenticationCodeInfo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ResendLoginEmailAddressCode")
+	ret0, _ := ret[0].(*tdlib.EmailAddressAuthenticationCodeInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ResendLoginEmailAddressCode indicates an expected call of ResendLoginEmailAddressCode.
+func (mr *MockClientMockRecorder) ResendLoginEmailAddressCode() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResendLoginEmailAddressCode", reflect.TypeOf((*MockClient)(nil).ResendLoginEmailAddressCode))
+}
+
 // ResendMessages mocks base method.
 func (m *MockClient) ResendMessages(chatID int64, messageIDs []int64) (*tdlib.Messages, error) {
 	m.ctrl.T.Helper()
@@ -4904,6 +6029,21 @@ func (m *MockClient) ResetAllNotificationSettings() (*tdlib.Ok, error) {
 func (mr *MockClientMockRecorder) ResetAllNotificationSettings() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResetAllNotificationSettings", reflect.TypeOf((*MockClient)(nil).ResetAllNotificationSettings))
+}
+
+// ResetAuthenticationEmailAddress mocks base method.
+func (m *MockClient) ResetAuthenticationEmailAddress() (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ResetAuthenticationEmailAddress")
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ResetAuthenticationEmailAddress indicates an expected call of ResetAuthenticationEmailAddress.
+func (mr *MockClientMockRecorder) ResetAuthenticationEmailAddress() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResetAuthenticationEmailAddress", reflect.TypeOf((*MockClient)(nil).ResetAuthenticationEmailAddress))
 }
 
 // ResetBackgrounds mocks base method.
@@ -5012,18 +6152,18 @@ func (mr *MockClientMockRecorder) SearchBackground(name interface{}) *gomock.Cal
 }
 
 // SearchCallMessages mocks base method.
-func (m *MockClient) SearchCallMessages(fromMessageID int64, limit int32, onlyMissed bool) (*tdlib.Messages, error) {
+func (m *MockClient) SearchCallMessages(offset string, limit int32, onlyMissed bool) (*tdlib.FoundMessages, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchCallMessages", fromMessageID, limit, onlyMissed)
-	ret0, _ := ret[0].(*tdlib.Messages)
+	ret := m.ctrl.Call(m, "SearchCallMessages", offset, limit, onlyMissed)
+	ret0, _ := ret[0].(*tdlib.FoundMessages)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SearchCallMessages indicates an expected call of SearchCallMessages.
-func (mr *MockClientMockRecorder) SearchCallMessages(fromMessageID, limit, onlyMissed interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) SearchCallMessages(offset, limit, onlyMissed interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchCallMessages", reflect.TypeOf((*MockClient)(nil).SearchCallMessages), fromMessageID, limit, onlyMissed)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchCallMessages", reflect.TypeOf((*MockClient)(nil).SearchCallMessages), offset, limit, onlyMissed)
 }
 
 // SearchChatMembers mocks base method.
@@ -5042,10 +6182,10 @@ func (mr *MockClientMockRecorder) SearchChatMembers(chatID, query, limit, filter
 }
 
 // SearchChatMessages mocks base method.
-func (m *MockClient) SearchChatMessages(chatID int64, query string, senderID tdlib.MessageSender, fromMessageID int64, offset, limit int32, filter tdlib.SearchMessagesFilter, messageThreadID int64) (*tdlib.Messages, error) {
+func (m *MockClient) SearchChatMessages(chatID int64, query string, senderID tdlib.MessageSender, fromMessageID int64, offset, limit int32, filter tdlib.SearchMessagesFilter, messageThreadID int64) (*tdlib.FoundChatMessages, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SearchChatMessages", chatID, query, senderID, fromMessageID, offset, limit, filter, messageThreadID)
-	ret0, _ := ret[0].(*tdlib.Messages)
+	ret0, _ := ret[0].(*tdlib.FoundChatMessages)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -5146,6 +6286,21 @@ func (mr *MockClientMockRecorder) SearchEmojis(text, exactMatch, inputLanguageCo
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchEmojis", reflect.TypeOf((*MockClient)(nil).SearchEmojis), text, exactMatch, inputLanguageCodes)
 }
 
+// SearchFileDownloads mocks base method.
+func (m *MockClient) SearchFileDownloads(query string, onlyActive, onlyCompleted bool, offset string, limit int32) (*tdlib.FoundFileDownloads, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchFileDownloads", query, onlyActive, onlyCompleted, offset, limit)
+	ret0, _ := ret[0].(*tdlib.FoundFileDownloads)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchFileDownloads indicates an expected call of SearchFileDownloads.
+func (mr *MockClientMockRecorder) SearchFileDownloads(query, onlyActive, onlyCompleted, offset, limit interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchFileDownloads", reflect.TypeOf((*MockClient)(nil).SearchFileDownloads), query, onlyActive, onlyCompleted, offset, limit)
+}
+
 // SearchHashtags mocks base method.
 func (m *MockClient) SearchHashtags(prefix string, limit int32) (*tdlib.Hashtags, error) {
 	m.ctrl.T.Helper()
@@ -5162,33 +6317,48 @@ func (mr *MockClientMockRecorder) SearchHashtags(prefix, limit interface{}) *gom
 }
 
 // SearchInstalledStickerSets mocks base method.
-func (m *MockClient) SearchInstalledStickerSets(isMasks bool, query string, limit int32) (*tdlib.StickerSets, error) {
+func (m *MockClient) SearchInstalledStickerSets(stickerType tdlib.StickerType, query string, limit int32) (*tdlib.StickerSets, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchInstalledStickerSets", isMasks, query, limit)
+	ret := m.ctrl.Call(m, "SearchInstalledStickerSets", stickerType, query, limit)
 	ret0, _ := ret[0].(*tdlib.StickerSets)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SearchInstalledStickerSets indicates an expected call of SearchInstalledStickerSets.
-func (mr *MockClientMockRecorder) SearchInstalledStickerSets(isMasks, query, limit interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) SearchInstalledStickerSets(stickerType, query, limit interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchInstalledStickerSets", reflect.TypeOf((*MockClient)(nil).SearchInstalledStickerSets), isMasks, query, limit)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchInstalledStickerSets", reflect.TypeOf((*MockClient)(nil).SearchInstalledStickerSets), stickerType, query, limit)
 }
 
 // SearchMessages mocks base method.
-func (m *MockClient) SearchMessages(chatList tdlib.ChatList, query string, offsetDate int32, offsetChatID, offsetMessageID int64, limit int32, filter tdlib.SearchMessagesFilter, minDate, maxDate int32) (*tdlib.Messages, error) {
+func (m *MockClient) SearchMessages(chatList tdlib.ChatList, query, offset string, limit int32, filter tdlib.SearchMessagesFilter, minDate, maxDate int32) (*tdlib.FoundMessages, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchMessages", chatList, query, offsetDate, offsetChatID, offsetMessageID, limit, filter, minDate, maxDate)
-	ret0, _ := ret[0].(*tdlib.Messages)
+	ret := m.ctrl.Call(m, "SearchMessages", chatList, query, offset, limit, filter, minDate, maxDate)
+	ret0, _ := ret[0].(*tdlib.FoundMessages)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SearchMessages indicates an expected call of SearchMessages.
-func (mr *MockClientMockRecorder) SearchMessages(chatList, query, offsetDate, offsetChatID, offsetMessageID, limit, filter, minDate, maxDate interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) SearchMessages(chatList, query, offset, limit, filter, minDate, maxDate interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchMessages", reflect.TypeOf((*MockClient)(nil).SearchMessages), chatList, query, offsetDate, offsetChatID, offsetMessageID, limit, filter, minDate, maxDate)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchMessages", reflect.TypeOf((*MockClient)(nil).SearchMessages), chatList, query, offset, limit, filter, minDate, maxDate)
+}
+
+// SearchOutgoingDocumentMessages mocks base method.
+func (m *MockClient) SearchOutgoingDocumentMessages(query string, limit int32) (*tdlib.FoundMessages, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchOutgoingDocumentMessages", query, limit)
+	ret0, _ := ret[0].(*tdlib.FoundMessages)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchOutgoingDocumentMessages indicates an expected call of SearchOutgoingDocumentMessages.
+func (mr *MockClientMockRecorder) SearchOutgoingDocumentMessages(query, limit interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchOutgoingDocumentMessages", reflect.TypeOf((*MockClient)(nil).SearchOutgoingDocumentMessages), query, limit)
 }
 
 // SearchPublicChat mocks base method.
@@ -5267,18 +6437,63 @@ func (mr *MockClientMockRecorder) SearchStickerSets(query interface{}) *gomock.C
 }
 
 // SearchStickers mocks base method.
-func (m *MockClient) SearchStickers(emoji string, limit int32) (*tdlib.Stickers, error) {
+func (m *MockClient) SearchStickers(stickerType tdlib.StickerType, emojis string, limit int32) (*tdlib.Stickers, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchStickers", emoji, limit)
+	ret := m.ctrl.Call(m, "SearchStickers", stickerType, emojis, limit)
 	ret0, _ := ret[0].(*tdlib.Stickers)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SearchStickers indicates an expected call of SearchStickers.
-func (mr *MockClientMockRecorder) SearchStickers(emoji, limit interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) SearchStickers(stickerType, emojis, limit interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchStickers", reflect.TypeOf((*MockClient)(nil).SearchStickers), emoji, limit)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchStickers", reflect.TypeOf((*MockClient)(nil).SearchStickers), stickerType, emojis, limit)
+}
+
+// SearchUserByPhoneNumber mocks base method.
+func (m *MockClient) SearchUserByPhoneNumber(phoneNumber string) (*tdlib.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchUserByPhoneNumber", phoneNumber)
+	ret0, _ := ret[0].(*tdlib.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchUserByPhoneNumber indicates an expected call of SearchUserByPhoneNumber.
+func (mr *MockClientMockRecorder) SearchUserByPhoneNumber(phoneNumber interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchUserByPhoneNumber", reflect.TypeOf((*MockClient)(nil).SearchUserByPhoneNumber), phoneNumber)
+}
+
+// SearchUserByToken mocks base method.
+func (m *MockClient) SearchUserByToken(token string) (*tdlib.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchUserByToken", token)
+	ret0, _ := ret[0].(*tdlib.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchUserByToken indicates an expected call of SearchUserByToken.
+func (mr *MockClientMockRecorder) SearchUserByToken(token interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchUserByToken", reflect.TypeOf((*MockClient)(nil).SearchUserByToken), token)
+}
+
+// SearchWebApp mocks base method.
+func (m *MockClient) SearchWebApp(botUserID int64, webAppShortName string) (*tdlib.FoundWebApp, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SearchWebApp", botUserID, webAppShortName)
+	ret0, _ := ret[0].(*tdlib.FoundWebApp)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SearchWebApp indicates an expected call of SearchWebApp.
+func (mr *MockClientMockRecorder) SearchWebApp(botUserID, webAppShortName interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchWebApp", reflect.TypeOf((*MockClient)(nil).SearchWebApp), botUserID, webAppShortName)
 }
 
 // SendAndCatch mocks base method.
@@ -5326,6 +6541,21 @@ func (mr *MockClientMockRecorder) SendAuthPassword(password interface{}) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendAuthPassword", reflect.TypeOf((*MockClient)(nil).SendAuthPassword), password)
 }
 
+// SendAuthenticationFirebaseSms mocks base method.
+func (m *MockClient) SendAuthenticationFirebaseSms(token string) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendAuthenticationFirebaseSms", token)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SendAuthenticationFirebaseSms indicates an expected call of SendAuthenticationFirebaseSms.
+func (mr *MockClientMockRecorder) SendAuthenticationFirebaseSms(token interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendAuthenticationFirebaseSms", reflect.TypeOf((*MockClient)(nil).SendAuthenticationFirebaseSms), token)
+}
+
 // SendBotStartMessage mocks base method.
 func (m *MockClient) SendBotStartMessage(botUserID, chatID int64, parameter string) (*tdlib.Message, error) {
 	m.ctrl.T.Helper()
@@ -5354,6 +6584,21 @@ func (m *MockClient) SendCallDebugInformation(callID int32, debugInformation str
 func (mr *MockClientMockRecorder) SendCallDebugInformation(callID, debugInformation interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendCallDebugInformation", reflect.TypeOf((*MockClient)(nil).SendCallDebugInformation), callID, debugInformation)
+}
+
+// SendCallLog mocks base method.
+func (m *MockClient) SendCallLog(callID int32, logFile tdlib.InputFile) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendCallLog", callID, logFile)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SendCallLog indicates an expected call of SendCallLog.
+func (mr *MockClientMockRecorder) SendCallLog(callID, logFile interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendCallLog", reflect.TypeOf((*MockClient)(nil).SendCallLog), callID, logFile)
 }
 
 // SendCallRating mocks base method.
@@ -5477,48 +6722,48 @@ func (mr *MockClientMockRecorder) SendMessage(chatID, messageThreadID, replyToMe
 }
 
 // SendMessageAlbum mocks base method.
-func (m *MockClient) SendMessageAlbum(chatID, messageThreadID, replyToMessageID int64, options *tdlib.MessageSendOptions, inputMessageContents []tdlib.InputMessageContent) (*tdlib.Messages, error) {
+func (m *MockClient) SendMessageAlbum(chatID, messageThreadID, replyToMessageID int64, options *tdlib.MessageSendOptions, inputMessageContents []tdlib.InputMessageContent, onlyPreview bool) (*tdlib.Messages, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendMessageAlbum", chatID, messageThreadID, replyToMessageID, options, inputMessageContents)
+	ret := m.ctrl.Call(m, "SendMessageAlbum", chatID, messageThreadID, replyToMessageID, options, inputMessageContents, onlyPreview)
 	ret0, _ := ret[0].(*tdlib.Messages)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SendMessageAlbum indicates an expected call of SendMessageAlbum.
-func (mr *MockClientMockRecorder) SendMessageAlbum(chatID, messageThreadID, replyToMessageID, options, inputMessageContents interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) SendMessageAlbum(chatID, messageThreadID, replyToMessageID, options, inputMessageContents, onlyPreview interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendMessageAlbum", reflect.TypeOf((*MockClient)(nil).SendMessageAlbum), chatID, messageThreadID, replyToMessageID, options, inputMessageContents)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendMessageAlbum", reflect.TypeOf((*MockClient)(nil).SendMessageAlbum), chatID, messageThreadID, replyToMessageID, options, inputMessageContents, onlyPreview)
 }
 
 // SendPassportAuthorizationForm mocks base method.
-func (m *MockClient) SendPassportAuthorizationForm(autorizationFormID int32, typeParams []tdlib.PassportElementType) (*tdlib.Ok, error) {
+func (m *MockClient) SendPassportAuthorizationForm(authorizationFormID int32, typeParams []tdlib.PassportElementType) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendPassportAuthorizationForm", autorizationFormID, typeParams)
+	ret := m.ctrl.Call(m, "SendPassportAuthorizationForm", authorizationFormID, typeParams)
 	ret0, _ := ret[0].(*tdlib.Ok)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SendPassportAuthorizationForm indicates an expected call of SendPassportAuthorizationForm.
-func (mr *MockClientMockRecorder) SendPassportAuthorizationForm(autorizationFormID, typeParams interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) SendPassportAuthorizationForm(authorizationFormID, typeParams interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendPassportAuthorizationForm", reflect.TypeOf((*MockClient)(nil).SendPassportAuthorizationForm), autorizationFormID, typeParams)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendPassportAuthorizationForm", reflect.TypeOf((*MockClient)(nil).SendPassportAuthorizationForm), authorizationFormID, typeParams)
 }
 
 // SendPaymentForm mocks base method.
-func (m *MockClient) SendPaymentForm(chatID, messageID int64, paymentFormID *tdlib.JSONInt64, orderInfoID, shippingOptionID string, credentials tdlib.InputCredentials, tipAmount int64) (*tdlib.PaymentResult, error) {
+func (m *MockClient) SendPaymentForm(inputInvoice tdlib.InputInvoice, paymentFormID *tdlib.JSONInt64, orderInfoID, shippingOptionID string, credentials tdlib.InputCredentials, tipAmount int64) (*tdlib.PaymentResult, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SendPaymentForm", chatID, messageID, paymentFormID, orderInfoID, shippingOptionID, credentials, tipAmount)
+	ret := m.ctrl.Call(m, "SendPaymentForm", inputInvoice, paymentFormID, orderInfoID, shippingOptionID, credentials, tipAmount)
 	ret0, _ := ret[0].(*tdlib.PaymentResult)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SendPaymentForm indicates an expected call of SendPaymentForm.
-func (mr *MockClientMockRecorder) SendPaymentForm(chatID, messageID, paymentFormID, orderInfoID, shippingOptionID, credentials, tipAmount interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) SendPaymentForm(inputInvoice, paymentFormID, orderInfoID, shippingOptionID, credentials, tipAmount interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendPaymentForm", reflect.TypeOf((*MockClient)(nil).SendPaymentForm), chatID, messageID, paymentFormID, orderInfoID, shippingOptionID, credentials, tipAmount)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendPaymentForm", reflect.TypeOf((*MockClient)(nil).SendPaymentForm), inputInvoice, paymentFormID, orderInfoID, shippingOptionID, credentials, tipAmount)
 }
 
 // SendPhoneNumber mocks base method.
@@ -5566,6 +6811,21 @@ func (mr *MockClientMockRecorder) SendPhoneNumberVerificationCode(phoneNumber, s
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendPhoneNumberVerificationCode", reflect.TypeOf((*MockClient)(nil).SendPhoneNumberVerificationCode), phoneNumber, settings)
 }
 
+// SendWebAppData mocks base method.
+func (m *MockClient) SendWebAppData(botUserID int64, buttonText, data string) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendWebAppData", botUserID, buttonText, data)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SendWebAppData indicates an expected call of SendWebAppData.
+func (mr *MockClientMockRecorder) SendWebAppData(botUserID, buttonText, data interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendWebAppData", reflect.TypeOf((*MockClient)(nil).SendWebAppData), botUserID, buttonText, data)
+}
+
 // SetAccountTTL mocks base method.
 func (m *MockClient) SetAccountTTL(tTL *tdlib.AccountTTL) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -5594,6 +6854,21 @@ func (m *MockClient) SetAlarm(seconds float64) (*tdlib.Ok, error) {
 func (mr *MockClientMockRecorder) SetAlarm(seconds interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAlarm", reflect.TypeOf((*MockClient)(nil).SetAlarm), seconds)
+}
+
+// SetAuthenticationEmailAddress mocks base method.
+func (m *MockClient) SetAuthenticationEmailAddress(emailAddress string) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetAuthenticationEmailAddress", emailAddress)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetAuthenticationEmailAddress indicates an expected call of SetAuthenticationEmailAddress.
+func (mr *MockClientMockRecorder) SetAuthenticationEmailAddress(emailAddress interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAuthenticationEmailAddress", reflect.TypeOf((*MockClient)(nil).SetAuthenticationEmailAddress), emailAddress)
 }
 
 // SetAuthenticationPhoneNumber mocks base method.
@@ -5626,6 +6901,21 @@ func (mr *MockClientMockRecorder) SetAutoDownloadSettings(settings, typeParam in
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAutoDownloadSettings", reflect.TypeOf((*MockClient)(nil).SetAutoDownloadSettings), settings, typeParam)
 }
 
+// SetAutosaveSettings mocks base method.
+func (m *MockClient) SetAutosaveSettings(scope tdlib.AutosaveSettingsScope, settings *tdlib.ScopeAutosaveSettings) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetAutosaveSettings", scope, settings)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetAutosaveSettings indicates an expected call of SetAutosaveSettings.
+func (mr *MockClientMockRecorder) SetAutosaveSettings(scope, settings interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetAutosaveSettings", reflect.TypeOf((*MockClient)(nil).SetAutosaveSettings), scope, settings)
+}
+
 // SetBackground mocks base method.
 func (m *MockClient) SetBackground(background tdlib.InputBackground, typeParam tdlib.BackgroundType, forDarkTheme bool) (*tdlib.Background, error) {
 	m.ctrl.T.Helper()
@@ -5656,6 +6946,36 @@ func (mr *MockClientMockRecorder) SetBio(bio interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetBio", reflect.TypeOf((*MockClient)(nil).SetBio), bio)
 }
 
+// SetBotInfoDescription mocks base method.
+func (m *MockClient) SetBotInfoDescription(languageCode, description string) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetBotInfoDescription", languageCode, description)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetBotInfoDescription indicates an expected call of SetBotInfoDescription.
+func (mr *MockClientMockRecorder) SetBotInfoDescription(languageCode, description interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetBotInfoDescription", reflect.TypeOf((*MockClient)(nil).SetBotInfoDescription), languageCode, description)
+}
+
+// SetBotInfoShortDescription mocks base method.
+func (m *MockClient) SetBotInfoShortDescription(languageCode, shortDescription string) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetBotInfoShortDescription", languageCode, shortDescription)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetBotInfoShortDescription indicates an expected call of SetBotInfoShortDescription.
+func (mr *MockClientMockRecorder) SetBotInfoShortDescription(languageCode, shortDescription interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetBotInfoShortDescription", reflect.TypeOf((*MockClient)(nil).SetBotInfoShortDescription), languageCode, shortDescription)
+}
+
 // SetBotUpdatesStatus mocks base method.
 func (m *MockClient) SetBotUpdatesStatus(pendingUpdateCount int32, errParamMessage string) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -5669,6 +6989,21 @@ func (m *MockClient) SetBotUpdatesStatus(pendingUpdateCount int32, errParamMessa
 func (mr *MockClientMockRecorder) SetBotUpdatesStatus(pendingUpdateCount, errParamMessage interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetBotUpdatesStatus", reflect.TypeOf((*MockClient)(nil).SetBotUpdatesStatus), pendingUpdateCount, errParamMessage)
+}
+
+// SetChatAvailableReactions mocks base method.
+func (m *MockClient) SetChatAvailableReactions(chatID int64, availableReactions tdlib.ChatAvailableReactions) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetChatAvailableReactions", chatID, availableReactions)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetChatAvailableReactions indicates an expected call of SetChatAvailableReactions.
+func (mr *MockClientMockRecorder) SetChatAvailableReactions(chatID, availableReactions interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetChatAvailableReactions", reflect.TypeOf((*MockClient)(nil).SetChatAvailableReactions), chatID, availableReactions)
 }
 
 // SetChatClientData mocks base method.
@@ -5761,6 +7096,21 @@ func (mr *MockClientMockRecorder) SetChatMemberStatus(chatID, memberID, status i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetChatMemberStatus", reflect.TypeOf((*MockClient)(nil).SetChatMemberStatus), chatID, memberID, status)
 }
 
+// SetChatMessageAutoDeleteTime mocks base method.
+func (m *MockClient) SetChatMessageAutoDeleteTime(chatID int64, messageAutoDeleteTime int32) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetChatMessageAutoDeleteTime", chatID, messageAutoDeleteTime)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetChatMessageAutoDeleteTime indicates an expected call of SetChatMessageAutoDeleteTime.
+func (mr *MockClientMockRecorder) SetChatMessageAutoDeleteTime(chatID, messageAutoDeleteTime interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetChatMessageAutoDeleteTime", reflect.TypeOf((*MockClient)(nil).SetChatMessageAutoDeleteTime), chatID, messageAutoDeleteTime)
+}
+
 // SetChatMessageSender mocks base method.
 func (m *MockClient) SetChatMessageSender(chatID int64, messageSenderID tdlib.MessageSender) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -5774,21 +7124,6 @@ func (m *MockClient) SetChatMessageSender(chatID int64, messageSenderID tdlib.Me
 func (mr *MockClientMockRecorder) SetChatMessageSender(chatID, messageSenderID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetChatMessageSender", reflect.TypeOf((*MockClient)(nil).SetChatMessageSender), chatID, messageSenderID)
-}
-
-// SetChatMessageTTL mocks base method.
-func (m *MockClient) SetChatMessageTTL(chatID int64, tTL int32) (*tdlib.Ok, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetChatMessageTTL", chatID, tTL)
-	ret0, _ := ret[0].(*tdlib.Ok)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// SetChatMessageTTL indicates an expected call of SetChatMessageTTL.
-func (mr *MockClientMockRecorder) SetChatMessageTTL(chatID, tTL interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetChatMessageTTL", reflect.TypeOf((*MockClient)(nil).SetChatMessageTTL), chatID, tTL)
 }
 
 // SetChatNotificationSettings mocks base method.
@@ -5896,6 +7231,21 @@ func (mr *MockClientMockRecorder) SetCommands(scope, languageCode, commands inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetCommands", reflect.TypeOf((*MockClient)(nil).SetCommands), scope, languageCode, commands)
 }
 
+// SetCustomEmojiStickerSetThumbnail mocks base method.
+func (m *MockClient) SetCustomEmojiStickerSetThumbnail(name string, customEmojiID *tdlib.JSONInt64) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetCustomEmojiStickerSetThumbnail", name, customEmojiID)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetCustomEmojiStickerSetThumbnail indicates an expected call of SetCustomEmojiStickerSetThumbnail.
+func (mr *MockClientMockRecorder) SetCustomEmojiStickerSetThumbnail(name, customEmojiID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetCustomEmojiStickerSetThumbnail", reflect.TypeOf((*MockClient)(nil).SetCustomEmojiStickerSetThumbnail), name, customEmojiID)
+}
+
 // SetCustomLanguagePack mocks base method.
 func (m *MockClient) SetCustomLanguagePack(info *tdlib.LanguagePackInfo, strings []tdlib.LanguagePackString) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -5941,8 +7291,83 @@ func (mr *MockClientMockRecorder) SetDatabaseEncryptionKey(newEncryptionKey inte
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDatabaseEncryptionKey", reflect.TypeOf((*MockClient)(nil).SetDatabaseEncryptionKey), newEncryptionKey)
 }
 
+// SetDefaultChannelAdministratorRights mocks base method.
+func (m *MockClient) SetDefaultChannelAdministratorRights(defaultChannelAdministratorRights *tdlib.ChatAdministratorRights) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetDefaultChannelAdministratorRights", defaultChannelAdministratorRights)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetDefaultChannelAdministratorRights indicates an expected call of SetDefaultChannelAdministratorRights.
+func (mr *MockClientMockRecorder) SetDefaultChannelAdministratorRights(defaultChannelAdministratorRights interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDefaultChannelAdministratorRights", reflect.TypeOf((*MockClient)(nil).SetDefaultChannelAdministratorRights), defaultChannelAdministratorRights)
+}
+
+// SetDefaultGroupAdministratorRights mocks base method.
+func (m *MockClient) SetDefaultGroupAdministratorRights(defaultGroupAdministratorRights *tdlib.ChatAdministratorRights) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetDefaultGroupAdministratorRights", defaultGroupAdministratorRights)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetDefaultGroupAdministratorRights indicates an expected call of SetDefaultGroupAdministratorRights.
+func (mr *MockClientMockRecorder) SetDefaultGroupAdministratorRights(defaultGroupAdministratorRights interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDefaultGroupAdministratorRights", reflect.TypeOf((*MockClient)(nil).SetDefaultGroupAdministratorRights), defaultGroupAdministratorRights)
+}
+
+// SetDefaultMessageAutoDeleteTime mocks base method.
+func (m *MockClient) SetDefaultMessageAutoDeleteTime(messageAutoDeleteTime *tdlib.MessageAutoDeleteTime) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetDefaultMessageAutoDeleteTime", messageAutoDeleteTime)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetDefaultMessageAutoDeleteTime indicates an expected call of SetDefaultMessageAutoDeleteTime.
+func (mr *MockClientMockRecorder) SetDefaultMessageAutoDeleteTime(messageAutoDeleteTime interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDefaultMessageAutoDeleteTime", reflect.TypeOf((*MockClient)(nil).SetDefaultMessageAutoDeleteTime), messageAutoDeleteTime)
+}
+
+// SetDefaultReactionType mocks base method.
+func (m *MockClient) SetDefaultReactionType(reactionType tdlib.ReactionType) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetDefaultReactionType", reactionType)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetDefaultReactionType indicates an expected call of SetDefaultReactionType.
+func (mr *MockClientMockRecorder) SetDefaultReactionType(reactionType interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDefaultReactionType", reflect.TypeOf((*MockClient)(nil).SetDefaultReactionType), reactionType)
+}
+
+// SetEmojiStatus mocks base method.
+func (m *MockClient) SetEmojiStatus(emojiStatus *tdlib.EmojiStatus, duration int32) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetEmojiStatus", emojiStatus, duration)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetEmojiStatus indicates an expected call of SetEmojiStatus.
+func (mr *MockClientMockRecorder) SetEmojiStatus(emojiStatus, duration interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetEmojiStatus", reflect.TypeOf((*MockClient)(nil).SetEmojiStatus), emojiStatus, duration)
+}
+
 // SetFileGenerationProgress mocks base method.
-func (m *MockClient) SetFileGenerationProgress(generationID *tdlib.JSONInt64, expectedSize, localPrefixSize int32) (*tdlib.Ok, error) {
+func (m *MockClient) SetFileGenerationProgress(generationID *tdlib.JSONInt64, expectedSize, localPrefixSize int64) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SetFileGenerationProgress", generationID, expectedSize, localPrefixSize)
 	ret0, _ := ret[0].(*tdlib.Ok)
@@ -5954,6 +7379,21 @@ func (m *MockClient) SetFileGenerationProgress(generationID *tdlib.JSONInt64, ex
 func (mr *MockClientMockRecorder) SetFileGenerationProgress(generationID, expectedSize, localPrefixSize interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetFileGenerationProgress", reflect.TypeOf((*MockClient)(nil).SetFileGenerationProgress), generationID, expectedSize, localPrefixSize)
+}
+
+// SetForumTopicNotificationSettings mocks base method.
+func (m *MockClient) SetForumTopicNotificationSettings(chatID, messageThreadID int64, notificationSettings *tdlib.ChatNotificationSettings) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetForumTopicNotificationSettings", chatID, messageThreadID, notificationSettings)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetForumTopicNotificationSettings indicates an expected call of SetForumTopicNotificationSettings.
+func (mr *MockClientMockRecorder) SetForumTopicNotificationSettings(chatID, messageThreadID, notificationSettings interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetForumTopicNotificationSettings", reflect.TypeOf((*MockClient)(nil).SetForumTopicNotificationSettings), chatID, messageThreadID, notificationSettings)
 }
 
 // SetGameScore mocks base method.
@@ -6106,6 +7546,36 @@ func (mr *MockClientMockRecorder) SetLogVerbosityLevel(newVerbosityLevel interfa
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetLogVerbosityLevel", reflect.TypeOf((*MockClient)(nil).SetLogVerbosityLevel), newVerbosityLevel)
 }
 
+// SetLoginEmailAddress mocks base method.
+func (m *MockClient) SetLoginEmailAddress(newLoginEmailAddress string) (*tdlib.EmailAddressAuthenticationCodeInfo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetLoginEmailAddress", newLoginEmailAddress)
+	ret0, _ := ret[0].(*tdlib.EmailAddressAuthenticationCodeInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetLoginEmailAddress indicates an expected call of SetLoginEmailAddress.
+func (mr *MockClientMockRecorder) SetLoginEmailAddress(newLoginEmailAddress interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetLoginEmailAddress", reflect.TypeOf((*MockClient)(nil).SetLoginEmailAddress), newLoginEmailAddress)
+}
+
+// SetMenuButton mocks base method.
+func (m *MockClient) SetMenuButton(userID int64, menuButton *tdlib.BotMenuButton) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetMenuButton", userID, menuButton)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetMenuButton indicates an expected call of SetMenuButton.
+func (mr *MockClientMockRecorder) SetMenuButton(userID, menuButton interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetMenuButton", reflect.TypeOf((*MockClient)(nil).SetMenuButton), userID, menuButton)
+}
+
 // SetName mocks base method.
 func (m *MockClient) SetName(firstName, lastName string) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -6211,6 +7681,21 @@ func (mr *MockClientMockRecorder) SetPinnedChats(chatList, chatIDs interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPinnedChats", reflect.TypeOf((*MockClient)(nil).SetPinnedChats), chatList, chatIDs)
 }
 
+// SetPinnedForumTopics mocks base method.
+func (m *MockClient) SetPinnedForumTopics(chatID int64, messageThreadIDs []int64) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetPinnedForumTopics", chatID, messageThreadIDs)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetPinnedForumTopics indicates an expected call of SetPinnedForumTopics.
+func (mr *MockClientMockRecorder) SetPinnedForumTopics(chatID, messageThreadIDs interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetPinnedForumTopics", reflect.TypeOf((*MockClient)(nil).SetPinnedForumTopics), chatID, messageThreadIDs)
+}
+
 // SetPollAnswer mocks base method.
 func (m *MockClient) SetPollAnswer(chatID, messageID int64, optionIDs []int32) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -6227,18 +7712,18 @@ func (mr *MockClientMockRecorder) SetPollAnswer(chatID, messageID, optionIDs int
 }
 
 // SetProfilePhoto mocks base method.
-func (m *MockClient) SetProfilePhoto(photo tdlib.InputChatPhoto) (*tdlib.Ok, error) {
+func (m *MockClient) SetProfilePhoto(photo tdlib.InputChatPhoto, isPublic bool) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetProfilePhoto", photo)
+	ret := m.ctrl.Call(m, "SetProfilePhoto", photo, isPublic)
 	ret0, _ := ret[0].(*tdlib.Ok)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SetProfilePhoto indicates an expected call of SetProfilePhoto.
-func (mr *MockClientMockRecorder) SetProfilePhoto(photo interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) SetProfilePhoto(photo, isPublic interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetProfilePhoto", reflect.TypeOf((*MockClient)(nil).SetProfilePhoto), photo)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetProfilePhoto", reflect.TypeOf((*MockClient)(nil).SetProfilePhoto), photo, isPublic)
 }
 
 // SetRecoveryEmailAddress mocks base method.
@@ -6271,6 +7756,51 @@ func (mr *MockClientMockRecorder) SetScopeNotificationSettings(scope, notificati
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetScopeNotificationSettings", reflect.TypeOf((*MockClient)(nil).SetScopeNotificationSettings), scope, notificationSettings)
 }
 
+// SetStickerEmojis mocks base method.
+func (m *MockClient) SetStickerEmojis(sticker tdlib.InputFile, emojis string) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetStickerEmojis", sticker, emojis)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetStickerEmojis indicates an expected call of SetStickerEmojis.
+func (mr *MockClientMockRecorder) SetStickerEmojis(sticker, emojis interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetStickerEmojis", reflect.TypeOf((*MockClient)(nil).SetStickerEmojis), sticker, emojis)
+}
+
+// SetStickerKeywords mocks base method.
+func (m *MockClient) SetStickerKeywords(sticker tdlib.InputFile, keywords []string) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetStickerKeywords", sticker, keywords)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetStickerKeywords indicates an expected call of SetStickerKeywords.
+func (mr *MockClientMockRecorder) SetStickerKeywords(sticker, keywords interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetStickerKeywords", reflect.TypeOf((*MockClient)(nil).SetStickerKeywords), sticker, keywords)
+}
+
+// SetStickerMaskPosition mocks base method.
+func (m *MockClient) SetStickerMaskPosition(sticker tdlib.InputFile, maskPosition *tdlib.MaskPosition) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetStickerMaskPosition", sticker, maskPosition)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetStickerMaskPosition indicates an expected call of SetStickerMaskPosition.
+func (mr *MockClientMockRecorder) SetStickerMaskPosition(sticker, maskPosition interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetStickerMaskPosition", reflect.TypeOf((*MockClient)(nil).SetStickerMaskPosition), sticker, maskPosition)
+}
+
 // SetStickerPositionInSet mocks base method.
 func (m *MockClient) SetStickerPositionInSet(sticker tdlib.InputFile, position int32) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -6287,10 +7817,10 @@ func (mr *MockClientMockRecorder) SetStickerPositionInSet(sticker, position inte
 }
 
 // SetStickerSetThumbnail mocks base method.
-func (m *MockClient) SetStickerSetThumbnail(userID int64, name string, thumbnail tdlib.InputFile) (*tdlib.StickerSet, error) {
+func (m *MockClient) SetStickerSetThumbnail(userID int64, name string, thumbnail tdlib.InputFile) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SetStickerSetThumbnail", userID, name, thumbnail)
-	ret0, _ := ret[0].(*tdlib.StickerSet)
+	ret0, _ := ret[0].(*tdlib.Ok)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -6299,6 +7829,21 @@ func (m *MockClient) SetStickerSetThumbnail(userID int64, name string, thumbnail
 func (mr *MockClientMockRecorder) SetStickerSetThumbnail(userID, name, thumbnail interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetStickerSetThumbnail", reflect.TypeOf((*MockClient)(nil).SetStickerSetThumbnail), userID, name, thumbnail)
+}
+
+// SetStickerSetTitle mocks base method.
+func (m *MockClient) SetStickerSetTitle(name, title string) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetStickerSetTitle", name, title)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetStickerSetTitle indicates an expected call of SetStickerSetTitle.
+func (mr *MockClientMockRecorder) SetStickerSetTitle(name, title interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetStickerSetTitle", reflect.TypeOf((*MockClient)(nil).SetStickerSetTitle), name, title)
 }
 
 // SetSupergroupStickerSet mocks base method.
@@ -6332,18 +7877,33 @@ func (mr *MockClientMockRecorder) SetSupergroupUsername(supergroupID, username i
 }
 
 // SetTdlibParameters mocks base method.
-func (m *MockClient) SetTdlibParameters(parameters *tdlib.TdlibParameters) (*tdlib.Ok, error) {
+func (m *MockClient) SetTdlibParameters(useTestDc bool, databaseDirectory, filesDirectory string, databaseEncryptionKey []byte, useFileDatabase, useChatInfoDatabase, useMessageDatabase, useSecretChats bool, aPIID int32, aPIHash, systemLanguageCode, deviceModel, systemVersion, applicationVersion string, enableStorageOptimizer, ignoreFileNames bool) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTdlibParameters", parameters)
+	ret := m.ctrl.Call(m, "SetTdlibParameters", useTestDc, databaseDirectory, filesDirectory, databaseEncryptionKey, useFileDatabase, useChatInfoDatabase, useMessageDatabase, useSecretChats, aPIID, aPIHash, systemLanguageCode, deviceModel, systemVersion, applicationVersion, enableStorageOptimizer, ignoreFileNames)
 	ret0, _ := ret[0].(*tdlib.Ok)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // SetTdlibParameters indicates an expected call of SetTdlibParameters.
-func (mr *MockClientMockRecorder) SetTdlibParameters(parameters interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) SetTdlibParameters(useTestDc, databaseDirectory, filesDirectory, databaseEncryptionKey, useFileDatabase, useChatInfoDatabase, useMessageDatabase, useSecretChats, aPIID, aPIHash, systemLanguageCode, deviceModel, systemVersion, applicationVersion, enableStorageOptimizer, ignoreFileNames interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTdlibParameters", reflect.TypeOf((*MockClient)(nil).SetTdlibParameters), parameters)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTdlibParameters", reflect.TypeOf((*MockClient)(nil).SetTdlibParameters), useTestDc, databaseDirectory, filesDirectory, databaseEncryptionKey, useFileDatabase, useChatInfoDatabase, useMessageDatabase, useSecretChats, aPIID, aPIHash, systemLanguageCode, deviceModel, systemVersion, applicationVersion, enableStorageOptimizer, ignoreFileNames)
+}
+
+// SetUserPersonalProfilePhoto mocks base method.
+func (m *MockClient) SetUserPersonalProfilePhoto(userID int64, photo tdlib.InputChatPhoto) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetUserPersonalProfilePhoto", userID, photo)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetUserPersonalProfilePhoto indicates an expected call of SetUserPersonalProfilePhoto.
+func (mr *MockClientMockRecorder) SetUserPersonalProfilePhoto(userID, photo interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetUserPersonalProfilePhoto", reflect.TypeOf((*MockClient)(nil).SetUserPersonalProfilePhoto), userID, photo)
 }
 
 // SetUserPrivacySettingRules mocks base method.
@@ -6359,6 +7919,21 @@ func (m *MockClient) SetUserPrivacySettingRules(setting tdlib.UserPrivacySetting
 func (mr *MockClientMockRecorder) SetUserPrivacySettingRules(setting, rules interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetUserPrivacySettingRules", reflect.TypeOf((*MockClient)(nil).SetUserPrivacySettingRules), setting, rules)
+}
+
+// SetUserSupportInfo mocks base method.
+func (m *MockClient) SetUserSupportInfo(userID int64, message *tdlib.FormattedText) (*tdlib.UserSupportInfo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetUserSupportInfo", userID, message)
+	ret0, _ := ret[0].(*tdlib.UserSupportInfo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SetUserSupportInfo indicates an expected call of SetUserSupportInfo.
+func (mr *MockClientMockRecorder) SetUserSupportInfo(userID, message interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetUserSupportInfo", reflect.TypeOf((*MockClient)(nil).SetUserSupportInfo), userID, message)
 }
 
 // SetUsername mocks base method.
@@ -6391,6 +7966,21 @@ func (mr *MockClientMockRecorder) SetVideoChatDefaultParticipant(chatID, default
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetVideoChatDefaultParticipant", reflect.TypeOf((*MockClient)(nil).SetVideoChatDefaultParticipant), chatID, defaultParticipantID)
 }
 
+// ShareChatWithBot mocks base method.
+func (m *MockClient) ShareChatWithBot(chatID, messageID int64, buttonID int32, sharedChatID int64, onlyCheck bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShareChatWithBot", chatID, messageID, buttonID, sharedChatID, onlyCheck)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShareChatWithBot indicates an expected call of ShareChatWithBot.
+func (mr *MockClientMockRecorder) ShareChatWithBot(chatID, messageID, buttonID, sharedChatID, onlyCheck interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShareChatWithBot", reflect.TypeOf((*MockClient)(nil).ShareChatWithBot), chatID, messageID, buttonID, sharedChatID, onlyCheck)
+}
+
 // SharePhoneNumber mocks base method.
 func (m *MockClient) SharePhoneNumber(userID int64) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -6404,6 +7994,21 @@ func (m *MockClient) SharePhoneNumber(userID int64) (*tdlib.Ok, error) {
 func (mr *MockClientMockRecorder) SharePhoneNumber(userID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SharePhoneNumber", reflect.TypeOf((*MockClient)(nil).SharePhoneNumber), userID)
+}
+
+// ShareUserWithBot mocks base method.
+func (m *MockClient) ShareUserWithBot(chatID, messageID int64, buttonID int32, sharedUserID int64, onlyCheck bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ShareUserWithBot", chatID, messageID, buttonID, sharedUserID, onlyCheck)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ShareUserWithBot indicates an expected call of ShareUserWithBot.
+func (mr *MockClientMockRecorder) ShareUserWithBot(chatID, messageID, buttonID, sharedUserID, onlyCheck interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ShareUserWithBot", reflect.TypeOf((*MockClient)(nil).ShareUserWithBot), chatID, messageID, buttonID, sharedUserID, onlyCheck)
 }
 
 // StartGroupCallRecording mocks base method.
@@ -6464,6 +8069,21 @@ func (m *MockClient) StopPoll(chatID, messageID int64, replyMarkup tdlib.ReplyMa
 func (mr *MockClientMockRecorder) StopPoll(chatID, messageID, replyMarkup interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StopPoll", reflect.TypeOf((*MockClient)(nil).StopPoll), chatID, messageID, replyMarkup)
+}
+
+// SuggestUserProfilePhoto mocks base method.
+func (m *MockClient) SuggestUserProfilePhoto(userID int64, photo tdlib.InputChatPhoto) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SuggestUserProfilePhoto", userID, photo)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// SuggestUserProfilePhoto indicates an expected call of SuggestUserProfilePhoto.
+func (mr *MockClientMockRecorder) SuggestUserProfilePhoto(userID, photo interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SuggestUserProfilePhoto", reflect.TypeOf((*MockClient)(nil).SuggestUserProfilePhoto), userID, photo)
 }
 
 // SynchronizeLanguagePack mocks base method.
@@ -6706,6 +8326,36 @@ func (mr *MockClientMockRecorder) TestUseUpdate() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TestUseUpdate", reflect.TypeOf((*MockClient)(nil).TestUseUpdate))
 }
 
+// ToggleAllDownloadsArePaused mocks base method.
+func (m *MockClient) ToggleAllDownloadsArePaused(arePaused bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ToggleAllDownloadsArePaused", arePaused)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleAllDownloadsArePaused indicates an expected call of ToggleAllDownloadsArePaused.
+func (mr *MockClientMockRecorder) ToggleAllDownloadsArePaused(arePaused interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleAllDownloadsArePaused", reflect.TypeOf((*MockClient)(nil).ToggleAllDownloadsArePaused), arePaused)
+}
+
+// ToggleBotIsAddedToAttachmentMenu mocks base method.
+func (m *MockClient) ToggleBotIsAddedToAttachmentMenu(botUserID int64, isAdded, allowWriteAccess bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ToggleBotIsAddedToAttachmentMenu", botUserID, isAdded, allowWriteAccess)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleBotIsAddedToAttachmentMenu indicates an expected call of ToggleBotIsAddedToAttachmentMenu.
+func (mr *MockClientMockRecorder) ToggleBotIsAddedToAttachmentMenu(botUserID, isAdded, allowWriteAccess interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleBotIsAddedToAttachmentMenu", reflect.TypeOf((*MockClient)(nil).ToggleBotIsAddedToAttachmentMenu), botUserID, isAdded, allowWriteAccess)
+}
+
 // ToggleChatDefaultDisableNotification mocks base method.
 func (m *MockClient) ToggleChatDefaultDisableNotification(chatID int64, defaultDisableNotification bool) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -6764,6 +8414,81 @@ func (m *MockClient) ToggleChatIsPinned(chatList tdlib.ChatList, chatID int64, i
 func (mr *MockClientMockRecorder) ToggleChatIsPinned(chatList, chatID, isPinned interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleChatIsPinned", reflect.TypeOf((*MockClient)(nil).ToggleChatIsPinned), chatList, chatID, isPinned)
+}
+
+// ToggleChatIsTranslatable mocks base method.
+func (m *MockClient) ToggleChatIsTranslatable(chatID int64, isTranslatable bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ToggleChatIsTranslatable", chatID, isTranslatable)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleChatIsTranslatable indicates an expected call of ToggleChatIsTranslatable.
+func (mr *MockClientMockRecorder) ToggleChatIsTranslatable(chatID, isTranslatable interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleChatIsTranslatable", reflect.TypeOf((*MockClient)(nil).ToggleChatIsTranslatable), chatID, isTranslatable)
+}
+
+// ToggleDownloadIsPaused mocks base method.
+func (m *MockClient) ToggleDownloadIsPaused(fileID int32, isPaused bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ToggleDownloadIsPaused", fileID, isPaused)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleDownloadIsPaused indicates an expected call of ToggleDownloadIsPaused.
+func (mr *MockClientMockRecorder) ToggleDownloadIsPaused(fileID, isPaused interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleDownloadIsPaused", reflect.TypeOf((*MockClient)(nil).ToggleDownloadIsPaused), fileID, isPaused)
+}
+
+// ToggleForumTopicIsClosed mocks base method.
+func (m *MockClient) ToggleForumTopicIsClosed(chatID, messageThreadID int64, isClosed bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ToggleForumTopicIsClosed", chatID, messageThreadID, isClosed)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleForumTopicIsClosed indicates an expected call of ToggleForumTopicIsClosed.
+func (mr *MockClientMockRecorder) ToggleForumTopicIsClosed(chatID, messageThreadID, isClosed interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleForumTopicIsClosed", reflect.TypeOf((*MockClient)(nil).ToggleForumTopicIsClosed), chatID, messageThreadID, isClosed)
+}
+
+// ToggleForumTopicIsPinned mocks base method.
+func (m *MockClient) ToggleForumTopicIsPinned(chatID, messageThreadID int64, isPinned bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ToggleForumTopicIsPinned", chatID, messageThreadID, isPinned)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleForumTopicIsPinned indicates an expected call of ToggleForumTopicIsPinned.
+func (mr *MockClientMockRecorder) ToggleForumTopicIsPinned(chatID, messageThreadID, isPinned interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleForumTopicIsPinned", reflect.TypeOf((*MockClient)(nil).ToggleForumTopicIsPinned), chatID, messageThreadID, isPinned)
+}
+
+// ToggleGeneralForumTopicIsHidden mocks base method.
+func (m *MockClient) ToggleGeneralForumTopicIsHidden(chatID int64, isHidden bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ToggleGeneralForumTopicIsHidden", chatID, isHidden)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleGeneralForumTopicIsHidden indicates an expected call of ToggleGeneralForumTopicIsHidden.
+func (mr *MockClientMockRecorder) ToggleGeneralForumTopicIsHidden(chatID, isHidden interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleGeneralForumTopicIsHidden", reflect.TypeOf((*MockClient)(nil).ToggleGeneralForumTopicIsHidden), chatID, isHidden)
 }
 
 // ToggleGroupCallEnabledStartNotification mocks base method.
@@ -6916,6 +8641,36 @@ func (mr *MockClientMockRecorder) ToggleSessionCanAcceptSecretChats(sessionID, c
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleSessionCanAcceptSecretChats", reflect.TypeOf((*MockClient)(nil).ToggleSessionCanAcceptSecretChats), sessionID, canAcceptSecretChats)
 }
 
+// ToggleSupergroupHasAggressiveAntiSpamEnabled mocks base method.
+func (m *MockClient) ToggleSupergroupHasAggressiveAntiSpamEnabled(supergroupID int64, hasAggressiveAntiSpamEnabled bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ToggleSupergroupHasAggressiveAntiSpamEnabled", supergroupID, hasAggressiveAntiSpamEnabled)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleSupergroupHasAggressiveAntiSpamEnabled indicates an expected call of ToggleSupergroupHasAggressiveAntiSpamEnabled.
+func (mr *MockClientMockRecorder) ToggleSupergroupHasAggressiveAntiSpamEnabled(supergroupID, hasAggressiveAntiSpamEnabled interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleSupergroupHasAggressiveAntiSpamEnabled", reflect.TypeOf((*MockClient)(nil).ToggleSupergroupHasAggressiveAntiSpamEnabled), supergroupID, hasAggressiveAntiSpamEnabled)
+}
+
+// ToggleSupergroupHasHiddenMembers mocks base method.
+func (m *MockClient) ToggleSupergroupHasHiddenMembers(supergroupID int64, hasHiddenMembers bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ToggleSupergroupHasHiddenMembers", supergroupID, hasHiddenMembers)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleSupergroupHasHiddenMembers indicates an expected call of ToggleSupergroupHasHiddenMembers.
+func (mr *MockClientMockRecorder) ToggleSupergroupHasHiddenMembers(supergroupID, hasHiddenMembers interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleSupergroupHasHiddenMembers", reflect.TypeOf((*MockClient)(nil).ToggleSupergroupHasHiddenMembers), supergroupID, hasHiddenMembers)
+}
+
 // ToggleSupergroupIsAllHistoryAvailable mocks base method.
 func (m *MockClient) ToggleSupergroupIsAllHistoryAvailable(supergroupID int64, isAllHistoryAvailable bool) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -6946,6 +8701,51 @@ func (mr *MockClientMockRecorder) ToggleSupergroupIsBroadcastGroup(supergroupID 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleSupergroupIsBroadcastGroup", reflect.TypeOf((*MockClient)(nil).ToggleSupergroupIsBroadcastGroup), supergroupID)
 }
 
+// ToggleSupergroupIsForum mocks base method.
+func (m *MockClient) ToggleSupergroupIsForum(supergroupID int64, isForum bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ToggleSupergroupIsForum", supergroupID, isForum)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleSupergroupIsForum indicates an expected call of ToggleSupergroupIsForum.
+func (mr *MockClientMockRecorder) ToggleSupergroupIsForum(supergroupID, isForum interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleSupergroupIsForum", reflect.TypeOf((*MockClient)(nil).ToggleSupergroupIsForum), supergroupID, isForum)
+}
+
+// ToggleSupergroupJoinByRequest mocks base method.
+func (m *MockClient) ToggleSupergroupJoinByRequest(supergroupID int64, joinByRequest bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ToggleSupergroupJoinByRequest", supergroupID, joinByRequest)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleSupergroupJoinByRequest indicates an expected call of ToggleSupergroupJoinByRequest.
+func (mr *MockClientMockRecorder) ToggleSupergroupJoinByRequest(supergroupID, joinByRequest interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleSupergroupJoinByRequest", reflect.TypeOf((*MockClient)(nil).ToggleSupergroupJoinByRequest), supergroupID, joinByRequest)
+}
+
+// ToggleSupergroupJoinToSendMessages mocks base method.
+func (m *MockClient) ToggleSupergroupJoinToSendMessages(supergroupID int64, joinToSendMessages bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ToggleSupergroupJoinToSendMessages", supergroupID, joinToSendMessages)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleSupergroupJoinToSendMessages indicates an expected call of ToggleSupergroupJoinToSendMessages.
+func (mr *MockClientMockRecorder) ToggleSupergroupJoinToSendMessages(supergroupID, joinToSendMessages interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleSupergroupJoinToSendMessages", reflect.TypeOf((*MockClient)(nil).ToggleSupergroupJoinToSendMessages), supergroupID, joinToSendMessages)
+}
+
 // ToggleSupergroupSignMessages mocks base method.
 func (m *MockClient) ToggleSupergroupSignMessages(supergroupID int64, signMessages bool) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -6959,6 +8759,36 @@ func (m *MockClient) ToggleSupergroupSignMessages(supergroupID int64, signMessag
 func (mr *MockClientMockRecorder) ToggleSupergroupSignMessages(supergroupID, signMessages interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleSupergroupSignMessages", reflect.TypeOf((*MockClient)(nil).ToggleSupergroupSignMessages), supergroupID, signMessages)
+}
+
+// ToggleSupergroupUsernameIsActive mocks base method.
+func (m *MockClient) ToggleSupergroupUsernameIsActive(supergroupID int64, username string, isActive bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ToggleSupergroupUsernameIsActive", supergroupID, username, isActive)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleSupergroupUsernameIsActive indicates an expected call of ToggleSupergroupUsernameIsActive.
+func (mr *MockClientMockRecorder) ToggleSupergroupUsernameIsActive(supergroupID, username, isActive interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleSupergroupUsernameIsActive", reflect.TypeOf((*MockClient)(nil).ToggleSupergroupUsernameIsActive), supergroupID, username, isActive)
+}
+
+// ToggleUsernameIsActive mocks base method.
+func (m *MockClient) ToggleUsernameIsActive(username string, isActive bool) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ToggleUsernameIsActive", username, isActive)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ToggleUsernameIsActive indicates an expected call of ToggleUsernameIsActive.
+func (mr *MockClientMockRecorder) ToggleUsernameIsActive(username, isActive interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ToggleUsernameIsActive", reflect.TypeOf((*MockClient)(nil).ToggleUsernameIsActive), username, isActive)
 }
 
 // TransferChatOwnership mocks base method.
@@ -6976,6 +8806,36 @@ func (mr *MockClientMockRecorder) TransferChatOwnership(chatID, userID, password
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TransferChatOwnership", reflect.TypeOf((*MockClient)(nil).TransferChatOwnership), chatID, userID, password)
 }
 
+// TranslateMessageText mocks base method.
+func (m *MockClient) TranslateMessageText(chatID, messageID int64, toLanguageCode string) (*tdlib.FormattedText, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TranslateMessageText", chatID, messageID, toLanguageCode)
+	ret0, _ := ret[0].(*tdlib.FormattedText)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TranslateMessageText indicates an expected call of TranslateMessageText.
+func (mr *MockClientMockRecorder) TranslateMessageText(chatID, messageID, toLanguageCode interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TranslateMessageText", reflect.TypeOf((*MockClient)(nil).TranslateMessageText), chatID, messageID, toLanguageCode)
+}
+
+// TranslateText mocks base method.
+func (m *MockClient) TranslateText(text *tdlib.FormattedText, toLanguageCode string) (*tdlib.FormattedText, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "TranslateText", text, toLanguageCode)
+	ret0, _ := ret[0].(*tdlib.FormattedText)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// TranslateText indicates an expected call of TranslateText.
+func (mr *MockClientMockRecorder) TranslateText(text, toLanguageCode interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "TranslateText", reflect.TypeOf((*MockClient)(nil).TranslateText), text, toLanguageCode)
+}
+
 // UnpinAllChatMessages mocks base method.
 func (m *MockClient) UnpinAllChatMessages(chatID int64) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
@@ -6989,6 +8849,21 @@ func (m *MockClient) UnpinAllChatMessages(chatID int64) (*tdlib.Ok, error) {
 func (mr *MockClientMockRecorder) UnpinAllChatMessages(chatID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnpinAllChatMessages", reflect.TypeOf((*MockClient)(nil).UnpinAllChatMessages), chatID)
+}
+
+// UnpinAllMessageThreadMessages mocks base method.
+func (m *MockClient) UnpinAllMessageThreadMessages(chatID, messageThreadID int64) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UnpinAllMessageThreadMessages", chatID, messageThreadID)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UnpinAllMessageThreadMessages indicates an expected call of UnpinAllMessageThreadMessages.
+func (mr *MockClientMockRecorder) UnpinAllMessageThreadMessages(chatID, messageThreadID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UnpinAllMessageThreadMessages", reflect.TypeOf((*MockClient)(nil).UnpinAllMessageThreadMessages), chatID, messageThreadID)
 }
 
 // UnpinChatMessage mocks base method.
@@ -7021,64 +8896,64 @@ func (mr *MockClientMockRecorder) UpgradeBasicGroupChatToSupergroupChat(chatID i
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpgradeBasicGroupChatToSupergroupChat", reflect.TypeOf((*MockClient)(nil).UpgradeBasicGroupChatToSupergroupChat), chatID)
 }
 
-// UploadFile mocks base method.
-func (m *MockClient) UploadFile(file tdlib.InputFile, fileType tdlib.FileType, priority int32) (*tdlib.File, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UploadFile", file, fileType, priority)
-	ret0, _ := ret[0].(*tdlib.File)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// UploadFile indicates an expected call of UploadFile.
-func (mr *MockClientMockRecorder) UploadFile(file, fileType, priority interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadFile", reflect.TypeOf((*MockClient)(nil).UploadFile), file, fileType, priority)
-}
-
 // UploadStickerFile mocks base method.
-func (m *MockClient) UploadStickerFile(userID int64, sticker tdlib.InputSticker) (*tdlib.File, error) {
+func (m *MockClient) UploadStickerFile(userID int64, stickerFormat tdlib.StickerFormat, sticker tdlib.InputFile) (*tdlib.File, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "UploadStickerFile", userID, sticker)
+	ret := m.ctrl.Call(m, "UploadStickerFile", userID, stickerFormat, sticker)
 	ret0, _ := ret[0].(*tdlib.File)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // UploadStickerFile indicates an expected call of UploadStickerFile.
-func (mr *MockClientMockRecorder) UploadStickerFile(userID, sticker interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) UploadStickerFile(userID, stickerFormat, sticker interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadStickerFile", reflect.TypeOf((*MockClient)(nil).UploadStickerFile), userID, sticker)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UploadStickerFile", reflect.TypeOf((*MockClient)(nil).UploadStickerFile), userID, stickerFormat, sticker)
 }
 
 // ValidateOrderInfo mocks base method.
-func (m *MockClient) ValidateOrderInfo(chatID, messageID int64, orderInfo *tdlib.OrderInfo, allowSave bool) (*tdlib.ValidatedOrderInfo, error) {
+func (m *MockClient) ValidateOrderInfo(inputInvoice tdlib.InputInvoice, orderInfo *tdlib.OrderInfo, allowSave bool) (*tdlib.ValidatedOrderInfo, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ValidateOrderInfo", chatID, messageID, orderInfo, allowSave)
+	ret := m.ctrl.Call(m, "ValidateOrderInfo", inputInvoice, orderInfo, allowSave)
 	ret0, _ := ret[0].(*tdlib.ValidatedOrderInfo)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ValidateOrderInfo indicates an expected call of ValidateOrderInfo.
-func (mr *MockClientMockRecorder) ValidateOrderInfo(chatID, messageID, orderInfo, allowSave interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) ValidateOrderInfo(inputInvoice, orderInfo, allowSave interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidateOrderInfo", reflect.TypeOf((*MockClient)(nil).ValidateOrderInfo), chatID, messageID, orderInfo, allowSave)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ValidateOrderInfo", reflect.TypeOf((*MockClient)(nil).ValidateOrderInfo), inputInvoice, orderInfo, allowSave)
 }
 
 // ViewMessages mocks base method.
-func (m *MockClient) ViewMessages(chatID, messageThreadID int64, messageIDs []int64, forceRead bool) (*tdlib.Ok, error) {
+func (m *MockClient) ViewMessages(chatID int64, messageIDs []int64, source tdlib.MessageSource, forceRead bool) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ViewMessages", chatID, messageThreadID, messageIDs, forceRead)
+	ret := m.ctrl.Call(m, "ViewMessages", chatID, messageIDs, source, forceRead)
 	ret0, _ := ret[0].(*tdlib.Ok)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // ViewMessages indicates an expected call of ViewMessages.
-func (mr *MockClientMockRecorder) ViewMessages(chatID, messageThreadID, messageIDs, forceRead interface{}) *gomock.Call {
+func (mr *MockClientMockRecorder) ViewMessages(chatID, messageIDs, source, forceRead interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ViewMessages", reflect.TypeOf((*MockClient)(nil).ViewMessages), chatID, messageThreadID, messageIDs, forceRead)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ViewMessages", reflect.TypeOf((*MockClient)(nil).ViewMessages), chatID, messageIDs, source, forceRead)
+}
+
+// ViewPremiumFeature mocks base method.
+func (m *MockClient) ViewPremiumFeature(feature tdlib.PremiumFeature) (*tdlib.Ok, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ViewPremiumFeature", feature)
+	ret0, _ := ret[0].(*tdlib.Ok)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ViewPremiumFeature indicates an expected call of ViewPremiumFeature.
+func (mr *MockClientMockRecorder) ViewPremiumFeature(feature interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ViewPremiumFeature", reflect.TypeOf((*MockClient)(nil).ViewPremiumFeature), feature)
 }
 
 // ViewTrendingStickerSets mocks base method.
@@ -7097,7 +8972,7 @@ func (mr *MockClientMockRecorder) ViewTrendingStickerSets(stickerSetIDs interfac
 }
 
 // WriteGeneratedFilePart mocks base method.
-func (m *MockClient) WriteGeneratedFilePart(generationID *tdlib.JSONInt64, offset int32, data []byte) (*tdlib.Ok, error) {
+func (m *MockClient) WriteGeneratedFilePart(generationID *tdlib.JSONInt64, offset int64, data []byte) (*tdlib.Ok, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "WriteGeneratedFilePart", generationID, offset, data)
 	ret0, _ := ret[0].(*tdlib.Ok)
