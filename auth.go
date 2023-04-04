@@ -16,13 +16,7 @@ func (client *ClientImpl) Authorize() (AuthorizationState, error) {
 		return nil, err
 	}
 
-	if state.GetAuthorizationStateEnum() == AuthorizationStateWaitEncryptionKeyType {
-		ok, err := client.CheckDatabaseEncryptionKey(nil)
-
-		if ok == nil || err != nil {
-			return nil, err
-		}
-	} else if state.GetAuthorizationStateEnum() == AuthorizationStateWaitTdlibParametersType {
+	if state.GetAuthorizationStateEnum() == AuthorizationStateWaitTdlibParametersType {
 		client.sendTdLibParams()
 	}
 

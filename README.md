@@ -1,6 +1,7 @@
 # Go-TDlib
 
-Package on Golang for TDLib. Current version support TDLib: v1.8.0
+Package on Golang for TDLib. Current version support TDLib: v1.8.13 (current master in TD repo)
+
 
 ## Install  
 
