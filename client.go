@@ -11,8 +11,6 @@ import (
 	"time"
 )
 
-//go:generate mockgen -source client.go --aux_files=github.com/wh3r3areyou/go-tdlib=auth.go,github.com/wh3r3areyou/go-tdlib=events.go,github.com/wh3r3areyou/go-tdlib=tl_methods.go -destination=./mocks/client.go
-
 // Client is the Telegram TdLib contract
 type Client interface {
 	SendAndCatch(jsonQuery interface{}) (UpdateMsg, error)

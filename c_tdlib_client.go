@@ -18,8 +18,6 @@ import (
 	"unsafe"
 )
 
-//go:generate mockgen -source c_tdlib_client.go -destination=./mocks/c_tdlib_client.go
-
 // Contract wrapper over tdlib client in C language
 type tdlibClient interface {
 	send(jsonQuery interface{})
